@@ -1,0 +1,2048 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>RH Assertivo</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --navy: #0f1f3d;
+    --navy-mid: #1a3260;
+    --blue: #1e4db7;
+    --blue-light: #2d63e8;
+    --gold: #c9a84c;
+    --gold-light: #e8c96a;
+    --cream: #f7f4ee;
+    --cream-dark: #ede9e0;
+    --text: #1a1a2e;
+    --text-mid: #4a4a6a;
+    --text-light: #8888aa;
+    --white: #ffffff;
+    --success: #1a7a4a;
+    --success-bg: #e8f7ee;
+    --danger: #a0192e;
+    --danger-bg: #fde8eb;
+    --warn: #8a5a00;
+    --warn-bg: #fef5e0;
+    --shadow: 0 4px 24px rgba(15,31,61,0.10);
+    --shadow-lg: 0 8px 48px rgba(15,31,61,0.16);
+    --radius: 12px;
+    --radius-sm: 8px;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    font-family: 'DM Sans', sans-serif;
+    background: var(--cream);
+    color: var(--text);
+    min-height: 100vh;
+    display: flex;
+  }
+
+  /* ── Sidebar ── */
+  .sidebar {
+    width: 240px;
+    min-height: 100vh;
+    background: var(--navy);
+    display: flex;
+    flex-direction: column;
+    position: fixed;
+    top: 0; left: 0; bottom: 0;
+    z-index: 100;
+  }
+
+  .sidebar-logo {
+    padding: 28px 24px 24px;
+    border-bottom: 1px solid rgba(255,255,255,0.08);
+  }
+
+  .sidebar-logo h1 {
+    font-family: 'DM Serif Display', serif;
+    font-size: 20px;
+    color: var(--white);
+    line-height: 1.2;
+  }
+
+  .sidebar-logo span {
+    color: var(--gold);
+  }
+
+  .sidebar-logo p {
+    font-size: 11px;
+    color: rgba(255,255,255,0.4);
+    margin-top: 4px;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+  }
+
+  .sidebar-nav {
+    flex: 1;
+    padding: 20px 12px;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+  }
+
+  .nav-item {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 11px 14px;
+    border-radius: var(--radius-sm);
+    cursor: pointer;
+    color: rgba(255,255,255,0.55);
+    font-size: 14px;
+    font-weight: 500;
+    transition: all 0.15s;
+    border: none;
+    background: none;
+    text-align: left;
+    width: 100%;
+  }
+
+  .nav-item:hover { background: rgba(255,255,255,0.07); color: var(--white); }
+  .nav-item.active { background: var(--blue); color: var(--white); }
+  .nav-item .icon { font-size: 18px; width: 22px; text-align: center; }
+
+  .sidebar-footer {
+    padding: 16px;
+    border-top: 1px solid rgba(255,255,255,0.08);
+  }
+
+  .status-dot {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 12px;
+    color: rgba(255,255,255,0.4);
+  }
+
+  .dot { width: 8px; height: 8px; border-radius: 50%; background: #4ade80; box-shadow: 0 0 6px #4ade80; }
+
+  /* ── Main ── */
+  .main {
+    margin-left: 240px;
+    flex: 1;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+  }
+
+  .topbar {
+    background: var(--white);
+    border-bottom: 1px solid var(--cream-dark);
+    padding: 0 32px;
+    height: 64px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    position: sticky;
+    top: 0;
+    z-index: 50;
+  }
+
+  .topbar h2 {
+    font-family: 'DM Serif Display', serif;
+    font-size: 22px;
+    color: var(--navy);
+  }
+
+  .topbar-actions { display: flex; gap: 10px; align-items: center; }
+
+  .content { padding: 32px; flex: 1; }
+
+  /* ── Buttons ── */
+  .btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 10px 20px;
+    border-radius: var(--radius-sm);
+    font-size: 14px;
+    font-weight: 500;
+    font-family: 'DM Sans', sans-serif;
+    cursor: pointer;
+    border: none;
+    transition: all 0.15s;
+  }
+
+  .btn-primary { background: var(--blue); color: var(--white); }
+  .btn-primary:hover { background: var(--blue-light); }
+  .btn-secondary { background: var(--cream-dark); color: var(--text); }
+  .btn-secondary:hover { background: #ddd8cc; }
+  .btn-gold { background: var(--gold); color: var(--navy); font-weight: 600; }
+  .btn-gold:hover { background: var(--gold-light); }
+  .btn-danger { background: var(--danger-bg); color: var(--danger); }
+  .btn-danger:hover { background: #fbd0d6; }
+  .btn-sm { padding: 6px 14px; font-size: 13px; }
+  .btn:disabled { opacity: 0.5; cursor: not-allowed; }
+
+  /* ── Cards ── */
+  .card {
+    background: var(--white);
+    border-radius: var(--radius);
+    box-shadow: var(--shadow);
+    padding: 24px;
+  }
+
+  .card-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 20px;
+  }
+
+  .card-title {
+    font-family: 'DM Serif Display', serif;
+    font-size: 18px;
+    color: var(--navy);
+  }
+
+  /* ── Grid ── */
+  .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+  .grid-3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; }
+
+  /* ── Stat cards ── */
+  .stat-card {
+    background: var(--white);
+    border-radius: var(--radius);
+    padding: 20px 24px;
+    box-shadow: var(--shadow);
+    border-left: 4px solid var(--blue);
+  }
+
+  .stat-card.gold { border-left-color: var(--gold); }
+  .stat-card.success { border-left-color: var(--success); }
+
+  .stat-label { font-size: 12px; text-transform: uppercase; letter-spacing: 0.05em; color: var(--text-light); font-weight: 500; }
+  .stat-value { font-family: 'DM Serif Display', serif; font-size: 36px; color: var(--navy); margin: 4px 0; }
+  .stat-sub { font-size: 13px; color: var(--text-mid); }
+
+  /* ── Badges ── */
+  .badge {
+    display: inline-flex;
+    align-items: center;
+    padding: 3px 10px;
+    border-radius: 20px;
+    font-size: 12px;
+    font-weight: 500;
+  }
+
+  .badge-blue { background: #dbeafe; color: #1e40af; }
+  .badge-gold { background: #fef3c7; color: #92400e; }
+  .badge-success { background: var(--success-bg); color: var(--success); }
+  .badge-danger { background: var(--danger-bg); color: var(--danger); }
+  .badge-gray { background: #f1f0f5; color: var(--text-mid); }
+
+  /* ── Forms ── */
+  .form-group { margin-bottom: 18px; }
+  .form-label { display: block; font-size: 13px; font-weight: 500; color: var(--text-mid); margin-bottom: 6px; }
+
+  .form-control {
+    width: 100%;
+    padding: 10px 14px;
+    border: 1.5px solid var(--cream-dark);
+    border-radius: var(--radius-sm);
+    font-size: 14px;
+    font-family: 'DM Sans', sans-serif;
+    color: var(--text);
+    background: var(--white);
+    transition: border-color 0.15s;
+    outline: none;
+  }
+
+  .form-control:focus { border-color: var(--blue); }
+  textarea.form-control { resize: vertical; min-height: 90px; }
+
+  select.form-control { cursor: pointer; }
+
+  /* ── Table ── */
+  .table-wrap { overflow-x: auto; }
+
+  table { width: 100%; border-collapse: collapse; }
+  th {
+    text-align: left;
+    padding: 10px 14px;
+    font-size: 12px;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    color: var(--text-light);
+    font-weight: 600;
+    border-bottom: 2px solid var(--cream-dark);
+  }
+
+  td {
+    padding: 13px 14px;
+    border-bottom: 1px solid var(--cream-dark);
+    font-size: 14px;
+    color: var(--text);
+    vertical-align: middle;
+  }
+
+  tr:last-child td { border-bottom: none; }
+  tr:hover td { background: var(--cream); }
+
+  /* ── Score bar ── */
+  .score-bar { display: flex; align-items: center; gap: 10px; }
+  .score-track { flex: 1; height: 6px; background: var(--cream-dark); border-radius: 3px; overflow: hidden; }
+  .score-fill { height: 100%; border-radius: 3px; transition: width 0.6s; }
+  .score-num { font-weight: 600; font-size: 15px; width: 36px; text-align: right; }
+
+  .score-high .score-fill { background: var(--success); }
+  .score-high .score-num { color: var(--success); }
+  .score-mid .score-fill { background: var(--gold); }
+  .score-mid .score-num { color: var(--warn); }
+  .score-low .score-fill { background: var(--danger); }
+  .score-low .score-num { color: var(--danger); }
+
+  /* ── Upload zone ── */
+  .upload-zone {
+    border: 2px dashed var(--cream-dark);
+    border-radius: var(--radius);
+    padding: 40px;
+    text-align: center;
+    cursor: pointer;
+    transition: all 0.2s;
+    background: var(--cream);
+  }
+
+  .upload-zone:hover, .upload-zone.drag { border-color: var(--blue); background: #eff4ff; }
+  .upload-zone .upload-icon { font-size: 40px; margin-bottom: 12px; }
+  .upload-zone p { color: var(--text-mid); font-size: 14px; }
+  .upload-zone strong { color: var(--blue); }
+
+  /* ── Modal ── */
+  .modal-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(15,31,61,0.55);
+    z-index: 200;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.2s;
+  }
+
+  .modal-overlay.open { opacity: 1; pointer-events: all; }
+
+  .modal {
+    background: var(--white);
+    border-radius: var(--radius);
+    width: 100%;
+    max-width: 560px;
+    max-height: 90vh;
+    overflow-y: auto;
+    box-shadow: var(--shadow-lg);
+    transform: translateY(20px);
+    transition: transform 0.2s;
+  }
+
+  .modal-overlay.open .modal { transform: translateY(0); }
+
+  .modal-header {
+    padding: 24px 28px 18px;
+    border-bottom: 1px solid var(--cream-dark);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+
+  .modal-header h3 { font-family: 'DM Serif Display', serif; font-size: 20px; color: var(--navy); }
+  .modal-close { background: none; border: none; font-size: 22px; color: var(--text-light); cursor: pointer; padding: 4px; }
+  .modal-body { padding: 24px 28px; }
+  .modal-footer { padding: 16px 28px 24px; display: flex; gap: 10px; justify-content: flex-end; }
+
+  /* ── Candidate detail ── */
+  .candidate-detail-modal .modal { max-width: 720px; }
+
+  .detail-section { margin-bottom: 22px; }
+  .parecer-card { border-radius: 10px; padding: 20px 24px; margin-bottom: 20px; border: 1.5px solid; }
+  .parecer-avancar { background: #f0faf3; border-color: #2d9e5f; }
+  .parecer-ressalvas { background: #fffbf0; border-color: #e6a817; }
+  .parecer-nao-avancar { background: #fef2f2; border-color: #dc3545; }
+  .parecer-incompleto { background: #f5f3ee; border-color: #ccc; }
+  .parecer-veredicto { font-size: 17px; font-weight: 700; margin-bottom: 6px; }
+  .parecer-justificativa { font-size: 13px; line-height: 1.7; }
+  .parecer-indicadores { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-top: 14px; }
+  .indicador { background: rgba(255,255,255,0.7); border-radius: 6px; padding: 8px 12px; }
+  .indicador-label { font-size: 10px; text-transform: uppercase; letter-spacing: .06em; color: var(--text-light); margin-bottom: 3px; }
+  .indicador-valor { font-size: 18px; font-weight: 700; }
+  .ind-green { color: #2d9e5f; }
+  .ind-yellow { color: #e6a817; }
+  .ind-red { color: #dc3545; }
+  .ind-gray { color: #aaa; }
+  .detail-section h4 { font-size: 13px; text-transform: uppercase; letter-spacing: 0.05em; color: var(--text-light); font-weight: 600; margin-bottom: 10px; }
+
+  .tag-list { display: flex; flex-wrap: wrap; gap: 6px; }
+  .tag { padding: 4px 12px; border-radius: 20px; font-size: 13px; }
+  .tag-met { background: var(--success-bg); color: var(--success); }
+  .tag-missing { background: var(--danger-bg); color: var(--danger); }
+  .tag-alert { background: var(--warn-bg); color: var(--warn); }
+
+  .interview-script {
+    background: var(--cream);
+    border-radius: var(--radius-sm);
+    padding: 16px;
+    font-size: 13px;
+    line-height: 1.8;
+    white-space: pre-wrap;
+    color: var(--text-mid);
+  }
+
+  /* ── Loading ── */
+  .loading {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 60px;
+    color: var(--text-light);
+    gap: 14px;
+  }
+
+  .spinner {
+    width: 36px;
+    height: 36px;
+    border: 3px solid var(--cream-dark);
+    border-top-color: var(--blue);
+    border-radius: 50%;
+    animation: spin 0.8s linear infinite;
+  }
+
+  @keyframes spin { to { transform: rotate(360deg); } }
+
+  .loading-text { font-size: 14px; }
+
+  /* ── Empty ── */
+  .empty {
+    text-align: center;
+    padding: 60px 20px;
+    color: var(--text-light);
+  }
+
+  .empty-icon { font-size: 48px; margin-bottom: 12px; }
+  .empty p { font-size: 15px; }
+
+  /* ── Alert ── */
+  .alert {
+    padding: 12px 16px;
+    border-radius: var(--radius-sm);
+    font-size: 14px;
+    margin-bottom: 16px;
+  }
+
+  .alert-success { background: var(--success-bg); color: var(--success); border-left: 3px solid var(--success); }
+  .alert-danger { background: var(--danger-bg); color: var(--danger); border-left: 3px solid var(--danger); }
+  .alert-info { background: #dbeafe; color: #1e40af; border-left: 3px solid #1e40af; }
+
+  /* ── Process card ── */
+  .process-card {
+    background: var(--white);
+    border-radius: var(--radius);
+    box-shadow: var(--shadow);
+    padding: 20px 24px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+    cursor: pointer;
+    transition: box-shadow 0.15s, transform 0.15s;
+    border: 2px solid transparent;
+  }
+
+  .process-card:hover { box-shadow: var(--shadow-lg); transform: translateY(-1px); }
+  .process-card.selected { border-color: var(--blue); }
+
+  .process-card-info { flex: 1; }
+  .process-card-title { font-family: 'DM Serif Display', serif; font-size: 17px; color: var(--navy); }
+  .process-card-meta { font-size: 13px; color: var(--text-mid); margin-top: 4px; }
+  .process-card-actions { display: flex; gap: 8px; align-items: center; }
+
+  .processes-list { display: flex; flex-direction: column; gap: 12px; }
+
+  /* ── Sections ── */
+  .section { display: none; }
+  .section.active { display: block; }
+
+  /* ── Tabs ── */
+  .tabs { display: flex; gap: 0; border-bottom: 2px solid var(--cream-dark); margin-bottom: 24px; }
+  .tab {
+    padding: 10px 20px;
+    font-size: 14px;
+    font-weight: 500;
+    color: var(--text-light);
+    cursor: pointer;
+    border-bottom: 2px solid transparent;
+    margin-bottom: -2px;
+    transition: all 0.15s;
+  }
+  .tab:hover { color: var(--text); }
+  .tab.active { color: var(--blue); border-bottom-color: var(--blue); }
+
+  /* ── Progress for upload ── */
+  .upload-progress {
+    background: var(--cream);
+    border-radius: var(--radius-sm);
+    padding: 16px;
+    margin-top: 16px;
+  }
+
+  .progress-track { height: 8px; background: var(--cream-dark); border-radius: 4px; overflow: hidden; margin: 10px 0; }
+  .progress-fill { height: 100%; background: var(--blue); border-radius: 4px; transition: width 0.4s; }
+  .progress-label { font-size: 13px; color: var(--text-mid); }
+
+  .mb-4 { margin-bottom: 16px; }
+  .mb-6 { margin-bottom: 24px; }
+  .mt-4 { margin-top: 16px; }
+  .flex { display: flex; }
+  .gap-2 { gap: 8px; }
+  .items-center { align-items: center; }
+  .justify-between { justify-content: space-between; }
+  .flex-1 { flex: 1; }
+  .text-sm { font-size: 13px; }
+  .text-mid { color: var(--text-mid); }
+  .font-serif { font-family: 'DM Serif Display', serif; }
+  .w-full { width: 100%; }
+</style>
+</head>
+<body>
+
+<!-- Tela de Login -->
+<div id="login-screen" style="display:none;position:fixed;inset:0;background:var(--navy);z-index:9999;align-items:center;justify-content:center;flex-direction:column">
+  <div style="background:white;border-radius:16px;padding:48px;width:100%;max-width:420px;box-shadow:0 24px 80px rgba(0,0,0,0.4)">
+    <div style="text-align:center;margin-bottom:32px">
+      <div style="font-family:'DM Serif Display',serif;font-size:28px;color:var(--navy)">RH <span style="color:var(--gold)">Assertivo</span></div>
+      <div style="font-size:12px;color:var(--text-light);margin-top:4px;letter-spacing:0.1em;text-transform:uppercase">O Boticário Niterói</div>
+    </div>
+    <div style="margin-bottom:16px">
+      <label style="font-size:13px;font-weight:500;color:var(--text-mid);display:block;margin-bottom:6px">Email</label>
+      <input id="login-email" type="email" placeholder="seu@email.com" style="width:100%;padding:12px 16px;border:1.5px solid var(--cream-dark);border-radius:8px;font-size:14px;font-family:'DM Sans',sans-serif;outline:none;transition:border 0.15s" onfocus="this.style.borderColor='var(--blue)'" onblur="this.style.borderColor='var(--cream-dark)'">
+    </div>
+    <div style="margin-bottom:24px">
+      <label style="font-size:13px;font-weight:500;color:var(--text-mid);display:block;margin-bottom:6px">Senha</label>
+      <input id="login-password" type="password" placeholder="••••••••" style="width:100%;padding:12px 16px;border:1.5px solid var(--cream-dark);border-radius:8px;font-size:14px;font-family:'DM Sans',sans-serif;outline:none;transition:border 0.15s" onfocus="this.style.borderColor='var(--blue)'" onblur="this.style.borderColor='var(--cream-dark)'">
+    </div>
+    <button id="login-btn" onclick="doLogin()" style="width:100%;padding:14px;background:var(--navy);color:white;border:none;border-radius:8px;font-size:15px;font-weight:600;font-family:'DM Sans',sans-serif;cursor:pointer">Entrar</button>
+    <div id="login-msg" style="margin-top:12px;text-align:center;font-size:13px;color:var(--danger)"></div>
+  </div>
+</div>
+
+<!-- App principal -->
+<div id="app-screen" style="display:none;width:100%;min-height:100vh">
+
+<!-- Sidebar -->
+<aside class="sidebar">
+  <div class="sidebar-logo">
+    <h1>RH <span>Assertivo</span></h1>
+    <p>Triagem Inteligente</p>
+  </div>
+  <nav class="sidebar-nav">
+    <button class="nav-item active" onclick="showSection('dashboard')">
+      <span class="icon">📊</span> Dashboard
+    </button>
+    <button class="nav-item" onclick="showSection('processes')">
+      <span class="icon">📋</span> Processos
+    </button>
+    <button class="nav-item" onclick="showSection('profiles')">
+      <span class="icon">📄</span> Perfis de Vaga
+    </button>
+    <button class="nav-item" onclick="showSection('talent')">
+      <span class="icon">⭐</span> Banco de Talentos
+    </button>
+  </nav>
+  <div class="sidebar-footer">
+    <div class="status-dot" style="flex-direction:column;align-items:flex-start;gap:8px">
+      <div style="display:flex;align-items:center;gap:8px"><span class="dot"></span><span id="user-name">Usuário</span></div>
+      <div style="font-size:11px;opacity:0.6" id="user-role">Operador</div>
+      <button onclick="doLogout()" style="margin-top:4px;background:rgba(255,255,255,0.1);border:none;color:rgba(255,255,255,0.6);padding:6px 12px;border-radius:6px;font-size:12px;cursor:pointer;font-family:'DM Sans',sans-serif">Sair</button>
+    </div>
+  </div>
+</aside>
+
+<!-- Main -->
+<main class="main">
+  <header class="topbar">
+    <h2 id="page-title">Dashboard</h2>
+    <div class="topbar-actions" id="topbar-actions"></div>
+  </header>
+
+  <div class="content">
+
+    <!-- DASHBOARD -->
+    <div id="section-dashboard" class="section active">
+      <div style="margin-bottom:1rem">
+        <h2 style="font-size:16px;font-weight:600;margin-bottom:2px">Dashboard de Acompanhamento</h2>
+        <p style="font-size:12px;color:var(--text-mid)" id="dash-subtitulo">O Boticário Niterói</p>
+      </div>
+
+      <!-- KPIs -->
+      <div class="grid-3 mb-6" id="stats-grid">
+        <div class="stat-card">
+          <div class="stat-label">Processos Abertos</div>
+          <div class="stat-value" id="stat-open">—</div>
+          <div class="stat-sub">em andamento</div>
+        </div>
+        <div class="stat-card gold">
+          <div class="stat-label">Candidatos Analisados</div>
+          <div class="stat-value" id="stat-candidates">—</div>
+          <div class="stat-sub" id="stat-candidates-s">total geral</div>
+        </div>
+        <div class="stat-card success">
+          <div class="stat-label">Banco de Talentos</div>
+          <div class="stat-value" id="stat-talent">—</div>
+          <div class="stat-sub">talentos salvos</div>
+        </div>
+      </div>
+
+      <!-- Score médio + Questionários -->
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:.75rem;margin-bottom:.75rem">
+        <div class="stat-card" style="border-left:3px solid var(--blue)">
+          <div class="stat-label">Score médio</div>
+          <div class="stat-value" id="stat-score">—</div>
+          <div class="stat-sub" id="stat-score-s">máx. 100 pontos</div>
+        </div>
+        <div class="stat-card" style="border-left:3px solid #534AB7">
+          <div class="stat-label">Questionários respondidos</div>
+          <div class="stat-value" id="stat-quiz">—</div>
+          <div class="stat-sub" id="stat-quiz-s">comportamental</div>
+        </div>
+      </div>
+
+      <!-- Distribuição de status + Indicadores comportamentais -->
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:.75rem;margin-bottom:.75rem">
+        <div class="card" style="margin-bottom:0">
+          <div class="card-header" style="margin-bottom:.75rem"><span class="card-title">Status dos candidatos</span></div>
+          <div id="dash-status-bars"><div class="loading"><div class="spinner"></div></div></div>
+        </div>
+        <div class="card" style="margin-bottom:0">
+          <div class="card-header" style="margin-bottom:.75rem"><span class="card-title">Indicadores comportamentais</span></div>
+          <div id="dash-comportamental"><div class="loading"><div class="spinner"></div></div></div>
+        </div>
+      </div>
+
+      <!-- Processos -->
+      <div class="card">
+        <div class="card-header">
+          <span class="card-title">Processos seletivos</span>
+          <button class="btn btn-primary btn-sm" onclick="showSection('processes')">Ver todos</button>
+        </div>
+        <div id="dashboard-processes">
+          <div class="loading"><div class="spinner"></div></div>
+        </div>
+      </div>
+
+      <!-- Ranking -->
+      <div class="card">
+        <div class="card-header"><span class="card-title">Top candidatos — ranking geral</span></div>
+        <div id="dash-ranking"><div class="loading"><div class="spinner"></div></div></div>
+      </div>
+    </div>
+
+    <!-- PROCESSOS -->
+    <div id="section-processes" class="section">
+      <div id="view-process-list">
+        <div class="processes-list" id="processes-list">
+          <div class="loading"><div class="spinner"></div></div>
+        </div>
+      </div>
+
+      <div id="view-process-detail" style="display:none">
+        <button class="btn btn-secondary btn-sm mb-6" onclick="backToProcessList()">← Voltar</button>
+        <div id="process-detail-content"></div>
+      </div>
+    </div>
+
+    <!-- PERFIS -->
+    <div id="section-profiles" class="section">
+      <div class="grid-2">
+        <div class="card">
+          <div class="card-header">
+            <span class="card-title">Novo Perfil de Vaga</span>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Nome do perfil</label>
+            <input type="text" class="form-control" id="profile-name" placeholder="Ex: Analista Financeiro Sênior">
+          </div>
+          <div class="form-group">
+            <label class="form-label">Documento do perfil <span style="color:var(--text-mid);font-weight:400">(recomendado — .docx ou .pdf)</span></label>
+            <div id="upload-area" style="border:1.5px dashed var(--cream-dark);border-radius:var(--radius-sm);padding:1rem;text-align:center;cursor:pointer;transition:all .15s" onclick="document.getElementById('profile-file').click()" ondragover="event.preventDefault();this.style.borderColor='var(--blue)'" ondrop="handleDrop(event)">
+              <input type="file" id="profile-file" accept=".docx,.doc,.pdf" style="display:none" onchange="handleFileSelect(this)">
+              <div id="upload-label" style="font-size:13px;color:var(--text-mid)">Clique ou arraste o arquivo aqui<br><span style="font-size:11px;opacity:.7">.doc, .docx ou .pdf</span></div>
+            </div>
+          </div>
+          <div class="form-group" style="margin-top:.25rem">
+            <label class="form-label" style="font-size:11px;color:var(--text-light)">Ou descreva manualmente</label>
+            <textarea class="form-control" id="profile-content" rows="4" placeholder="Descreva os requisitos, competências, experiências necessárias..."></textarea>
+          </div>
+          <div id="profile-msg"></div>
+          <button class="btn btn-primary w-full" onclick="saveProfile()">💾 Salvar Perfil</button>
+        </div>
+
+        <div class="card">
+          <div class="card-header">
+            <span class="card-title">Perfis Cadastrados</span>
+          </div>
+          <div id="profiles-list">
+            <div class="loading"><div class="spinner"></div></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- BANCO DE TALENTOS -->
+    <div id="section-talent" class="section">
+      <div class="card">
+        <div class="card-header">
+          <span class="card-title">Banco de Talentos</span>
+          <span class="text-sm text-mid">Candidatos com score ≥ 70 reprovados por ajuste de vaga</span>
+        </div>
+        <div id="talent-list">
+          <div class="loading"><div class="spinner"></div></div>
+        </div>
+      </div>
+    </div>
+
+  </div><!-- /content -->
+</main>
+
+<!-- Modal: Novo Processo -->
+<div class="modal-overlay" id="modal-new-process">
+  <div class="modal">
+    <div class="modal-header">
+      <h3>Novo Processo Seletivo</h3>
+      <button class="modal-close" onclick="closeModal('modal-new-process')">✕</button>
+    </div>
+    <div class="modal-body">
+      <div class="form-group">
+        <label class="form-label">Título da vaga</label>
+        <input type="text" class="form-control" id="np-title" placeholder="Ex: Analista de RH Sênior">
+      </div>
+      <div class="form-group">
+        <label class="form-label">Perfil de vaga</label>
+        <select class="form-control" id="np-profile">
+          <option value="">— Selecionar perfil —</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label class="form-label">Ajustes específicos para este processo <span class="text-mid">(opcional)</span></label>
+        <textarea class="form-control" id="np-adjustments" rows="4" placeholder="Ex: Preferência por candidatos com experiência no setor varejista. Nível de inglês avançado é diferencial."></textarea>
+      </div>
+      <div id="np-msg"></div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-secondary" onclick="closeModal('modal-new-process')">Cancelar</button>
+      <button class="btn btn-primary" onclick="createProcess()">Criar Processo</button>
+    </div>
+  </div>
+</div>
+
+<!-- Modal: Candidato detalhe -->
+<div class="modal-overlay candidate-detail-modal" id="modal-candidate">
+  <div class="modal">
+    <div class="modal-header">
+      <h3 id="modal-candidate-name">Candidato</h3>
+      <button class="modal-close" onclick="closeModal('modal-candidate')">✕</button>
+    </div>
+    <div class="modal-body" id="modal-candidate-body"></div>
+    <div class="modal-footer" id="modal-candidate-footer"></div>
+  </div>
+</div>
+
+<!-- Modal: Encerrar processo -->
+<div class="modal-overlay" id="modal-close-process">
+  <div class="modal">
+    <div class="modal-header">
+      <h3>Encerrar Processo</h3>
+      <button class="modal-close" onclick="closeModal('modal-close-process')">✕</button>
+    </div>
+    <div class="modal-body">
+      <div class="form-group">
+        <label class="form-label">Desfecho</label>
+        <select class="form-control" id="cp-outcome">
+          <option value="contratado">Contratado</option>
+          <option value="cancelado">Cancelado</option>
+          <option value="sem_candidato">Sem candidato adequado</option>
+          <option value="suspenso">Suspenso temporariamente</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label class="form-label">Observações</label>
+        <textarea class="form-control" id="cp-reason" rows="3" placeholder="Detalhes sobre o encerramento..."></textarea>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-secondary" onclick="closeModal('modal-close-process')">Cancelar</button>
+      <button class="btn btn-danger" onclick="closeProcessConfirm()">Encerrar Processo</button>
+    </div>
+  </div>
+</div>
+
+<script>
+// ── Dependências para extração de texto no browser ────────────
+// pdf.js via CDN (carregado dinamicamente quando necessário)
+// mammoth.js via CDN para .docx
+
+const API = 'https://rh-assertivo-api.choil-plosk.workers.dev';
+let currentProcessId = null;
+let currentCandidateId = null;
+let closeProcessId = null;
+let authToken = localStorage.getItem('rh_token') || null;
+let currentUser = JSON.parse(localStorage.getItem('rh_user') || 'null');
+
+// ── Login ─────────────────────────────────────────────────────
+function checkAuth() {
+  if (!authToken) {
+    document.getElementById('login-screen').style.display = 'flex';
+    document.getElementById('app-screen').style.display = 'none';
+  } else {
+    document.getElementById('login-screen').style.display = 'none';
+    document.getElementById('app-screen').style.display = 'flex';
+    if (currentUser) {
+      document.getElementById('user-name').textContent = currentUser.name;
+      document.getElementById('user-role').textContent = currentUser.role === 'diretor' ? 'Diretor' : 'Operador';
+    }
+    loadDashboard();
+  }
+}
+
+async function doLogin() {
+  const email = document.getElementById('login-email').value.trim();
+  const password = document.getElementById('login-password').value;
+  const msg = document.getElementById('login-msg');
+  const btn = document.getElementById('login-btn');
+
+  if (!email || !password) { msg.textContent = 'Preencha email e senha.'; return; }
+  btn.disabled = true;
+  btn.textContent = 'Entrando...';
+  msg.textContent = '';
+
+  try {
+    const r = await fetch(API + '/auth/login', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ email, password })
+    });
+    const data = await r.json();
+    if (!r.ok) { msg.textContent = data.error || 'Erro ao entrar.'; btn.disabled = false; btn.textContent = 'Entrar'; return; }
+    authToken = data.token;
+    currentUser = data.user;
+    localStorage.setItem('rh_token', authToken);
+    localStorage.setItem('rh_user', JSON.stringify(currentUser));
+    checkAuth();
+  } catch(e) {
+    msg.textContent = 'Erro de conexão.';
+    btn.disabled = false;
+    btn.textContent = 'Entrar';
+  }
+}
+
+function doLogout() {
+  authToken = null;
+  currentUser = null;
+  localStorage.removeItem('rh_token');
+  localStorage.removeItem('rh_user');
+  checkAuth();
+}
+
+// Enter no campo de senha faz login
+document.addEventListener('DOMContentLoaded', () => {
+  document.getElementById('login-password')?.addEventListener('keydown', e => {
+    if (e.key === 'Enter') doLogin();
+  });
+  checkAuth();
+});
+
+// ── Navigation ──────────────────────────────────────────────────────────────
+
+function showSection(name) {
+  document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+  document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+  document.getElementById('section-' + name).classList.add('active');
+  document.querySelectorAll('.nav-item').forEach(n => {
+    if (n.textContent.trim().toLowerCase().includes(
+      name === 'dashboard' ? 'dashboard' :
+      name === 'processes' ? 'processo' :
+      name === 'profiles' ? 'perfis' : 'talento'
+    )) n.classList.add('active');
+  });
+
+  const titles = { dashboard: 'Dashboard', processes: 'Processos Seletivos', profiles: 'Perfis de Vaga', talent: 'Banco de Talentos' };
+  document.getElementById('page-title').textContent = titles[name];
+
+  const actions = document.getElementById('topbar-actions');
+  actions.innerHTML = '';
+  if (name === 'processes') {
+    actions.innerHTML = '<button class="btn btn-gold" onclick="openNewProcess()">+ Novo Processo</button>';
+  }
+
+  if (name === 'dashboard') loadDashboard();
+  if (name === 'processes') loadProcesses();
+  if (name === 'profiles') loadProfiles();
+  if (name === 'talent') loadTalent();
+}
+
+// ── API helpers ──────────────────────────────────────────────────────────────
+
+async function api(path, opts = {}) {
+  const headers = { 'Content-Type': 'application/json', ...(opts.headers || {}) };
+  if (authToken) headers['Authorization'] = 'Bearer ' + authToken;
+  const r = await fetch(API + path, { ...opts, headers });
+  if (r.status === 401) { doLogout(); throw new Error('Sessão expirada.'); }
+  if (!r.ok) throw new Error(await r.text());
+  return r.json();
+}
+
+// ── Dashboard ────────────────────────────────────────────────────────────────
+
+function scoreColor(s){
+  if(s>=70)return'var(--success)';
+  if(s>=50)return'var(--warn)';
+  return'var(--danger)';
+}
+
+async function loadDashboard() {
+  try {
+    document.getElementById('dash-subtitulo').textContent =
+      'O Boticário Niterói · ' + new Date().toLocaleDateString('pt-BR');
+
+    const [processes, talent] = await Promise.all([
+      api('/processes'),
+      api('/talent-bank')
+    ]);
+
+    // Carrega todos os candidatos
+    const allCandidates = [];
+    for (const p of processes) {
+      const cands = await api(`/processes/${p.id}/candidates`);
+      if (cands) allCandidates.push(...cands.map(c => ({...c, process_title: p.title})));
+    }
+
+    // KPIs básicos
+    const open = processes.filter(p => p.status !== 'encerrado').length;
+    const scores = allCandidates.map(c => c.score).filter(s => s > 0);
+    const scoreMedio = scores.length ? Math.round(scores.reduce((a,b)=>a+b,0)/scores.length) : 0;
+
+    document.getElementById('stat-open').textContent = open;
+    document.getElementById('stat-candidates').textContent = allCandidates.length;
+    document.getElementById('stat-candidates-s').textContent = scores.length ? `${scores.length} com score` : 'total geral';
+    document.getElementById('stat-talent').textContent = talent ? talent.length : 0;
+    document.getElementById('stat-score').innerHTML = scores.length ? `${scoreMedio}<span style="font-size:14px;font-weight:400;opacity:.6">/100</span>` : '—';
+    document.getElementById('stat-score-s').textContent = scores.length ? `média de ${scores.length} analisados` : 'máx. 100 pontos';
+
+    // Questionários
+    let totalQuiz = 0;
+    const allQuizScores = [];
+    for (const p of processes) {
+      try {
+        const pend = await api(`/questionario/processo/${p.id}/pendentes`);
+        if (pend) {
+          const respondidos = pend.filter(x => x.respondido);
+          totalQuiz += respondidos.length;
+          for (const c of respondidos) {
+            const resp = await api(`/questionario/${c.id}/respostas`);
+            if (resp && resp.respondido) allQuizScores.push(resp.scores);
+          }
+        }
+      } catch {}
+    }
+    document.getElementById('stat-quiz').textContent = totalQuiz || '—';
+    document.getElementById('stat-quiz-s').textContent = totalQuiz
+      ? `de ${allCandidates.length} candidatos`
+      : 'nenhum ainda';
+
+    // Barras de status
+    const ap = allCandidates.filter(c=>c.status==='aprovado'||c.status==='contratado').length;
+    const pe = allCandidates.filter(c=>c.status==='pendente').length;
+    const rp = allCandidates.filter(c=>c.status==='reprovado').length;
+    const tot = allCandidates.length || 1;
+    document.getElementById('dash-status-bars').innerHTML = allCandidates.length ? `
+      ${[['Aprovados', ap, 'var(--success)', 'var(--success-bg)'],
+         ['Pendentes', pe, 'var(--blue)', '#E6F1FB'],
+         ['Reprovados', rp, 'var(--danger)', 'var(--danger-bg)']].map(([l,v,c,bg])=>`
+        <div style="margin-bottom:10px">
+          <div style="display:flex;justify-content:space-between;font-size:12px;margin-bottom:4px">
+            <span style="color:var(--text-mid)">${l}</span>
+            <span style="font-weight:600;color:${c}">${v} (${Math.round(v/tot*100)}%)</span>
+          </div>
+          <div style="height:6px;background:#e2e2df;border-radius:3px;overflow:hidden">
+            <div style="height:100%;width:${Math.round(v/tot*100)}%;background:${c};border-radius:3px"></div>
+          </div>
+        </div>`).join('')}` : '<div class="text-sm text-mid">Nenhum candidato ainda.</div>';
+
+    // Indicadores comportamentais
+    const compEl = document.getElementById('dash-comportamental');
+    if (allQuizScores.length) {
+      const avg = k => Math.round(allQuizScores.reduce((s,q)=>s+(q[k]||0),0)/allQuizScores.length);
+      compEl.innerHTML = `
+        <div style="font-size:11px;color:var(--text-mid);margin-bottom:8px">${allQuizScores.length} questionário(s)</div>
+        ${[['Resiliência',avg('resiliencia'),'var(--success)'],
+           ['Confiabilidade',avg('confianca'),'var(--blue)'],
+           ['Crescimento',avg('crescimento'),'#534AB7'],
+           ['⚠ Mosca morta',avg('mosca'),'var(--danger)'],
+           ['⚠ Deslealdade',avg('traidor'),'#D85A30'],
+           ['⚠ Turnover',avg('turnover'),'var(--warn)']].map(([l,v,c])=>`
+          <div style="display:flex;align-items:center;gap:6px;margin-bottom:7px">
+            <span style="font-size:11px;color:var(--text-mid);min-width:110px">${l}</span>
+            <div style="flex:1;height:5px;background:#e2e2df;border-radius:3px;overflow:hidden">
+              <div style="height:100%;width:${v}%;background:${c};border-radius:3px"></div>
+            </div>
+            <span style="font-size:11px;font-weight:600;color:${c};min-width:28px;text-align:right">${v}%</span>
+          </div>`).join('')}`;
+    } else {
+      compEl.innerHTML = '<div class="text-sm text-mid">Aguardando questionários respondidos.</div>';
+    }
+
+    // Tabela de processos
+    const procEl = document.getElementById('dashboard-processes');
+    if (!processes.length) {
+      procEl.innerHTML = '<div class="empty"><div class="empty-icon">📋</div><p>Nenhum processo ainda. Crie o primeiro!</p></div>';
+    } else {
+      procEl.innerHTML = `<div class="table-wrap"><table>
+        <thead><tr><th>Vaga</th><th>Status</th><th>Candidatos</th><th>Score médio</th><th>Criado em</th></tr></thead>
+        <tbody>${processes.map(p => {
+          const cands = allCandidates.filter(c=>c.process_id===p.id);
+          const sc = cands.length ? Math.round(cands.reduce((s,c)=>s+c.score,0)/cands.length) : 0;
+          return `<tr style="cursor:pointer" onclick="openProcess(${p.id})">
+            <td><strong>${p.title}</strong></td>
+            <td>${statusBadge(p.status)}</td>
+            <td>${p.candidate_count}</td>
+            <td>${sc ? `<span style="font-weight:600;color:${scoreColor(sc)}">${sc}</span>` : '—'}</td>
+            <td>${fmtDate(p.created_at)}</td>
+          </tr>`;}).join('')}
+        </tbody></table></div>`;
+    }
+
+    // Ranking top 8
+    const top = [...allCandidates].sort((a,b)=>b.score-a.score).slice(0,8);
+    const rankEl = document.getElementById('dash-ranking');
+    if (top.length) {
+      rankEl.innerHTML = top.map((c,i) => {
+        const ini = c.name.split(' ').slice(0,2).map(n=>n[0]||'').join('').toUpperCase()||'?';
+        const sc = scoreColor(c.score);
+        return `<div style="display:flex;align-items:center;gap:10px;padding:8px 0;border-bottom:0.5px solid var(--cream-dark)">
+          <span style="font-size:13px;font-weight:600;color:var(--text-light);min-width:18px">${i+1}</span>
+          <div style="width:32px;height:32px;border-radius:50%;background:#E6F1FB;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:600;color:var(--blue);flex-shrink:0">${ini}</div>
+          <div style="flex:1">
+            <div style="font-size:13px;font-weight:500">${c.name||c.filename}</div>
+            <div style="font-size:11px;color:var(--text-mid)">${c.process_title}</div>
+          </div>
+          <span style="font-size:15px;font-weight:700;color:${sc}">${Math.round(c.score)}</span>
+          ${statusBadge(c.status)}
+        </div>`;}).join('');
+    } else {
+      rankEl.innerHTML = '<div class="text-sm text-mid">Nenhum candidato analisado ainda.</div>';
+    }
+
+  } catch (e) {
+    document.getElementById('dashboard-processes').innerHTML = `<div class="alert alert-danger">Erro ao carregar: ${e.message}</div>`;
+  }
+}
+
+// ── Processes ────────────────────────────────────────────────────────────────
+
+async function loadProcesses() {
+  const el = document.getElementById('processes-list');
+  el.innerHTML = '<div class="loading"><div class="spinner"></div><span class="loading-text">Carregando...</span></div>';
+  try {
+    const processes = await api('/processes');
+    if (!processes.length) {
+      el.innerHTML = '<div class="empty"><div class="empty-icon">📋</div><p>Nenhum processo. Clique em "Novo Processo" para começar.</p></div>';
+      return;
+    }
+    el.innerHTML = processes.map(p => `
+      <div class="process-card" onclick="openProcess(${p.id})">
+        <div class="process-card-info">
+          <div class="process-card-title">${p.title}</div>
+          <div class="process-card-meta">${p.candidate_count} candidato(s) · Criado em ${fmtDate(p.created_at)}</div>
+        </div>
+        <div class="process-card-actions">
+          ${statusBadge(p.status)}
+        </div>
+      </div>`).join('');
+  } catch(e) {
+    el.innerHTML = `<div class="alert alert-danger">Erro: ${e.message}</div>`;
+  }
+}
+
+async function openProcess(id) {
+  currentProcessId = id;
+  document.getElementById('view-process-list').style.display = 'none';
+  document.getElementById('view-process-detail').style.display = 'block';
+  document.getElementById('topbar-actions').innerHTML = '<button class="btn btn-gold" onclick="openNewProcess()">+ Novo Processo</button>';
+
+  const el = document.getElementById('process-detail-content');
+  el.innerHTML = '<div class="loading"><div class="spinner"></div><span class="loading-text">Carregando processo...</span></div>';
+
+  try {
+    const [proc, candidates] = await Promise.all([
+      api(`/processes/${id}`),
+      api(`/processes/${id}/candidates`)
+    ]);
+
+    renderProcessDetail(proc, candidates);
+    // Verifica se há candidatos aguardando análise e mostra o botão
+    setTimeout(() => checkPendingAnalysis(), 100);
+  } catch(e) {
+    el.innerHTML = `<div class="alert alert-danger">Erro: ${e.message}</div>`;
+  }
+}
+
+function renderProcessDetail(proc, candidates) {
+  const el = document.getElementById('process-detail-content');
+  const isOpen = proc.status !== 'encerrado';
+
+  el.innerHTML = `
+    <div class="flex items-center justify-between mb-6">
+      <div>
+        <h2 class="font-serif" style="font-size:26px;color:var(--navy)">${proc.title}</h2>
+        <div class="text-sm text-mid mt-4">${statusBadge(proc.status)} · ${candidates.length} candidato(s) · Criado em ${fmtDate(proc.created_at)}</div>
+      </div>
+      ${isOpen ? `<button class="btn btn-danger btn-sm" onclick="openCloseProcess(${proc.id})">Encerrar Processo</button>` : ''}
+    </div>
+
+    ${proc.profile_adjustments ? `<div class="alert alert-info mb-6">📌 Ajustes: ${proc.profile_adjustments}</div>` : ''}
+
+    ${isOpen ? `
+    <div class="card mb-6">
+      <div class="card-header"><span class="card-title">📤 Enviar Currículos</span></div>
+      <div class="upload-zone" id="upload-zone" onclick="document.getElementById('file-input').click()" 
+           ondragover="event.preventDefault();this.classList.add('drag')"
+           ondragleave="this.classList.remove('drag')"
+           ondrop="handleDrop(event)">
+        <div class="upload-icon">📂</div>
+        <p><strong>Clique para selecionar</strong> ou arraste os arquivos aqui</p>
+        <p class="text-sm mt-4" style="margin-top:6px">Formatos: .doc, .docx, .pdf · Múltiplos arquivos permitidos</p>
+      </div>
+      <input type="file" id="file-input" multiple accept=".doc,.docx,.pdf" style="display:none" onchange="handleFiles(this.files)">
+      <div id="upload-progress" style="display:none">
+        <div class="upload-progress">
+          <div class="progress-label" id="progress-label">Enviando arquivos...</div>
+          <div class="progress-track"><div class="progress-fill" id="progress-fill" style="width:0%"></div></div>
+          <div class="text-sm text-mid" id="progress-detail"></div>
+        </div>
+      </div>
+      <div id="analyze-section" style="display:none;margin-top:16px;padding-top:16px;border-top:1px solid var(--cream-dark)">
+        <div style="display:flex;align-items:center;justify-content:space-between;gap:16px">
+          <div>
+            <div style="font-weight:600;color:var(--navy)" id="pending-count-label"></div>
+            <div style="font-size:13px;color:var(--text-mid)">Revise a lista abaixo e clique em Analisar quando estiver pronto.</div>
+          </div>
+          <button class="btn btn-gold" onclick="startAnalysis()" id="btn-analyze">
+            🤖 Analisar com IA
+          </button>
+        </div>
+      </div>
+    </div>` : `<div class="alert alert-info mb-6">Este processo foi encerrado. Desfecho: <strong>${proc.outcome}</strong>${proc.outcome_reason ? ' — ' + proc.outcome_reason : ''}</div>`}
+
+    <div class="card">
+      <div class="card-header">
+        <span class="card-title">🏆 Ranking de Candidatos</span>
+        <span class="text-sm text-mid">${candidates.length} candidato(s)</span>
+      </div>
+      <div id="candidates-table">${renderCandidatesTable(candidates, isOpen)}</div>
+    </div>
+  `;
+}
+
+function renderCandidatesTable(candidates, isOpen) {
+  if (!candidates.length) return '<div class="empty"><div class="empty-icon">👥</div><p>Nenhum currículo enviado ainda.</p></div>';
+
+  return `<div class="table-wrap"><table>
+    <thead><tr>
+      <th>#</th><th>Candidato</th><th>Score</th><th>Status</th><th>Ações</th>
+    </tr></thead>
+    <tbody>${candidates.map(c => {
+      const sc = scoreClass(c.score);
+      return `<tr>
+        <td><strong>${c.ranking_position}</strong></td>
+        <td>
+          <div><strong>${c.name || c.filename}</strong></div>
+          ${c.email ? `<div class="text-sm text-mid">${c.email}</div>` : ''}
+        </td>
+        <td>
+          <div class="score-bar ${sc}">
+            <div class="score-track"><div class="score-fill" style="width:${c.score}%"></div></div>
+            <div class="score-num">${c.status === 'aguardando_analise' ? '—' : Math.round(c.score) + '/100'}</div>
+          </div>
+        </td>
+        <td>${candidateStatusBadge(c.status)}</td>
+        <td>
+          <div class="flex gap-2">
+            ${c.status === 'aguardando_analise' 
+              ? `<span style="font-size:12px;color:var(--text-light)">⏳ Aguardando análise</span>`
+              : `<button class="btn btn-secondary btn-sm" onclick="openCandidate(${c.id})">Ver detalhes</button>`
+            }
+            ${isOpen && c.status === 'pendente' ? `
+              <button class="btn btn-sm" style="background:var(--success-bg);color:var(--success)" onclick="updateStatus(${c.id},'aprovado')">✓</button>
+              <button class="btn btn-sm" style="background:var(--danger-bg);color:var(--danger)" onclick="updateStatus(${c.id},'reprovado')">✗</button>
+            ` : ''}
+          </div>
+        </td>
+      </tr>`;
+    }).join('')}</tbody>
+  </table></div>`;
+}
+
+function backToProcessList() {
+  document.getElementById('view-process-list').style.display = '';
+  document.getElementById('view-process-detail').style.display = 'none';
+  currentProcessId = null;
+  loadProcesses();
+}
+
+// ── Create process ───────────────────────────────────────────────────────────
+
+async function openNewProcess() {
+  document.getElementById('np-msg').innerHTML = '';
+  document.getElementById('np-title').value = '';
+  document.getElementById('np-adjustments').value = '';
+
+  const sel = document.getElementById('np-profile');
+  sel.innerHTML = '<option value="">— Selecionar perfil (opcional) —</option>';
+  const profiles = await api('/profiles/');
+  profiles.forEach(p => {
+    sel.innerHTML += `<option value="${p.id}">${p.name}</option>`;
+  });
+
+  openModal('modal-new-process');
+}
+
+async function createProcess() {
+  const title = document.getElementById('np-title').value.trim();
+  if (!title) { document.getElementById('np-msg').innerHTML = '<div class="alert alert-danger">Informe o título da vaga.</div>'; return; }
+
+  const body = {
+    title,
+    profile_id: document.getElementById('np-profile').value ? parseInt(document.getElementById('np-profile').value) : null,
+    profile_adjustments: document.getElementById('np-adjustments').value.trim()
+  };
+
+  try {
+    const proc = await api('/processes/', { method: 'POST', body: JSON.stringify(body) });
+    closeModal('modal-new-process');
+    showSection('processes');
+    openProcess(proc.id);
+  } catch(e) {
+    document.getElementById('np-msg').innerHTML = `<div class="alert alert-danger">Erro: ${e.message}</div>`;
+  }
+}
+
+// ── Upload ───────────────────────────────────────────────────────────────────
+
+function handleDrop(e) {
+  e.preventDefault();
+  document.getElementById('upload-zone').classList.remove('drag');
+  handleFiles(e.dataTransfer.files);
+}
+
+async function handleFiles(files) {
+  if (!files.length) return;
+
+  const zone = document.getElementById('upload-zone');
+  const progressEl = document.getElementById('upload-progress');
+  const fill = document.getElementById('progress-fill');
+  const label = document.getElementById('progress-label');
+  const detail = document.getElementById('progress-detail');
+
+  zone.style.display = 'none';
+  progressEl.style.display = 'block';
+  label.textContent = `Extraindo texto de ${files.length} arquivo(s)...`;
+  detail.textContent = 'Lendo currículos no browser.';
+  fill.style.width = '30%';
+
+  try {
+    // Extrai texto de cada arquivo no browser
+    const candidates = [];
+    for (let i = 0; i < files.length; i++) {
+      const f = files[i];
+      label.textContent = `Lendo ${i+1}/${files.length}: ${f.name}`;
+      const text = await extractTextFromFile(f);
+      candidates.push({ filename: f.name, text });
+    }
+
+    fill.style.width = '60%';
+    label.textContent = `Enviando ${candidates.length} currículo(s)...`;
+    detail.textContent = 'Salvando currículos no sistema.';
+
+    const r = await fetch(`${API}/processes/${currentProcessId}/upload`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + authToken },
+      body: JSON.stringify({ candidates })
+    });
+    if (!r.ok) throw new Error(await r.text());
+    const data = await r.json();
+    fill.style.width = '100%';
+    const temDuplicatas = data.skipped && data.skipped.length > 0;
+    label.textContent = `✅ ${data.uploaded} currículo(s) recebido(s)` + (temDuplicatas ? ` · ⚠️ ${data.skipped.length} duplicado(s) ignorado(s)` : '');
+    detail.textContent = temDuplicatas
+      ? `Ignorados (já existem neste processo): ${data.skipped.join(', ')}`
+      : 'Clique em "Analisar com IA" quando estiver pronto.';
+    setTimeout(() => {
+      progressEl.style.display = 'none';
+      zone.style.display = '';
+      checkPendingAnalysis();
+      openProcess(currentProcessId);
+    }, temDuplicatas ? 3000 : 800);
+  } catch(e) {
+    fill.style.width = '0%';
+    fill.style.background = 'var(--danger)';
+    label.textContent = '❌ Erro ao enviar arquivos';
+    detail.textContent = e.message;
+  }
+}
+
+async function checkPendingAnalysis() {
+  try {
+    const candidates = await api(`/processes/${currentProcessId}/candidates`);
+    const pending = candidates.filter(c => c.status === 'aguardando_analise');
+    const section = document.getElementById('analyze-section');
+    const label = document.getElementById('pending-count-label');
+    if (!section) return;
+    if (pending.length > 0) {
+      section.style.display = 'block';
+      label.textContent = `${pending.length} currículo(s) prontos para análise`;
+    } else {
+      section.style.display = 'none';
+    }
+  } catch(e) {}
+}
+
+async function startAnalysis() {
+  const btn = document.getElementById('btn-analyze');
+  if (!btn) return;
+  btn.disabled = true;
+  btn.textContent = '⏳ Analisando...';
+
+  const progressEl = document.getElementById('upload-progress');
+  const fill = document.getElementById('progress-fill');
+  const label = document.getElementById('progress-label');
+  const detail = document.getElementById('progress-detail');
+
+  if (progressEl) {
+    progressEl.style.display = 'block';
+    label.textContent = 'A IA está analisando os currículos...';
+    detail.textContent = 'Isso pode levar alguns minutos dependendo da quantidade.';
+    fill.style.width = '15%';
+    let prog = 15;
+    const interval = setInterval(() => {
+      prog = Math.min(prog + 4, 85);
+      fill.style.width = prog + '%';
+    }, 2000);
+
+    try {
+      const r = await fetch(`${API}/processes/${currentProcessId}/analyze`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + authToken }
+      });
+      clearInterval(interval);
+      if (!r.ok) throw new Error(await r.text());
+      const data = await r.json();
+      fill.style.width = '100%';
+      label.textContent = `✅ ${data.analyzed} currículo(s) analisado(s) com sucesso!`;
+      detail.textContent = 'Atualizando ranking...';
+      setTimeout(() => {
+        progressEl.style.display = 'none';
+        openProcess(currentProcessId);
+      }, 1000);
+    } catch(e) {
+      clearInterval(interval);
+      fill.style.background = 'var(--danger)';
+      label.textContent = '❌ Erro na análise';
+      detail.textContent = e.message;
+      if (btn) { btn.disabled = false; btn.textContent = '🤖 Analisar com IA'; }
+    }
+  }
+}
+
+// ── Candidate detail ─────────────────────────────────────────────────────────
+
+async function openCandidate(candidateId) {
+  currentCandidateId = candidateId;
+  const candidates = await api(`/processes/${currentProcessId}/candidates`);
+  const c = candidates.find(x => x.id === candidateId);
+  if (!c) return;
+
+  document.getElementById('modal-candidate-name').textContent = c.name || c.filename;
+
+  // Formata timestamp da análise
+  let analyzedLabel = '';
+  if (c.analyzed_at) {
+    const d = new Date(c.analyzed_at);
+    const fmt = d.toLocaleString('pt-BR', { day:'2-digit', month:'2-digit', year:'numeric', hour:'2-digit', minute:'2-digit' });
+    analyzedLabel = `<div style="font-size:11px;color:var(--text-light);margin-top:6px">🕐 Analisado em ${fmt}</div>`;
+  }
+
+  const sc = scoreClass(c.score);
+  // Carrega questionário para montar parecer integrado
+  let quizData = null;
+  try {
+    const qr = await api(`/questionario/${c.id}/respostas`);
+    if (qr && qr.respondido) quizData = qr;
+  } catch(e) {}
+
+  // Monta parecer integrado
+  const parecerHtml = montarParecerIntegrado(c, quizData);
+
+  document.getElementById('modal-candidate-body').innerHTML = `
+    ${parecerHtml}
+
+    <div class="detail-section">
+      <div class="flex items-center gap-2 mb-4" style="gap:16px">
+        <div class="score-bar ${sc}" style="flex:1">
+          <div class="score-track"><div class="score-fill" style="width:${c.score}%"></div></div>
+          <div class="score-num" style="font-size:24px">${Math.round(c.score)}<span style="font-size:14px;font-weight:400;opacity:.6">/100</span></div>
+        </div>
+        ${candidateStatusBadge(c.status)}
+      </div>
+      ${c.email ? `<div class="text-sm text-mid">📧 ${c.email}</div>` : ''}
+      ${c.phone ? `<div class="text-sm text-mid">📞 ${c.phone}</div>` : ''}
+      ${analyzedLabel}
+    </div>
+
+    <div class="detail-section">
+      <h4>Resumo da IA</h4>
+      <p style="font-size:14px;line-height:1.7;color:var(--text-mid)">${c.ai_summary || '—'}</p>
+    </div>
+
+    ${c.requirements_met.length ? `
+    <div class="detail-section">
+      <h4>✅ Requisitos Atendidos</h4>
+      <div class="tag-list">${c.requirements_met.map(r => `<span class="tag tag-met">${r}</span>`).join('')}</div>
+    </div>` : ''}
+
+    ${c.requirements_missing.length ? `
+    <div class="detail-section">
+      <h4>❌ Requisitos Faltantes</h4>
+      <div class="tag-list">${c.requirements_missing.map(r => `<span class="tag tag-missing">${r}</span>`).join('')}</div>
+    </div>` : ''}
+
+    ${c.alerts.length ? `
+    <div class="detail-section">
+      <h4>⚠️ Alertas</h4>
+      <div class="tag-list">${c.alerts.map(a => `<span class="tag tag-alert">${a}</span>`).join('')}</div>
+    </div>` : ''}
+
+    ${c.interview_script ? `
+    <div class="detail-section">
+      <h4>🎤 Roteiro de Entrevista</h4>
+      <div class="interview-script">${c.interview_script}</div>
+    </div>` : ''}
+
+    <div class="detail-section" id="questionario-status-${c.id}">
+      <h4>📋 Questionário Comportamental</h4>
+      <div id="qs-content-${c.id}">
+        <p style="font-size:13px;color:var(--text-mid)">Verificando status...</p>
+      </div>
+    </div>
+  `;
+
+  // Carrega status do questionário
+  carregarStatusQuestionario(c.id);
+
+  const footer = document.getElementById('modal-candidate-footer');
+  const btnTalent = c.in_talent_bank
+    ? `<button class="btn btn-secondary" disabled style="opacity:.5;cursor:default">⭐ No banco de talentos</button>`
+    : `<button class="btn btn-secondary" style="background:var(--warn-bg);color:var(--warn);border-color:var(--warn)" onclick="addToTalentBank(${c.id})">⭐ Banco de talentos</button>`;
+
+  const btnPrint = `<button class="btn btn-secondary btn-sm" onclick="printCandidate(${c.id})" title="Imprimir">🖨️ Imprimir</button>`;
+  const btnWhatsapp = `<button class="btn btn-secondary btn-sm" style="background:#e8f7ee;color:#1a7a4a" onclick="shareWhatsapp(${c.id})" title="Enviar por WhatsApp">💬 WhatsApp</button>`;
+
+  if (c.status === 'pendente') {
+    footer.innerHTML = `
+      <button class="btn btn-secondary" onclick="closeModal('modal-candidate')">Fechar</button>
+      ${btnPrint} ${btnWhatsapp}
+      ${btnTalent}
+      <button class="btn btn-danger" onclick="updateStatus(${c.id},'reprovado');closeModal('modal-candidate')">Reprovar</button>
+      <button class="btn btn-primary" onclick="updateStatus(${c.id},'aprovado');closeModal('modal-candidate')">Aprovar</button>
+    `;
+  } else {
+    footer.innerHTML = `
+      <button class="btn btn-secondary" onclick="closeModal('modal-candidate')">Fechar</button>
+      ${btnPrint} ${btnWhatsapp}
+      ${btnTalent}
+    `;
+  }
+
+  openModal('modal-candidate');
+}
+
+// ── Imprimir candidato ───────────────────────────────────────────────────────
+
+async function printCandidate(candidateId) {
+  const candidates = await api(`/processes/${currentProcessId}/candidates`);
+  const c = candidates.find(x => x.id === candidateId);
+  if (!c) return;
+
+  const analyzedStr = c.analyzed_at
+    ? new Date(c.analyzed_at).toLocaleString('pt-BR', { day:'2-digit', month:'2-digit', year:'numeric', hour:'2-digit', minute:'2-digit' })
+    : '—';
+
+  const win = window.open('', '_blank');
+  win.document.write(`<!DOCTYPE html><html><head>
+    <meta charset="UTF-8">
+    <title>Parecer — ${c.name}</title>
+    <style>
+      body { font-family: Arial, sans-serif; max-width: 800px; margin: 40px auto; color: #222; font-size: 14px; line-height: 1.6; }
+      h1 { font-size: 22px; color: #0f1f3d; margin-bottom: 4px; }
+      .meta { font-size: 12px; color: #888; margin-bottom: 24px; }
+      h2 { font-size: 14px; text-transform: uppercase; letter-spacing: .05em; color: #555; border-bottom: 1px solid #eee; padding-bottom: 4px; margin: 20px 0 10px; }
+      .score-big { font-size: 36px; font-weight: bold; color: #1e4db7; }
+      .tag { display: inline-block; padding: 3px 10px; border-radius: 20px; font-size: 12px; margin: 2px; }
+      .met { background: #e8f7ee; color: #1a7a4a; }
+      .miss { background: #fde8eb; color: #a0192e; }
+      .alert { background: #fef5e0; color: #8a5a00; }
+      .script { white-space: pre-line; background: #f7f4ee; padding: 12px; border-radius: 6px; font-size: 13px; }
+      @media print { body { margin: 20px; } }
+    </style>
+  </head><body>
+    <h1>${c.name || c.filename}</h1>
+    <div class="meta">
+      ${c.email ? `📧 ${c.email} &nbsp;` : ''}
+      ${c.phone ? `📞 ${c.phone} &nbsp;` : ''}
+      🕐 Analisado em ${analyzedStr}
+    </div>
+
+    <h2>Score</h2>
+    <div class="score-big">${Math.round(c.score)}<span style="font-size:18px;font-weight:normal;color:#888">/100</span></div>
+
+    <h2>Resumo da IA</h2>
+    <p>${c.ai_summary || '—'}</p>
+
+    ${c.requirements_met.length ? `
+    <h2>Requisitos Atendidos</h2>
+    <div>${c.requirements_met.map(r => `<span class="tag met">✓ ${r}</span>`).join('')}</div>` : ''}
+
+    ${c.requirements_missing.length ? `
+    <h2>Requisitos Faltantes</h2>
+    <div>${c.requirements_missing.map(r => `<span class="tag miss">✗ ${r}</span>`).join('')}</div>` : ''}
+
+    ${c.alerts.length ? `
+    <h2>Alertas</h2>
+    <div>${c.alerts.map(a => `<span class="tag alert">⚠ ${a}</span>`).join('')}</div>` : ''}
+
+    ${c.interview_script ? `
+    <h2>Roteiro de Entrevista</h2>
+    <div class="script">${c.interview_script}</div>` : ''}
+
+    <div style="margin-top:40px;font-size:11px;color:#aaa;text-align:center">RH Assertivo — O Boticário Niterói</div>
+  </body></html>`);
+  win.document.close();
+  win.focus();
+  setTimeout(() => win.print(), 500);
+}
+
+// ── Compartilhar no WhatsApp ─────────────────────────────────────────────────
+
+async function shareWhatsapp(candidateId) {
+  const candidates = await api(`/processes/${currentProcessId}/candidates`);
+  const c = candidates.find(x => x.id === candidateId);
+  if (!c) return;
+
+  const analyzedStr = c.analyzed_at
+    ? new Date(c.analyzed_at).toLocaleString('pt-BR', { day:'2-digit', month:'2-digit', year:'numeric', hour:'2-digit', minute:'2-digit' })
+    : '—';
+
+  const sep = '━━━━━━━━━━━━━━━━━━━━';
+
+  let msg = `🤖 *PARECER RH ASSERTIVO*\n${sep}\n`;
+  msg += `*Candidato:* ${c.name || c.filename}\n`;
+  if (c.email) msg += `*E-mail:* ${c.email}\n`;
+  if (c.phone) msg += `*Telefone:* ${c.phone}\n`;
+  msg += `*Analisado em:* ${analyzedStr}\n`;
+  const veredictoWA = c.score >= 70 ? '✅ AVANÇAR' : c.score >= 50 ? '⚠️ AVALIAR COM CAUTELA' : '✖️ NÃO AVANÇAR';
+  msg += `\n${sep}\n`;
+  msg += `📊 *SCORE: ${Math.round(c.score)}/100*\n`;
+  msg += `📋 *PARECER: ${veredictoWA}*\n`;
+  msg += `\n${sep}\n`;
+
+  msg += `\n💡 *RESUMO DA IA*\n${c.ai_summary || '—'}\n`;
+
+  if (c.requirements_met.length) {
+    msg += `\n${sep}\n✅ *REQUISITOS ATENDIDOS*\n`;
+    c.requirements_met.forEach(r => { msg += `• ${r}\n`; });
+  }
+
+  if (c.requirements_missing.length) {
+    msg += `\n${sep}\n❌ *REQUISITOS FALTANTES*\n`;
+    c.requirements_missing.forEach(r => { msg += `• ${r}\n`; });
+  }
+
+  if (c.alerts.length) {
+    msg += `\n${sep}\n⚠️ *ALERTAS*\n`;
+    c.alerts.forEach(a => { msg += `• ${a}\n`; });
+  }
+
+  if (c.interview_script) {
+    msg += `\n${sep}\n🎤 *ROTEIRO DE ENTREVISTA*\n${c.interview_script}\n`;
+  }
+
+  msg += `\n${sep}\n_RH Assertivo — O Boticário Niterói_`;
+
+  const url = `https://wa.me/?text=${encodeURIComponent(msg)}`;
+  window.open(url, '_blank');
+}
+
+async function updateStatus(candidateId, status) {
+  await api(`/processes/${currentProcessId}/candidates/${candidateId}/status`, {
+    method: 'PUT',
+    body: JSON.stringify({ status, reason: '' })
+  });
+  openProcess(currentProcessId);
+}
+
+async function carregarStatusQuestionario(candidateId) {
+  try {
+    const r = await api(`/questionario/${candidateId}/respostas`);
+    const el = document.getElementById(`qs-content-${candidateId}`);
+    if (!el) return;
+    if (r && r.respondido) {
+      const parecer = r.parecer_comportamental || '';
+      el.innerHTML = `
+        <span style="color:var(--success);font-size:13px;font-weight:500">✅ Respondido em ${r.respondido_em}</span>
+        ${parecer ? `<div style="margin-top:10px;padding:10px 12px;background:var(--cream);border-radius:8px;font-size:13px;line-height:1.6;color:var(--text-mid)">${parecer}</div>` : ''}
+        <div style="margin-top:10px;display:grid;grid-template-columns:1fr 1fr;gap:6px">
+          ${[['Resiliência',r.scores.resiliencia,'#3B6D11'],['Confiabilidade',r.scores.confianca,'#185FA5'],
+             ['Crescimento',r.scores.crescimento,'#534AB7'],['Risco mosca morta',r.scores.mosca,'#E24B4A'],
+             ['Risco deslealdade',r.scores.traidor,'#D85A30'],['Risco turnover',r.scores.turnover,'#BA7517']]
+            .map(([l,v,c]) => `<div style="font-size:11px;color:var(--text-mid)">${l}: <strong style="color:${c}">${v}%</strong></div>`)
+            .join('')}
+        </div>`;
+    } else {
+      el.innerHTML = `<span style="color:var(--text-light);font-size:13px">Questionário ainda não respondido.</span>
+        <div style="margin-top:8px;display:flex;gap:8px;flex-wrap:wrap">
+          <button class="btn btn-secondary" style="font-size:12px" onclick="gerarLinkQuestionario(${candidateId})">
+            🔗 Gerar link
+          </button>
+          <button class="btn btn-secondary" style="font-size:12px;background:#e8f7ee;color:#1a7a4a" onclick="enviarEmailQuestionario(${candidateId})">
+            📧 Enviar por email
+          </button>
+        </div>
+        <div id="link-result-${candidateId}" style="margin-top:8px"></div>`;
+    }
+  } catch(e) {
+    console.log('Erro ao verificar questionário:', e);
+  }
+}
+
+async function gerarLinkQuestionario(candidateId) {
+  const btn = event.target;
+  btn.disabled = true;
+  btn.textContent = 'Gerando...';
+  try {
+    const r = await api('/questionario/gerar-link', {
+      method: 'POST',
+      body: JSON.stringify({ candidate_id: candidateId, process_id: currentProcessId })
+    });
+    if (r && r.link) {
+      const el = document.getElementById(`link-result-${candidateId}`);
+      el.innerHTML = `
+        <div style="background:var(--cream);border:0.5px solid var(--cream-dark);border-radius:8px;padding:10px;font-size:12px">
+          <div style="font-weight:500;margin-bottom:4px">Link gerado — válido por 7 dias</div>
+          <div style="word-break:break-all;color:var(--blue);margin-bottom:8px">${r.link}</div>
+          <button class="btn btn-secondary" style="font-size:11px" onclick="navigator.clipboard.writeText('${r.link}').then(()=>this.textContent='Copiado!')">
+            📋 Copiar link
+          </button>
+        </div>`;
+      btn.style.display = 'none';
+    }
+  } catch(e) {
+    btn.disabled = false;
+    btn.textContent = '🔗 Gerar link para o candidato';
+    alert('Erro ao gerar link.');
+  }
+}
+
+function montarParecerIntegrado(c, quiz) {
+  const scoreCurriculo = Math.round(c.score || 0);
+  const temQuiz = quiz && quiz.respondido;
+  const scoreQuiz = temQuiz ? Math.round(quiz.score_comportamental || 0) : null;
+
+  // Indicadores de risco do questionário
+  const mosca = temQuiz ? (quiz.scores?.mosca || 0) : null;
+  const traidor = temQuiz ? (quiz.scores?.traidor || 0) : null;
+  const turnover = temQuiz ? (quiz.scores?.turnover || 0) : null;
+  const resiliencia = temQuiz ? (quiz.scores?.resiliencia || 0) : null;
+
+  // Flags de risco
+  const altoRisco = temQuiz && (mosca >= 65 || traidor >= 65 || turnover >= 65);
+  const temAlertas = c.alerts && c.alerts.length > 0;
+
+  // Score combinado (currículo 60% + comportamental 40%)
+  const scoreCombinado = temQuiz
+    ? Math.round(scoreCurriculo * 0.6 + scoreQuiz * 0.4)
+    : scoreCurriculo;
+
+  // Lógica de recomendação
+  let veredicto, justificativa, classe, emoji;
+
+  if (!temQuiz) {
+    // Só currículo disponível
+    if (scoreCurriculo >= 70 && !temAlertas) {
+      veredicto = "AVANÇAR — Aguardando questionário";
+      justificativa = "Currículo sólido. Recomenda-se enviar o questionário comportamental para completar a avaliação antes da decisão final.";
+      classe = "parecer-ressalvas";
+      emoji = "⏳";
+    } else if (scoreCurriculo >= 70 && temAlertas) {
+      veredicto = "AVANÇAR COM ATENÇÃO — Aguardando questionário";
+      justificativa = "Currículo acima da média, mas com pontos que merecem investigação na entrevista. O questionário comportamental é essencial antes de avançar.";
+      classe = "parecer-ressalvas";
+      emoji = "⚠️";
+    } else if (scoreCurriculo >= 50) {
+      veredicto = "AVALIAR COM CAUTELA — Aguardando questionário";
+      justificativa = "Currículo abaixo do esperado para a vaga. O questionário comportamental pode complementar a análise, mas há lacunas técnicas a considerar.";
+      classe = "parecer-ressalvas";
+      emoji = "⚠️";
+    } else {
+      veredicto = "NÃO AVANÇAR";
+      justificativa = "Currículo com score baixo e lacunas significativas em relação ao perfil da vaga. Não recomendamos avançar neste processo.";
+      classe = "parecer-nao-avancar";
+      emoji = "✖️";
+    }
+  } else {
+    // Currículo + questionário disponíveis
+    if (altoRisco) {
+      veredicto = "NÃO AVANÇAR — Risco comportamental elevado";
+      const riscos = [];
+      if (mosca >= 65) riscos.push("perfil de baixo engajamento");
+      if (traidor >= 65) riscos.push("indicadores de deslealdade");
+      if (turnover >= 65) riscos.push("alto risco de rotatividade");
+      justificativa = `A análise comportamental identificou ${riscos.join(', ')}. Independentemente do currículo, esses sinais contraindicam a contratação.`;
+      classe = "parecer-nao-avancar";
+      emoji = "✖️";
+    } else if (scoreCombinado >= 72 && !temAlertas) {
+      veredicto = "AVANÇAR PARA ENTREVISTA";
+      justificativa = `Candidato com score combinado de ${scoreCombinado}/100. Currículo e perfil comportamental alinhados com a vaga. Recomendamos avançar para entrevista.`;
+      classe = "parecer-avancar";
+      emoji = "✅";
+    } else if (scoreCombinado >= 60) {
+      veredicto = "AVANÇAR COM RESSALVAS";
+      const obs = [];
+      if (temAlertas) obs.push("alertas no currículo");
+      if (scoreQuiz < 60) obs.push("perfil comportamental abaixo do ideal");
+      justificativa = `Score combinado de ${scoreCombinado}/100 com ${obs.join(' e ')}. Pode avançar, mas os pontos de atenção devem ser explorados na entrevista.`;
+      classe = "parecer-ressalvas";
+      emoji = "⚠️";
+    } else {
+      veredicto = "NÃO AVANÇAR";
+      justificativa = `Score combinado de ${scoreCombinado}/100 abaixo do mínimo esperado. Currículo e/ou perfil comportamental não atendem aos requisitos da vaga.`;
+      classe = "parecer-nao-avancar";
+      emoji = "✖️";
+    }
+  }
+
+  // Indicadores visuais
+  function indColor(val, invertido = false) {
+    if (val === null) return 'ind-gray';
+    if (invertido) {
+      return val >= 65 ? 'ind-red' : val >= 40 ? 'ind-yellow' : 'ind-green';
+    }
+    return val >= 70 ? 'ind-green' : val >= 50 ? 'ind-yellow' : 'ind-red';
+  }
+
+  const indicadores = `
+    <div class="parecer-indicadores">
+      <div class="indicador">
+        <div class="indicador-label">Score Currículo</div>
+        <div class="indicador-valor ${indColor(scoreCurriculo)}">${scoreCurriculo}<span style="font-size:11px;font-weight:400">/100</span></div>
+      </div>
+      <div class="indicador">
+        <div class="indicador-label">Score Comportamental</div>
+        <div class="indicador-valor ${temQuiz ? indColor(scoreQuiz) : 'ind-gray'}">${temQuiz ? scoreQuiz + '<span style="font-size:11px;font-weight:400">/100</span>' : '—'}</div>
+      </div>
+      <div class="indicador">
+        <div class="indicador-label">Risco Mosca Morta</div>
+        <div class="indicador-valor ${indColor(mosca, true)}">${mosca !== null ? mosca + '<span style="font-size:11px;font-weight:400">%</span>' : '—'}</div>
+      </div>
+      <div class="indicador">
+        <div class="indicador-label">Risco Turnover</div>
+        <div class="indicador-valor ${indColor(turnover, true)}">${turnover !== null ? turnover + '<span style="font-size:11px;font-weight:400">%</span>' : '—'}</div>
+      </div>
+    </div>`;
+
+  return `
+    <div class="parecer-card ${classe}">
+      <div class="parecer-veredicto">${emoji} ${veredicto}</div>
+      <div class="parecer-justificativa">${justificativa}</div>
+      ${indicadores}
+    </div>`;
+}
+
+async function enviarEmailQuestionario(candidateId) {
+  const btn = event.target;
+  btn.disabled = true;
+  btn.textContent = 'Enviando...';
+  try {
+    const baseUrl = window.location.origin;
+    const r = await api('/questionario/enviar-email', {
+      method: 'POST',
+      body: JSON.stringify({
+        candidate_id: candidateId,
+        process_id: currentProcessId,
+        base_url: baseUrl
+      })
+    });
+    const el = document.getElementById(`link-result-${candidateId}`);
+    if (r && r.ok) {
+      el.innerHTML = `<div style="background:#e8f7ee;border-radius:8px;padding:10px;font-size:12px;color:#1a7a4a">
+        ✅ ${r.mensagem}
+      </div>`;
+      btn.style.display = 'none';
+    } else {
+      el.innerHTML = `<div style="color:var(--danger);font-size:12px">Erro ao enviar email.</div>`;
+      btn.disabled = false;
+      btn.textContent = '📧 Enviar por email';
+    }
+  } catch(e) {
+    btn.disabled = false;
+    btn.textContent = '📧 Enviar por email';
+    const el = document.getElementById(`link-result-${candidateId}`);
+    if (el) el.innerHTML = `<div style="color:var(--danger);font-size:12px">Erro: ${e.message}</div>`;
+  }
+}
+
+async function addToTalentBank(candidateId) {
+  try {
+    const r = await api('/processes/talent-bank/add', {
+      method: 'POST',
+      body: JSON.stringify({ candidate_id: candidateId, process_id: currentProcessId })
+    });
+    if (r && r.ok) {
+      closeModal('modal-candidate');
+      openProcess(currentProcessId);
+    }
+  } catch(e) {
+    alert('Erro ao adicionar ao banco de talentos.');
+  }
+}
+
+// ── Close process ────────────────────────────────────────────────────────────
+
+function openCloseProcess(id) {
+  closeProcessId = id;
+  document.getElementById('cp-outcome').value = 'contratado';
+  document.getElementById('cp-reason').value = '';
+  openModal('modal-close-process');
+}
+
+async function closeProcessConfirm() {
+  await api(`/processes/${closeProcessId}/close`, {
+    method: 'POST',
+    body: JSON.stringify({
+      outcome: document.getElementById('cp-outcome').value,
+      outcome_reason: document.getElementById('cp-reason').value
+    })
+  });
+  closeModal('modal-close-process');
+  openProcess(closeProcessId);
+}
+
+// ── Profiles ─────────────────────────────────────────────────────────────────
+
+async function loadProfiles() {
+  const el = document.getElementById('profiles-list');
+  el.innerHTML = '<div class="loading"><div class="spinner"></div></div>';
+  const profiles = await api('/profiles/');
+  if (!profiles.length) {
+    el.innerHTML = '<div class="empty"><div class="empty-icon">📄</div><p>Nenhum perfil cadastrado.</p></div>';
+    return;
+  }
+  el.innerHTML = profiles.map(p => `
+    <div class="process-card mb-4" style="cursor:default;margin-bottom:12px">
+      <div class="process-card-info">
+        <div class="process-card-title" style="font-size:15px">${p.name}</div>
+        <div class="text-sm text-mid">Criado em ${fmtDate(p.created_at)}</div>
+      </div>
+      <button class="btn btn-danger btn-sm" onclick="deleteProfile(${p.id})">Remover</button>
+    </div>`).join('');
+}
+
+let selectedProfileFile = null;
+
+function handleFileSelect(input) {
+  if (input.files[0]) {
+    selectedProfileFile = input.files[0];
+    document.getElementById('upload-label').innerHTML = `<strong>${selectedProfileFile.name}</strong><br><span style="font-size:11px;color:var(--success)">Arquivo selecionado</span>`;
+    document.getElementById('upload-area').style.borderColor = 'var(--success)';
+  }
+}
+
+function handleDrop(event) {
+  event.preventDefault();
+  const file = event.dataTransfer.files[0];
+  if (file) {
+    selectedProfileFile = file;
+    document.getElementById('upload-label').innerHTML = `<strong>${file.name}</strong><br><span style="font-size:11px;color:var(--success)">Arquivo selecionado</span>`;
+    document.getElementById('upload-area').style.borderColor = 'var(--success)';
+  }
+}
+
+async function saveProfile() {
+  const name = document.getElementById('profile-name').value.trim();
+  const textContent = document.getElementById('profile-content').value.trim();
+  const msg = document.getElementById('profile-msg');
+
+  if (!name) { msg.innerHTML = '<div class="alert alert-danger">Informe o nome do perfil.</div>'; return; }
+  if (!selectedProfileFile && !textContent) { msg.innerHTML = '<div class="alert alert-danger">Anexe um documento ou descreva o perfil manualmente.</div>'; return; }
+
+  msg.innerHTML = '<div class="alert alert-info">Salvando...</div>';
+
+  try {
+    let content = textContent;
+    let filename = null;
+    if (selectedProfileFile) {
+      content = await extractTextFromFile(selectedProfileFile);
+      filename = selectedProfileFile.name;
+    }
+    await api('/profiles', {
+      method: 'POST',
+      body: JSON.stringify({ name, content, filename })
+    });
+    msg.innerHTML = '<div class="alert alert-success">Perfil salvo com sucesso!</div>';
+    document.getElementById('profile-name').value = '';
+    document.getElementById('profile-content').value = '';
+    selectedProfileFile = null;
+    document.getElementById('upload-label').innerHTML = 'Clique ou arraste o arquivo aqui<br><span style="font-size:11px;opacity:.7">.doc, .docx ou .pdf</span>';
+    document.getElementById('upload-area').style.borderColor = 'var(--cream-dark)';
+    loadProfiles();
+    setTimeout(() => msg.innerHTML = '', 3000);
+  } catch(e) {
+    msg.innerHTML = '<div class="alert alert-danger">Erro ao salvar perfil: ' + e.message + '</div>';
+  }
+}
+
+async function deleteProfile(id) {
+  if (!confirm('Remover este perfil?')) return;
+  await api(`/profiles/${id}`, { method: 'DELETE' });
+  loadProfiles();
+}
+
+// ── Talent bank ──────────────────────────────────────────────────────────────
+
+async function loadTalent() {
+  const el = document.getElementById('talent-list');
+  el.innerHTML = '<div class="loading"><div class="spinner"></div></div>';
+  const talents = await api('/talent-bank');
+  if (!talents.length) {
+    el.innerHTML = '<div class="empty"><div class="empty-icon">⭐</div><p>Nenhum talento no banco ainda. Use o botão ⭐ no perfil de cada candidato para adicioná-lo.</p></div>';
+    return;
+  }
+  el.innerHTML = `<div class="table-wrap"><table>
+    <thead><tr><th>Candidato</th><th>Vaga avaliada</th><th>Score na vaga</th><th>Contato</th><th>Adicionado em</th></tr></thead>
+    <tbody>${talents.map(t => `
+      <tr>
+        <td><strong>${t.name || '—'}</strong><div class="text-sm text-mid" style="margin-top:4px">${t.summary ? t.summary.substring(0,80)+'...' : ''}</div></td>
+        <td><span class="text-sm">${t.vaga_nome || '—'}</span></td>
+        <td><div class="score-bar ${scoreClass(t.vaga_score || t.score)}" style="max-width:120px">
+          <div class="score-track"><div class="score-fill" style="width:${t.vaga_score || t.score}%"></div></div>
+          <div class="score-num">${Math.round(t.vaga_score || t.score)}</div>
+        </div></td>
+        <td>${t.email || '—'}<br>${t.phone ? `<span class="text-sm text-mid">${t.phone}</span>` : ''}</td>
+        <td>${fmtDate(t.added_at)}</td>
+      </tr>`).join('')}</tbody>
+  </table></div>`;
+}
+
+// ── Modal helpers ────────────────────────────────────────────────────────────
+
+function openModal(id) { document.getElementById(id).classList.add('open'); }
+function closeModal(id) { document.getElementById(id).classList.remove('open'); }
+
+document.querySelectorAll('.modal-overlay').forEach(m => {
+  m.addEventListener('click', e => { if (e.target === m) m.classList.remove('open'); });
+});
+
+// ── Formatters ───────────────────────────────────────────────────────────────
+
+function fmtDate(str) {
+  if (!str) return '—';
+  return new Date(str).toLocaleDateString('pt-BR');
+}
+
+function scoreClass(s) {
+  return s >= 70 ? 'score-high' : s >= 50 ? 'score-mid' : 'score-low';
+}
+
+function statusBadge(s) {
+  const map = {
+    aberto: ['badge-blue', 'Aberto'],
+    em_triagem: ['badge-gold', 'Em triagem'],
+    encerrado: ['badge-gray', 'Encerrado']
+  };
+  const [cls, label] = map[s] || ['badge-gray', s];
+  return `<span class="badge ${cls}">${label}</span>`;
+}
+
+function candidateStatusBadge(s) {
+  const map = {
+    pendente: ['badge-gray', 'Pendente'],
+    aprovado: ['badge-success', 'Aprovado'],
+    reprovado: ['badge-danger', 'Reprovado'],
+    contratado: ['badge-blue', 'Contratado']
+  };
+  const [cls, label] = map[s] || ['badge-gray', s];
+  return `<span class="badge ${cls}">${label}</span>`;
+}
+
+// ── Extração de texto no browser ──────────────────────────────
+
+async function extractTextFromFile(file) {
+  const ext = file.name.split('.').pop().toLowerCase();
+  if (ext === 'pdf') return extractPDF(file);
+  if (ext === 'docx') return extractDOCX(file);
+  if (ext === 'doc') return extractDOCX(file); // tenta como docx
+  // fallback texto puro
+  return new Promise((res) => {
+    const reader = new FileReader();
+    reader.onload = e => res(e.target.result);
+    reader.readAsText(file);
+  });
+}
+
+async function extractPDF(file) {
+  // Carrega pdf.js dinamicamente
+  if (!window.pdfjsLib) {
+    await loadScript('https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js');
+    window.pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
+  }
+  const arrayBuffer = await file.arrayBuffer();
+  const pdf = await window.pdfjsLib.getDocument({ data: arrayBuffer }).promise;
+  let text = '';
+  for (let i = 1; i <= pdf.numPages; i++) {
+    const page = await pdf.getPage(i);
+    const content = await page.getTextContent();
+    text += content.items.map(item => item.str).join(' ') + '\n';
+  }
+  return text;
+}
+
+async function extractDOCX(file) {
+  if (!window.mammoth) {
+    await loadScript('https://cdnjs.cloudflare.com/ajax/libs/mammoth/1.6.0/mammoth.browser.min.js');
+  }
+  const arrayBuffer = await file.arrayBuffer();
+  const result = await window.mammoth.extractRawText({ arrayBuffer });
+  return result.value;
+}
+
+function loadScript(src) {
+  return new Promise((resolve, reject) => {
+    const s = document.createElement('script');
+    s.src = src;
+    s.onload = resolve;
+    s.onerror = reject;
+    document.head.appendChild(s);
+  });
+}
+
+// ── Init ─────────────────────────────────────────────────────────────────────
+// checkAuth() é chamado pelo DOMContentLoaded acima
+
+</script>
+</div><!-- fim app-screen -->
+</body>
+</html>
