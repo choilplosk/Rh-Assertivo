@@ -405,6 +405,8 @@ async function enviarRespostas() {
     return `P${i+1}. ${q.text}\nResposta: ${ans !== null ? q.opts[ans].t : '—'}`;
   }).join('\n\n');
 
+  console.log("Totais brutos:", JSON.stringify(totais));
+  console.log("Scores normalizados:", JSON.stringify(norm));
   const payload = {
     respostas_json: JSON.stringify(answers),
     respostas_formatadas: respostasFormatadas,
