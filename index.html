@@ -592,7 +592,7 @@ async function loadDashboard() {
     let totalQuiz = 0; const allQuizScores = [];
     for (const p of processes) {
       try {
-        const pend = await api(`/questionario/processo/${p.id}/pendentes`);
+        const pend = await api(`/processes/${p.id}/questionario/pendentes`);
         if (pend) { const resp = pend.filter(x => x.respondido); totalQuiz += resp.length; for (const c of resp) { const qr = await api(`/questionario/${c.id}/respostas`); if (qr && qr.respondido) allQuizScores.push(qr.scores); } }
       } catch {}
     }
@@ -743,7 +743,7 @@ async function openNewProcess() {
   document.getElementById('np-adjustments').value = '';
   const sel = document.getElementById('np-profile');
   sel.innerHTML = '<option value="">— Selecionar perfil (opcional) —</option>';
-  const profiles = await api('/profiles/');
+  const profiles = await api('/profiles');
   profiles.forEach(p => { sel.innerHTML += `<option value="${p.id}">${p.name}</option>`; });
   openModal('modal-new-process');
 }
@@ -753,7 +753,7 @@ async function createProcess() {
   if (!title) { document.getElementById('np-msg').innerHTML = '<div class="alert alert-danger">Informe o título da vaga.</div>'; return; }
   const body = { title, profile_id: document.getElementById('np-profile').value ? parseInt(document.getElementById('np-profile').value) : null, profile_adjustments: document.getElementById('np-adjustments').value.trim() };
   try {
-    const proc = await api('/processes/', { method: 'POST', body: JSON.stringify(body) });
+    const proc = await api('/processes', { method: 'POST', body: JSON.stringify(body) });
     closeModal('modal-new-process');
     showSection('processes');
     openProcess(proc.id);
@@ -875,11 +875,10 @@ async function openCandidate(candidateId) {
   const btnContratar = isOpen && c.status === 'aprovado'
     ? `<button class="btn btn-gold" onclick="closeModal('modal-candidate');abrirModalContratar(${c.id},'${(c.name||'').replace(/'/g,"\\'")}','${c.email||''}','${c.phone||''}','${proc.title.replace(/'/g,"\\'")}')">✅ Contratado</button>`
     : '';
-  const btnParecer = quizData ? `<button class="btn btn-sm" style="background:#534AB7;color:#fff" onclick="gerarParecerIA(${c.id})">🧠 Parecer IA</button>` : '';
   if (c.status === 'pendente' && isOpen) {
-    footer.innerHTML = `<button class="btn btn-secondary" onclick="closeModal('modal-candidate')">Fechar</button>${btnPrint}${btnTalent}${btnBloquear}${btnParecer}<button class="btn btn-danger" onclick="updateStatus(${c.id},'reprovado');closeModal('modal-candidate')">Reprovar</button><button class="btn btn-primary" onclick="updateStatus(${c.id},'aprovado');closeModal('modal-candidate')">Aprovar</button>${btnContratar}`;
+    footer.innerHTML = `<button class="btn btn-secondary" onclick="closeModal('modal-candidate')">Fechar</button>${btnPrint}${btnTalent}${btnBloquear}<button class="btn btn-danger" onclick="updateStatus(${c.id},'reprovado');closeModal('modal-candidate')">Reprovar</button><button class="btn btn-primary" onclick="updateStatus(${c.id},'aprovado');closeModal('modal-candidate')">Aprovar</button>${btnContratar}`;
   } else {
-    footer.innerHTML = `<button class="btn btn-secondary" onclick="closeModal('modal-candidate')">Fechar</button>${btnPrint}${btnTalent}${btnBloquear}${btnParecer}${btnContratar}`;
+    footer.innerHTML = `<button class="btn btn-secondary" onclick="closeModal('modal-candidate')">Fechar</button>${btnPrint}${btnTalent}${btnBloquear}${btnContratar}`;
   }
   openModal('modal-candidate');
 }
@@ -965,7 +964,6 @@ async function carregarStatusQuestionario(candidateId) {
     if (r && r.respondido) {
       const parecer = r.parecer_comportamental || '';
       el.innerHTML = `
-        <div style="background:#e8f7ee;border-radius:6px;padding:8px 12px;font-size:12px;color:#1a7a4a;margin-bottom:8px">🎉 Questionário recebido!</div>
         <span style="color:var(--success);font-size:13px;font-weight:500">✅ Respondido em ${r.respondido_em}</span>
         ${parecer ? `<div style="margin-top:10px;padding:10px 12px;background:var(--cream);border-radius:8px;font-size:13px;line-height:1.6;color:var(--text-mid)">${parecer}</div>` : ''}
         <div style="margin-top:10px;display:grid;grid-template-columns:1fr 1fr;gap:6px">
@@ -1013,9 +1011,8 @@ async function gerarLinkWhatsApp(candidateId) {
             <div style="margin-top:8px;word-break:break-all;color:var(--text-light);font-size:11px">${r.link}</div>
           </div>`;
         btn.style.display = 'none';
+        // Abre automaticamente
         window.open(r.whatsapp_url, '_blank');
-        const sentEl = document.getElementById(`link-result-${candidateId}`);
-        if (sentEl) sentEl.innerHTML += `<div style="margin-top:8px;background:#e8f7ee;border-radius:6px;padding:8px 12px;font-size:12px;color:#1a7a4a">✅ Link enviado via WhatsApp. Aguardando resposta do candidato.</div>`;
       } else {
         // Sem telefone — mostra link para copiar com aviso
         el.innerHTML = `
@@ -1072,41 +1069,9 @@ function montarParecerIntegrado(c, quiz) {
   return `<div class="parecer-card ${classe}"><div class="parecer-veredicto">${emoji} ${veredicto}</div><div class="parecer-justificativa">${justificativa}</div><div class="parecer-indicadores"><div class="indicador"><div class="indicador-label">Score Currículo</div><div class="indicador-valor ${indColor(scoreCurriculo)}">${scoreCurriculo}<span style="font-size:11px;font-weight:400">/100</span></div></div><div class="indicador"><div class="indicador-label">Score Comportamental</div><div class="indicador-valor ${temQuiz ? indColor(scoreQuiz) : 'ind-gray'}">${temQuiz ? scoreQuiz + '<span style="font-size:11px;font-weight:400">/100</span>' : '—'}</div></div><div class="indicador"><div class="indicador-label">Risco Mosca Morta</div><div class="indicador-valor ${indColor(mosca, true)}">${mosca !== null ? mosca + '<span style="font-size:11px;font-weight:400">%</span>' : '—'}</div></div><div class="indicador"><div class="indicador-label">Risco Turnover</div><div class="indicador-valor ${indColor(turnover, true)}">${turnover !== null ? turnover + '<span style="font-size:11px;font-weight:400">%</span>' : '—'}</div></div></div></div>`;
 }
 
-async function gerarParecerIA(candidateId) {
-  const btn = event.target;
-  btn.disabled = true; btn.textContent = '⏳ Gerando...';
-  try {
-    const r = await api(`/parecer-rapido/${candidateId}`, { method: 'POST' });
-    const modalBody = document.getElementById('modal-candidate-body');
-    const vClass = r.veredicto === 'avançar' ? 'parecer-avancar' : r.veredicto === 'não avançar' ? 'parecer-nao-avancar' : 'parecer-ressalvas';
-    const vEmoji = r.veredicto === 'avançar' ? '✅' : r.veredicto === 'não avançar' ? '✖️' : '⚠️';
-    const roteiroHtml = r.roteiro_entrevista && r.roteiro_entrevista.length
-      ? `<div style="margin-top:12px"><div style="font-size:11px;text-transform:uppercase;letter-spacing:.05em;color:var(--text-light);font-weight:600;margin-bottom:6px">Roteiro de Entrevista</div>${r.roteiro_entrevista.map((q,i) => `<div style="font-size:13px;padding:6px 0;border-bottom:0.5px solid var(--cream-dark)">${i+1}. ${q}</div>`).join('')}</div>`
-      : '';
-    const alertasHtml = r.alertas && r.alertas.length
-      ? `<div style="margin-top:10px" class="tag-list">${r.alertas.map(a => `<span class="tag tag-alert">${a}</span>`).join('')}</div>`
-      : '';
-    const parecerEl = document.createElement('div');
-    parecerEl.innerHTML = `<div class="parecer-card ${vClass}" style="margin-bottom:16px">
-      <div class="parecer-veredicto">${vEmoji} PARECER FINAL — ${(r.veredicto||'').toUpperCase()}</div>
-      <div class="parecer-justificativa" style="margin-top:6px">${r.justificativa||''}</div>
-      <div class="parecer-indicadores" style="margin-top:12px">
-        <div class="indicador"><div class="indicador-label">Score Geral</div><div class="indicador-valor ${(r.score_geral||0)>=70?'ind-green':(r.score_geral||0)>=50?'ind-yellow':'ind-red'}">${r.score_geral||0}<span style="font-size:11px;font-weight:400">/100</span></div></div>
-        <div class="indicador"><div class="indicador-label">Risco Agregado</div><div class="indicador-valor ${(r.risco_agregado||0)<=30?'ind-green':(r.risco_agregado||0)<=60?'ind-yellow':'ind-red'}">${r.risco_agregado||0}<span style="font-size:11px;font-weight:400">%</span></div></div>
-      </div>
-      ${alertasHtml}${roteiroHtml}
-    </div>`;
-    modalBody.insertBefore(parecerEl, modalBody.firstChild);
-    btn.textContent = '✅ Parecer gerado';
-  } catch(e) {
-    btn.disabled = false; btn.textContent = '🧠 Parecer IA';
-    alert('Erro ao gerar parecer: ' + e.message);
-  }
-}
-
 async function addToTalentBank(candidateId) {
   try {
-    const r = await api('/processes/talent-bank/add', { method: 'POST', body: JSON.stringify({ candidate_id: candidateId, process_id: currentProcessId }) });
+    const r = await api('/talent-bank/add', { method: 'POST', body: JSON.stringify({ candidate_id: candidateId, process_id: currentProcessId }) });
     if (r && r.ok) { closeModal('modal-candidate'); openProcess(currentProcessId); }
   } catch(e) { alert('Erro ao adicionar ao banco de talentos.'); }
 }
@@ -1119,7 +1084,7 @@ async function closeProcessConfirm() { await api(`/processes/${closeProcessId}/c
 async function loadProfiles() {
   const el = document.getElementById('profiles-list');
   el.innerHTML = '<div class="loading"><div class="spinner"></div></div>';
-  const profiles = await api('/profiles/');
+  const profiles = await api('/profiles');
   if (!profiles.length) { el.innerHTML = '<div class="empty"><div class="empty-icon">📄</div><p>Nenhum perfil cadastrado.</p></div>'; return; }
   el.innerHTML = profiles.map(p => `<div class="process-card mb-4" style="cursor:default;margin-bottom:12px"><div class="process-card-info"><div class="process-card-title" style="font-size:15px">${p.name}</div><div class="text-sm text-mid">Criado em ${fmtDate(p.created_at)}</div></div><button class="btn btn-danger btn-sm" onclick="deleteProfile(${p.id})">Remover</button></div>`).join('');
 }
