@@ -743,7 +743,7 @@ async function openNewProcess() {
   document.getElementById('np-adjustments').value = '';
   const sel = document.getElementById('np-profile');
   sel.innerHTML = '<option value="">— Selecionar perfil (opcional) —</option>';
-  const profiles = await api('/profiles/');
+  const profiles = await api('/profiles');
   profiles.forEach(p => { sel.innerHTML += `<option value="${p.id}">${p.name}</option>`; });
   openModal('modal-new-process');
 }
@@ -753,7 +753,7 @@ async function createProcess() {
   if (!title) { document.getElementById('np-msg').innerHTML = '<div class="alert alert-danger">Informe o título da vaga.</div>'; return; }
   const body = { title, profile_id: document.getElementById('np-profile').value ? parseInt(document.getElementById('np-profile').value) : null, profile_adjustments: document.getElementById('np-adjustments').value.trim() };
   try {
-    const proc = await api('/processes/', { method: 'POST', body: JSON.stringify(body) });
+    const proc = await api('/processes', { method: 'POST', body: JSON.stringify(body) });
     closeModal('modal-new-process');
     showSection('processes');
     openProcess(proc.id);
@@ -1071,7 +1071,7 @@ function montarParecerIntegrado(c, quiz) {
 
 async function addToTalentBank(candidateId) {
   try {
-    const r = await api('/processes/talent-bank/add', { method: 'POST', body: JSON.stringify({ candidate_id: candidateId, process_id: currentProcessId }) });
+    const r = await api('/talent-bank/add', { method: 'POST', body: JSON.stringify({ candidate_id: candidateId, process_id: currentProcessId }) });
     if (r && r.ok) { closeModal('modal-candidate'); openProcess(currentProcessId); }
   } catch(e) { alert('Erro ao adicionar ao banco de talentos.'); }
 }
@@ -1084,7 +1084,7 @@ async function closeProcessConfirm() { await api(`/processes/${closeProcessId}/c
 async function loadProfiles() {
   const el = document.getElementById('profiles-list');
   el.innerHTML = '<div class="loading"><div class="spinner"></div></div>';
-  const profiles = await api('/profiles/');
+  const profiles = await api('/profiles');
   if (!profiles.length) { el.innerHTML = '<div class="empty"><div class="empty-icon">📄</div><p>Nenhum perfil cadastrado.</p></div>'; return; }
   el.innerHTML = profiles.map(p => `<div class="process-card mb-4" style="cursor:default;margin-bottom:12px"><div class="process-card-info"><div class="process-card-title" style="font-size:15px">${p.name}</div><div class="text-sm text-mid">Criado em ${fmtDate(p.created_at)}</div></div><button class="btn btn-danger btn-sm" onclick="deleteProfile(${p.id})">Remover</button></div>`).join('');
 }
