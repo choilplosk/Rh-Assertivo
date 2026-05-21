@@ -414,7 +414,7 @@ async function enviarRespostas() {
 
   try {
     if (candidatoId) {
-      await fetch(`/api/questionario/${candidatoId}/responder`, {
+      await fetch(`https://rh-assertivo-api.choil-plosk.workers.dev/questionario/${candidatoId}/responder`, {
         method: 'POST',
         headers: {'Content-Type': 'application/json'},
         body: JSON.stringify(payload)
