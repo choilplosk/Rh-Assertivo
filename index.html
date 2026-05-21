@@ -232,6 +232,9 @@
     <button class="nav-item" onclick="showSection('funcionarios')">
       <span class="icon">👤</span> Funcionários
     </button>
+    <button class="nav-item" id="nav-config" style="display:none" onclick="showSection('config')">
+      <span class="icon">⚙️</span> Configurações
+    </button>
   </nav>
   <div class="sidebar-footer">
     <div class="status-dot" style="flex-direction:column;align-items:flex-start;gap:8px">
@@ -368,6 +371,38 @@
       </div>
     </div>
 
+    <!-- CONFIGURAÇÕES -->
+    <div id="section-config" class="section">
+      <div class="grid-2">
+        <div class="card">
+          <div class="card-header"><span class="card-title">Novo Usuário</span></div>
+          <div class="form-group"><label class="form-label">Nome completo *</label><input type="text" class="form-control" id="nu-nome" placeholder="Nome do usuário"></div>
+          <div class="form-group"><label class="form-label">Email *</label><input type="email" class="form-control" id="nu-email" placeholder="email@exemplo.com"></div>
+          <div class="form-group"><label class="form-label">Senha *</label><input type="password" class="form-control" id="nu-senha" placeholder="Mínimo 6 caracteres"></div>
+          <div class="form-group">
+            <label class="form-label">Perfil</label>
+            <select class="form-control" id="nu-perfil">
+              <option value="operador">Operador</option>
+              <option value="diretor">Diretor</option>
+            </select>
+          </div>
+          <div id="nu-msg"></div>
+          <button class="btn btn-primary w-full" onclick="criarUsuario()">➕ Criar Usuário</button>
+          <div style="margin-top:24px;padding-top:24px;border-top:1px solid var(--cream-dark)">
+            <div class="card-title" style="font-size:16px;margin-bottom:16px">Alterar minha senha</div>
+            <div class="form-group"><label class="form-label">Nova senha *</label><input type="password" class="form-control" id="mp-senha" placeholder="Nova senha"></div>
+            <div class="form-group"><label class="form-label">Confirmar senha *</label><input type="password" class="form-control" id="mp-confirma" placeholder="Confirmar nova senha"></div>
+            <div id="mp-msg"></div>
+            <button class="btn btn-secondary w-full" onclick="alterarMinhaSenha()">🔑 Alterar Senha</button>
+          </div>
+        </div>
+        <div class="card">
+          <div class="card-header"><span class="card-title">Usuários Cadastrados</span><span id="users-count" class="text-sm text-mid"></span></div>
+          <div id="users-list"><div class="loading"><div class="spinner"></div></div></div>
+        </div>
+      </div>
+    </div>
+
   </div>
 </main>
 
@@ -497,6 +532,7 @@ function checkAuth() {
     if (currentUser) {
       document.getElementById('user-name').textContent = currentUser.name;
       document.getElementById('user-role').textContent = currentUser.role === 'diretor' ? 'Diretor' : 'Operador';
+      if (currentUser.role === 'diretor') document.getElementById('nav-config').style.display = '';
     }
     loadDashboard();
   }
@@ -546,7 +582,7 @@ function showSection(name) {
       (name === 'funcionarios' && t.includes('funcionário'))
     ) n.classList.add('active');
   });
-  const titles = { dashboard: 'Dashboard', processes: 'Processos Seletivos', profiles: 'Perfis de Vaga', talent: 'Banco de Talentos', funcionarios: 'Funcionários' };
+  const titles = { dashboard: 'Dashboard', processes: 'Processos Seletivos', profiles: 'Perfis de Vaga', talent: 'Banco de Talentos', funcionarios: 'Funcionários', config: 'Configurações' };
   document.getElementById('page-title').textContent = titles[name] || name;
   const actions = document.getElementById('topbar-actions');
   actions.innerHTML = '';
@@ -556,6 +592,8 @@ function showSection(name) {
   if (name === 'profiles') loadProfiles();
   if (name === 'talent') { loadProcessesForFilter(); loadTalent(); }
   if (name === 'funcionarios') loadFuncionarios();
+  if (name === 'config') loadUsuarios();
+  if (name === 'config') loadUsuarios();
 }
 
 // ── API helpers ─────────────────────────────────────────────────
@@ -1168,6 +1206,68 @@ async function saveFuncionario() {
     ['fn-nome','fn-pdv','fn-admissao','fn-cargo','fn-email','fn-telefone'].forEach(id => document.getElementById(id).value = '');
     ['fn-raca','fn-escolaridade','fn-sexo'].forEach(id => document.getElementById(id).value = '');
     loadFuncionarios();
+    setTimeout(() => msg.innerHTML = '', 3000);
+  } catch(e) { msg.innerHTML = `<div class="alert alert-danger">Erro: ${e.message}</div>`; }
+}
+
+// ── Configurações — Usuários ───────────────────────────────────
+async function loadUsuarios() {
+  const el = document.getElementById('users-list');
+  el.innerHTML = '<div class="loading"><div class="spinner"></div></div>';
+  try {
+    const users = await api('/users');
+    document.getElementById('users-count').textContent = users.length + ' usuário(s)';
+    if (!users.length) { el.innerHTML = '<div class="empty"><div class="empty-icon">👥</div><p>Nenhum usuário.</p></div>'; return; }
+    el.innerHTML = `<div class="table-wrap"><table><thead><tr><th>Nome</th><th>Email</th><th>Perfil</th><th>Status</th><th></th></tr></thead><tbody>${users.map(u => `<tr>
+      <td><strong>${u.name}</strong></td>
+      <td style="font-size:12px">${u.email}</td>
+      <td><span class="badge ${u.role === 'diretor' ? 'badge-blue' : 'badge-gray'}">${u.role === 'diretor' ? 'Diretor' : 'Operador'}</span></td>
+      <td><span class="badge ${u.ativo ? 'badge-success' : 'badge-danger'}">${u.ativo ? 'Ativo' : 'Inativo'}</span></td>
+      <td>${u.id !== currentUser?.id ? `<button class="btn btn-sm ${u.ativo ? 'btn-danger' : 'btn-secondary'}" onclick="toggleUsuario(${u.id}, ${!u.ativo})">${u.ativo ? 'Desativar' : 'Ativar'}</button>` : '<span style="font-size:11px;color:var(--text-light)">você</span>'}</td>
+    </tr>`).join('')}</tbody></table></div>`;
+  } catch(e) { el.innerHTML = `<div class="alert alert-danger">Erro: ${e.message}</div>`; }
+}
+
+async function criarUsuario() {
+  const nome = document.getElementById('nu-nome').value.trim();
+  const email = document.getElementById('nu-email').value.trim();
+  const senha = document.getElementById('nu-senha').value;
+  const perfil = document.getElementById('nu-perfil').value;
+  const msg = document.getElementById('nu-msg');
+  if (!nome || !email || !senha) { msg.innerHTML = '<div class="alert alert-danger">Preencha todos os campos.</div>'; return; }
+  if (senha.length < 6) { msg.innerHTML = '<div class="alert alert-danger">Senha deve ter no mínimo 6 caracteres.</div>'; return; }
+  try {
+    await api('/users', { method: 'POST', body: JSON.stringify({ name: nome, email, password: senha, role: perfil }) });
+    msg.innerHTML = '<div class="alert alert-success">Usuário criado!</div>';
+    document.getElementById('nu-nome').value = '';
+    document.getElementById('nu-email').value = '';
+    document.getElementById('nu-senha').value = '';
+    document.getElementById('nu-perfil').value = 'operador';
+    loadUsuarios();
+    setTimeout(() => msg.innerHTML = '', 3000);
+  } catch(e) { msg.innerHTML = `<div class="alert alert-danger">Erro: ${e.message}</div>`; }
+}
+
+async function toggleUsuario(id, ativo) {
+  if (!confirm(ativo ? 'Ativar este usuário?' : 'Desativar este usuário?')) return;
+  try {
+    await api(`/users/${id}/toggle`, { method: 'PUT', body: JSON.stringify({ ativo }) });
+    loadUsuarios();
+  } catch(e) { alert('Erro: ' + e.message); }
+}
+
+async function alterarMinhaSenha() {
+  const senha = document.getElementById('mp-senha').value;
+  const confirma = document.getElementById('mp-confirma').value;
+  const msg = document.getElementById('mp-msg');
+  if (!senha || !confirma) { msg.innerHTML = '<div class="alert alert-danger">Preencha os dois campos.</div>'; return; }
+  if (senha !== confirma) { msg.innerHTML = '<div class="alert alert-danger">Senhas não conferem.</div>'; return; }
+  if (senha.length < 6) { msg.innerHTML = '<div class="alert alert-danger">Mínimo 6 caracteres.</div>'; return; }
+  try {
+    await api(`/users/${currentUser.id}/senha`, { method: 'PUT', body: JSON.stringify({ password: senha }) });
+    msg.innerHTML = '<div class="alert alert-success">Senha alterada!</div>';
+    document.getElementById('mp-senha').value = '';
+    document.getElementById('mp-confirma').value = '';
     setTimeout(() => msg.innerHTML = '', 3000);
   } catch(e) { msg.innerHTML = `<div class="alert alert-danger">Erro: ${e.message}</div>`; }
 }
