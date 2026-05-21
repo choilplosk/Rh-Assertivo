@@ -1,0 +1,430 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Questionário — RH Assertivo</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bg:#f5f5f3;--surface:#fff;--border:#e2e2df;--bmd:#c8c8c4;
+  --text:#1a1a18;--muted:#6b6b68;--hint:#9e9e9a;
+  --blue:#185FA5;--bbg:#E6F1FB;--btx:#0C447C;
+  --green:#3B6D11;--gbg:#EAF3DE;
+  --amber:#854F0B;--abg:#FAEEDA;
+  --red:#A32D2D;--rbg:#FCEBEB;
+  --r:8px;--rl:12px;
+}
+body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+     background:var(--bg);color:var(--text);font-size:14px;line-height:1.6;
+     min-height:100vh;display:flex;align-items:flex-start;justify-content:center;padding:2rem 1rem}
+.wrap{width:100%;max-width:640px}
+.logo{text-align:center;margin-bottom:2rem}
+.logo h1{font-size:22px;font-weight:700;color:var(--text)}
+.logo span{color:var(--blue)}
+.logo p{font-size:12px;color:var(--muted);margin-top:4px}
+.card{background:var(--surface);border:0.5px solid var(--border);
+      border-radius:var(--rl);padding:1.5rem;margin-bottom:1rem}
+.progress-wrap{margin-bottom:1.25rem}
+.progress-track{height:4px;background:var(--border);border-radius:2px;overflow:hidden}
+.progress-fill{height:100%;background:var(--blue);border-radius:2px;transition:width .3s}
+.progress-label{font-size:11px;color:var(--muted);margin-top:6px;text-align:right}
+.block-tag{display:inline-flex;font-size:10px;font-weight:600;padding:3px 9px;
+           border-radius:20px;text-transform:uppercase;letter-spacing:.05em;margin-bottom:10px}
+.tag-force{background:#EEEDFE;color:#3C3489}
+.tag-proj{background:#E1F5EE;color:#085041}
+.tag-micro{background:#FAEEDA;color:#633806}
+.tag-valid{background:#F1EFE8;color:#444441}
+.q-num{font-size:11px;color:var(--muted);font-weight:500;margin-bottom:5px}
+.q-text{font-size:16px;font-weight:500;line-height:1.6;margin-bottom:1.25rem;color:var(--text)}
+.options{display:flex;flex-direction:column;gap:8px}
+.opt{display:flex;align-items:flex-start;gap:10px;padding:11px 14px;
+     border:0.5px solid var(--bmd);border-radius:var(--r);cursor:pointer;
+     transition:border-color .15s,background .15s}
+.opt:hover{border-color:var(--blue);background:var(--bbg)}
+.opt.selected{border-color:var(--blue);background:var(--bbg)}
+.opt-letter{width:22px;height:22px;border-radius:50%;background:var(--bg);
+            display:flex;align-items:center;justify-content:center;
+            font-size:11px;font-weight:600;color:var(--muted);flex-shrink:0;margin-top:1px}
+.opt.selected .opt-letter{background:var(--blue);color:#fff}
+.opt-text{font-size:13px;line-height:1.5;color:var(--text)}
+.scale-wrap{display:flex;flex-direction:column;gap:8px}
+.scale-btn{padding:10px 14px;border:0.5px solid var(--bmd);border-radius:var(--r);
+           background:none;cursor:pointer;font-size:13px;text-align:left;
+           transition:all .15s;color:var(--text)}
+.scale-btn:hover{border-color:var(--blue);background:var(--bbg)}
+.scale-btn.selected{border-color:var(--blue);background:var(--bbg);font-weight:500}
+.nav-row{display:flex;align-items:center;justify-content:space-between;margin-top:1.25rem;gap:8px}
+.btn{padding:9px 18px;border-radius:var(--r);font-size:13px;font-weight:500;
+     cursor:pointer;border:0.5px solid var(--bmd);background:none;color:var(--muted);
+     transition:all .15s}
+.btn:hover{background:var(--bg);color:var(--text)}
+.btn:disabled{opacity:.35;cursor:default}
+.btn-primary{background:var(--blue);color:#fff;border-color:var(--blue)}
+.btn-primary:hover{opacity:.88}
+.result-verd{border-radius:var(--rl);padding:1.25rem 1.5rem;margin-bottom:1rem}
+.rv-av{background:var(--gbg);border:0.5px solid #97C459}
+.rv-res{background:var(--abg);border:0.5px solid #EF9F27}
+.rv-risco{background:var(--rbg);border:0.5px solid #F09595}
+.dim-row{display:flex;align-items:center;gap:10px;padding:7px 0;border-bottom:0.5px solid var(--border)}
+.dim-row:last-child{border-bottom:none}
+.dim-label{font-size:12px;color:var(--muted);min-width:150px}
+.dim-bar{flex:1;height:5px;background:var(--border);border-radius:3px;overflow:hidden}
+.dim-fill{height:100%;border-radius:3px}
+.dim-val{font-size:12px;font-weight:500;min-width:36px;text-align:right}
+.sent-box{text-align:center;padding:2rem 1rem}
+.sent-icon{font-size:48px;margin-bottom:1rem}
+.sent-box h2{font-size:18px;font-weight:600;margin-bottom:8px}
+.sent-box p{font-size:13px;color:var(--muted);line-height:1.6}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="logo">
+    <h1>RH <span>Assertivo</span></h1>
+    <p>Questionário de perfil comportamental</p>
+  </div>
+
+  <div id="intro-card" class="card">
+    <p style="font-size:15px;font-weight:500;margin-bottom:8px">Olá! Bem-vindo(a).</p>
+    <p style="font-size:13px;color:var(--muted);line-height:1.7;margin-bottom:1rem">
+      Este questionário faz parte do nosso processo seletivo e leva cerca de 8 minutos para ser respondido.
+      Não há respostas certas ou erradas — queremos apenas conhecer melhor o seu jeito de pensar e agir.
+      Seja honesto(a): isso faz toda a diferença.
+    </p>
+    <button class="btn btn-primary" style="width:100%;justify-content:center" onclick="startQuiz()">Começar →</button>
+  </div>
+
+  <div id="quiz-wrap" style="display:none">
+    <div class="progress-wrap">
+      <div class="progress-track"><div class="progress-fill" id="prog-fill" style="width:0%"></div></div>
+      <div class="progress-label" id="prog-text">Pergunta 1 de 16</div>
+    </div>
+    <div id="quiz-area"></div>
+  </div>
+
+  <div id="sent-wrap" style="display:none" class="card">
+    <div class="sent-box">
+      <div class="sent-icon">✅</div>
+      <h2>Respostas enviadas!</h2>
+      <p>Obrigado por responder o questionário.<br>Nossa equipe entrará em contato em breve.</p>
+    </div>
+  </div>
+</div>
+
+<script>
+const params = new URLSearchParams(window.location.search);
+const token = params.get('token');
+const candidatoId = params.get('id');
+
+const questions = [
+  {
+    block:"Escolha forçada", tag:"tag-force",
+    text:"Você está sobrecarregado e um colega te pede ajuda com uma tarefa que ele poderia resolver sozinho. O que você faz?",
+    type:"choice",
+    opts:[
+      {l:"A",t:"Ajudo mesmo sobrecarregado — não gosto de deixar colega na mão"},
+      {l:"B",t:"Explico minha situação e combino um momento em que eu possa ajudar"},
+      {l:"C",t:"Oriento como ele pode resolver e deixo com ele"},
+      {l:"D",t:"Digo que não consigo agora e sigo com o meu"}
+    ],
+    scores:{A:{resiliencia:1},B:{confianca:2,resiliencia:1},C:{crescimento:1,confianca:1},D:{mosca:2,traidor:1}}
+  },
+  {
+    block:"Projeção reversa", tag:"tag-proj",
+    text:"O que você acha de funcionários que só fazem o que está escrito na descrição do cargo, nem mais nem menos?",
+    type:"choice",
+    opts:[
+      {l:"A",t:"É o combinado — a empresa também só paga o combinado"},
+      {l:"B",t:"É uma postura limitante que freia o crescimento pessoal"},
+      {l:"C",t:"Faz sentido para alguns cargos, mas não para outros"},
+      {l:"D",t:"Acho justo desde que o trabalho seja feito com qualidade"}
+    ],
+    scores:{A:{mosca:2,traidor:1},B:{crescimento:2},C:{mosca:1},D:{mosca:1}}
+  },
+  {
+    block:"Micro-situação", tag:"tag-micro",
+    text:"Você percebe que uma meta que seu time precisa bater está em risco por causa de um processo que não está funcionando bem. O que você faz?",
+    type:"choice",
+    opts:[
+      {l:"A",t:"Não é minha responsabilidade — aguardo orientação da chefia"},
+      {l:"B",t:"Comento com os colegas para ver se alguém tem ideia"},
+      {l:"C",t:"Levo o problema para o supervisor com uma sugestão de solução"},
+      {l:"D",t:"Tento ajustar o processo por conta própria enquanto comunico"}
+    ],
+    scores:{A:{mosca:2},B:{mosca:1},C:{crescimento:2,confianca:1},D:{resiliencia:1,crescimento:1}}
+  },
+  {
+    block:"Escala de atitude", tag:"tag-force",
+    text:"Com que frequência você busca aprender algo novo relacionado ao seu trabalho por iniciativa própria?",
+    type:"scale",
+    opts:[
+      {l:"1",t:"Quase nunca"},
+      {l:"2",t:"Raramente"},
+      {l:"3",t:"Às vezes"},
+      {l:"4",t:"Com frequência"},
+      {l:"5",t:"Sempre"}
+    ],
+    scores:{0:{mosca:2},1:{mosca:1},2:{},3:{crescimento:1},4:{crescimento:2}}
+  },
+  {
+    block:"Escala de atitude", tag:"tag-force",
+    text:"Quando você comete um erro no trabalho, o quanto você tende a assumir a responsabilidade abertamente?",
+    type:"scale",
+    opts:[
+      {l:"1",t:"Evito ao máximo"},
+      {l:"2",t:"Raramente assumo"},
+      {l:"3",t:"Depende da situação"},
+      {l:"4",t:"Na maioria das vezes"},
+      {l:"5",t:"Sempre assumo"}
+    ],
+    scores:{0:{traidor:2},1:{traidor:1},2:{traidor:1},3:{confianca:1},4:{confianca:2}}
+  },
+  {
+    block:"Micro-situação", tag:"tag-micro",
+    text:"No final de uma semana difícil, seu supervisor te chama e diz que seu desempenho ficou abaixo do esperado. Como você reage internamente?",
+    type:"choice",
+    opts:[
+      {l:"A",t:"Fico irritado — acho que ele não viu tudo que eu fiz"},
+      {l:"B",t:"Fico chateado, mas ouço com atenção para entender o que pode melhorar"},
+      {l:"C",t:"Concordo sem discutir, mesmo sem entender bem o que errei"},
+      {l:"D",t:"Fico frustrado mas analiso se o feedback faz sentido antes de reagir"}
+    ],
+    scores:{A:{traidor:1,mosca:1},B:{resiliencia:2,crescimento:1},C:{mosca:1},D:{resiliencia:1,crescimento:1}}
+  },
+  {
+    block:"Escolha forçada", tag:"tag-force",
+    text:"Você tem uma ideia que pode melhorar algo no trabalho. O que você faz?",
+    type:"choice",
+    opts:[
+      {l:"A",t:"Guardo para mim — não é minha área de decidir"},
+      {l:"B",t:"Comento com algum colega de confiança para ver o que ele acha"},
+      {l:"C",t:"Falo com o supervisor e ofereço para ajudar a implementar"},
+      {l:"D",t:"Escrevo como seria e apresento de forma estruturada"}
+    ],
+    scores:{A:{mosca:2},B:{mosca:1},C:{crescimento:2,confianca:1},D:{crescimento:2}}
+  },
+  {
+    block:"Projeção reversa", tag:"tag-proj",
+    text:"O que você acha de pessoas que mudam de emprego com frequência, ficando menos de um ano em cada lugar?",
+    type:"choice",
+    opts:[
+      {l:"A",t:"Estão sempre buscando crescimento — isso é positivo"},
+      {l:"B",t:"Pode indicar dificuldade de adaptação ou comprometimento"},
+      {l:"C",t:"Depende do motivo — às vezes o ambiente é ruim mesmo"},
+      {l:"D",t:"Cada um tem sua vida, não tenho como julgar"}
+    ],
+    scores:{A:{turnover:2},B:{confianca:1},C:{turnover:1},D:{mosca:1}}
+  },
+  {
+    block:"Micro-situação", tag:"tag-micro",
+    text:"Você está atendendo um cliente difícil que está alterado. Já tentou duas soluções e ele ainda não ficou satisfeito. O que você faz?",
+    type:"choice",
+    opts:[
+      {l:"A",t:"Chamo o supervisor para assumir — prefiro não arriscar mais"},
+      {l:"B",t:"Mantenho a calma, ouço mais uma vez e proponho uma terceira solução"},
+      {l:"C",t:"Digo que já fiz o que podia e que infelizmente não posso fazer mais"},
+      {l:"D",t:"Fecho o atendimento educadamente e registro a ocorrência"}
+    ],
+    scores:{A:{mosca:1},B:{resiliencia:2,crescimento:1},C:{mosca:2},D:{resiliencia:1}}
+  },
+  {
+    block:"Escolha forçada", tag:"tag-force",
+    text:"Em situações de pressão, o que você prefere?",
+    type:"choice",
+    opts:[
+      {l:"A",t:"Resolver as coisas no meu próprio ritmo, mesmo que leve mais tempo"},
+      {l:"B",t:"Pedir ajuda ao time e terminar mais rápido, mesmo tendo que ceder o controle"},
+      {l:"C",t:"Priorizar o que é urgente e deixar o resto para depois"},
+      {l:"D",t:"Fazer o meu e deixar cada um responsável pelo seu"}
+    ],
+    scores:{A:{mosca:1},B:{resiliencia:2,confianca:1},C:{resiliencia:1},D:{mosca:2}}
+  },
+  {
+    block:"Projeção reversa", tag:"tag-proj",
+    text:"O que você acha de pessoas que ficam quietas no trabalho, fazem o mínimo e nunca reclamam?",
+    type:"choice",
+    opts:[
+      {l:"A",t:"São profissionais — fazem o que precisa sem criar problema"},
+      {l:"B",t:"Provavelmente estão desmotivadas e vai acabar virando um problema"},
+      {l:"C",t:"Cada um tem seu jeito de trabalhar, não julgo"},
+      {l:"D",t:"Acho que falta iniciativa e isso prejudica todo o time"}
+    ],
+    scores:{A:{mosca:2},B:{resiliencia:1,confianca:1},C:{mosca:1},D:{crescimento:1,confianca:1}}
+  },
+  {
+    block:"Micro-situação", tag:"tag-micro",
+    text:"Você descobre que um colega cometeu um erro que vai aparecer amanhã numa reunião com a chefia. O que você faz?",
+    type:"choice",
+    opts:[
+      {l:"A",t:"Aviso o colega em particular para ele resolver"},
+      {l:"B",t:"Ajudo a corrigir o erro junto com ele antes da reunião"},
+      {l:"C",t:"Não é meu problema, cada um responde pelo seu trabalho"},
+      {l:"D",t:"Comunico a chefia para evitar surpresas"}
+    ],
+    scores:{A:{confianca:1},B:{confianca:2,resiliencia:1},C:{mosca:2,traidor:1},D:{traidor:1}}
+  },
+  {
+    block:"Escolha forçada", tag:"tag-force",
+    text:"Se você pudesse mudar uma coisa no seu último trabalho, o que seria?",
+    type:"choice",
+    opts:[
+      {l:"A",t:"Os colegas — trabalhava com gente muito acomodada"},
+      {l:"B",t:"A liderança — faltava clareza e reconhecimento"},
+      {l:"C",t:"Os processos — eram lentos e engessados"},
+      {l:"D",t:"Eu mesmo — poderia ter feito mais e aproveitado melhor"}
+    ],
+    scores:{A:{mosca:1},B:{traidor:1},C:{crescimento:1},D:{resiliencia:2,crescimento:1}}
+  },
+  {
+    block:"Projeção reversa", tag:"tag-proj",
+    text:"O que você acha de pessoas que falam mal da empresa onde trabalham para os colegas?",
+    type:"choice",
+    opts:[
+      {l:"A",t:"Às vezes é necessário desabafar, todo mundo faz isso"},
+      {l:"B",t:"Depende do que falam — se for verdade, tem seu lugar"},
+      {l:"C",t:"Acho prejudicial para o ambiente e para quem faz isso"},
+      {l:"D",t:"Se a empresa tem problemas, o correto é falar com quem pode resolver"}
+    ],
+    scores:{A:{traidor:2},B:{traidor:1},C:{confianca:1},D:{confianca:2,resiliencia:1}}
+  },
+  {
+    block:"Validação cruzada", tag:"tag-valid",
+    text:"Se pudesse descrever sua relação com trabalho em uma frase, qual seria mais honesta?",
+    type:"choice",
+    opts:[
+      {l:"A",t:"Trabalho para viver — tem coisas mais importantes na vida"},
+      {l:"B",t:"Gosto do que faço quando o ambiente é bom"},
+      {l:"C",t:"Sempre busco fazer meu melhor, independente do contexto"},
+      {l:"D",t:"Me importo com resultado, mas também preciso ser reconhecido"}
+    ],
+    scores:{A:{mosca:2},B:{mosca:1,turnover:1},C:{resiliencia:2,confianca:1},D:{crescimento:1}}
+  },
+  {
+    block:"Validação cruzada", tag:"tag-valid",
+    text:"Pensando nas empresas onde já trabalhou, qual afirmação é mais verdadeira para você?",
+    type:"choice",
+    opts:[
+      {l:"A",t:"Sempre saí porque encontrei uma oportunidade melhor"},
+      {l:"B",t:"Já saí por desentendimento com chefia ou colegas"},
+      {l:"C",t:"Saí quando senti que não havia mais crescimento"},
+      {l:"D",t:"Na maioria das vezes fui eu quem decidiu sair, por motivos variados"}
+    ],
+    scores:{A:{turnover:1},B:{traidor:1,turnover:1},C:{crescimento:1},D:{turnover:1}}
+  }
+];
+
+let current = 0;
+let answers = Array(questions.length).fill(null);
+
+function startQuiz() {
+  document.getElementById('intro-card').style.display = 'none';
+  document.getElementById('quiz-wrap').style.display = '';
+  render();
+}
+
+function render() {
+  const q = questions[current];
+  const answered = answers[current];
+  const pct = Math.round(((current) / questions.length) * 100);
+  document.getElementById('prog-fill').style.width = pct + '%';
+  document.getElementById('prog-text').textContent = `Pergunta ${current+1} de ${questions.length}`;
+
+  let html = `<div class="card">
+    <span class="block-tag ${q.tag}">${q.block}</span>
+    <div class="q-num">Pergunta ${current+1} de ${questions.length}</div>
+    <div class="q-text">${q.text}</div>
+    <div class="${q.type === 'scale' ? 'scale-wrap' : 'options'}">`;
+
+  q.opts.forEach((o, i) => {
+    const sel = answered === i ? 'selected' : '';
+    html += `<div class="${q.type === 'scale' ? 'scale-btn' : 'opt'} ${sel}" onclick="selectOpt(${i})">
+      ${q.type === 'choice' ? `<span class="opt-letter">${o.l}</span><span class="opt-text">${o.t}</span>` : o.t}
+    </div>`;
+  });
+
+  html += `</div>
+    <div class="nav-row">
+      <button class="btn" onclick="goBack()" ${current === 0 ? 'disabled' : ''}>← Anterior</button>
+      <button class="btn btn-primary" id="btn-next" onclick="goNext()" ${answered === null ? 'disabled' : ''}>
+        ${current === questions.length - 1 ? 'Enviar respostas ✓' : 'Próxima →'}
+      </button>
+    </div>
+  </div>`;
+
+  document.getElementById('quiz-area').innerHTML = html;
+}
+
+function selectOpt(i) {
+  answers[current] = i;
+  render();
+}
+
+function goBack() {
+  if (current > 0) { current--; render(); }
+}
+
+async function goNext() {
+  if (answers[current] === null) return;
+  if (current < questions.length - 1) {
+    current++;
+    render();
+  } else {
+    await enviarRespostas();
+  }
+}
+
+async function enviarRespostas() {
+  // Calcula scores
+  const totais = {resiliencia:0, confianca:0, crescimento:0, mosca:0, traidor:0, turnover:0};
+  const maximos = {resiliencia:0, confianca:0, crescimento:0, mosca:0, traidor:0, turnover:0};
+
+  questions.forEach((q, qi) => {
+    const ans = answers[qi];
+    if (ans === null) return;
+    const sc = q.scores[ans] || {};
+    Object.entries(sc).forEach(([k, v]) => { totais[k] = (totais[k]||0) + v; });
+    // máximo possível por pergunta
+    Object.values(q.scores).forEach(s => {
+      Object.entries(s).forEach(([k, v]) => {
+        maximos[k] = Math.max(maximos[k]||0, v);
+      });
+    });
+  });
+
+  // Normaliza para 0-100
+  const dimMax = {resiliencia:14, confianca:14, crescimento:12, mosca:18, traidor:10, turnover:8};
+  const norm = {};
+  Object.keys(totais).forEach(k => {
+    norm[k] = Math.min(100, Math.round((totais[k] / (dimMax[k]||1)) * 100));
+  });
+
+  // Monta payload
+  const respostasFormatadas = questions.map((q, i) => {
+    const ans = answers[i];
+    return `P${i+1}. ${q.text}\nResposta: ${ans !== null ? q.opts[ans].t : '—'}`;
+  }).join('\n\n');
+
+  const payload = {
+    respostas_json: JSON.stringify(answers),
+    respostas_formatadas: respostasFormatadas,
+    scores: norm,
+    token: token
+  };
+
+  try {
+    if (candidatoId) {
+      await fetch(`/api/questionario/${candidatoId}/responder`, {
+        method: 'POST',
+        headers: {'Content-Type': 'application/json'},
+        body: JSON.stringify(payload)
+      });
+    }
+  } catch(e) { console.log('Erro ao enviar:', e); }
+
+  document.getElementById('quiz-wrap').style.display = 'none';
+  document.getElementById('sent-wrap').style.display = '';
+}
+</script>
+</body>
+</html>
