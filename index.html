@@ -559,6 +559,8 @@ async function doLogin() {
 function doLogout() {
   authToken = null; currentUser = null;
   localStorage.removeItem('rh_token'); localStorage.removeItem('rh_user');
+  const navConfig = document.getElementById('nav-config');
+  if (navConfig) navConfig.style.display = 'none';
   checkAuth();
 }
 
@@ -579,7 +581,8 @@ function showSection(name) {
       (name === 'processes' && t.includes('processo')) ||
       (name === 'profiles' && t.includes('perfis')) ||
       (name === 'talent' && t.includes('talento')) ||
-      (name === 'funcionarios' && t.includes('funcionário'))
+      (name === 'funcionarios' && t.includes('funcionário')) ||
+      (name === 'config' && t.includes('configurações'))
     ) n.classList.add('active');
   });
   const titles = { dashboard: 'Dashboard', processes: 'Processos Seletivos', profiles: 'Perfis de Vaga', talent: 'Banco de Talentos', funcionarios: 'Funcionários', config: 'Configurações' };
@@ -592,8 +595,7 @@ function showSection(name) {
   if (name === 'profiles') loadProfiles();
   if (name === 'talent') { loadProcessesForFilter(); loadTalent(); }
   if (name === 'funcionarios') loadFuncionarios();
-  if (name === 'config') loadUsuarios();
-  if (name === 'config') loadUsuarios();
+  if (name === 'config') { if (currentUser?.role !== 'diretor') { showSection('dashboard'); return; } loadUsuarios(); }
 }
 
 // ── API helpers ─────────────────────────────────────────────────
