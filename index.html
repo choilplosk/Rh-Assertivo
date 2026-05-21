@@ -1076,30 +1076,28 @@ async function gerarParecerIA(candidateId) {
   const btn = event.target;
   btn.disabled = true; btn.textContent = '⏳ Gerando...';
   try {
-    const r = await api(`/parecer/${candidateId}`, { method: 'POST' });
-    if (r) {
-      const body = document.getElementById('modal-candidate-body');
-      const vClass = r.veredicto === 'avançar' ? 'parecer-avancar' : r.veredicto === 'não avançar' ? 'parecer-nao-avancar' : 'parecer-ressalvas';
-      const vEmoji = r.veredicto === 'avançar' ? '✅' : r.veredicto === 'não avançar' ? '✖️' : '⚠️';
-      const roteiroHtml = r.roteiro && r.roteiro.length
-        ? `<div style="margin-top:12px"><div style="font-size:11px;text-transform:uppercase;letter-spacing:.05em;color:var(--text-light);font-weight:600;margin-bottom:6px">Roteiro de Entrevista</div>${r.roteiro.map((q,i) => `<div style="font-size:13px;padding:4px 0;border-bottom:0.5px solid var(--cream-dark)">${i+1}. ${q}</div>`).join('')}</div>`
-        : '';
-      const alertasHtml = r.alertas && r.alertas.length
-        ? `<div style="margin-top:10px" class="tag-list">${r.alertas.map(a => `<span class="tag tag-alert">${a}</span>`).join('')}</div>`
-        : '';
-      const parecerEl = document.createElement('div');
-      parecerEl.innerHTML = `<div class="parecer-card ${vClass}" style="margin-top:16px">
-        <div class="parecer-veredicto">${vEmoji} ${(r.veredicto||'').toUpperCase()}</div>
-        <div class="parecer-justificativa" style="margin-top:6px">${r.justificativa || ''}</div>
-        <div class="parecer-indicadores" style="margin-top:12px">
-          <div class="indicador"><div class="indicador-label">Score Geral</div><div class="indicador-valor ${r.score_geral>=70?'ind-green':r.score_geral>=50?'ind-yellow':'ind-red'}">${r.score_geral||0}<span style="font-size:11px;font-weight:400">/100</span></div></div>
-          <div class="indicador"><div class="indicador-label">Risco Agregado</div><div class="indicador-valor ${r.risco_agregado<=30?'ind-green':r.risco_agregado<=60?'ind-yellow':'ind-red'}">${r.risco_agregado||0}<span style="font-size:11px;font-weight:400">%</span></div></div>
-        </div>
-        ${alertasHtml}${roteiroHtml}
-      </div>`;
-      body.insertBefore(parecerEl, body.firstChild);
-      btn.textContent = '✅ Parecer gerado';
-    }
+    const r = await api(`/parecer-rapido/${candidateId}`, { method: 'POST' });
+    const modalBody = document.getElementById('modal-candidate-body');
+    const vClass = r.veredicto === 'avançar' ? 'parecer-avancar' : r.veredicto === 'não avançar' ? 'parecer-nao-avancar' : 'parecer-ressalvas';
+    const vEmoji = r.veredicto === 'avançar' ? '✅' : r.veredicto === 'não avançar' ? '✖️' : '⚠️';
+    const roteiroHtml = r.roteiro_entrevista && r.roteiro_entrevista.length
+      ? `<div style="margin-top:12px"><div style="font-size:11px;text-transform:uppercase;letter-spacing:.05em;color:var(--text-light);font-weight:600;margin-bottom:6px">Roteiro de Entrevista</div>${r.roteiro_entrevista.map((q,i) => `<div style="font-size:13px;padding:6px 0;border-bottom:0.5px solid var(--cream-dark)">${i+1}. ${q}</div>`).join('')}</div>`
+      : '';
+    const alertasHtml = r.alertas && r.alertas.length
+      ? `<div style="margin-top:10px" class="tag-list">${r.alertas.map(a => `<span class="tag tag-alert">${a}</span>`).join('')}</div>`
+      : '';
+    const parecerEl = document.createElement('div');
+    parecerEl.innerHTML = `<div class="parecer-card ${vClass}" style="margin-bottom:16px">
+      <div class="parecer-veredicto">${vEmoji} PARECER FINAL — ${(r.veredicto||'').toUpperCase()}</div>
+      <div class="parecer-justificativa" style="margin-top:6px">${r.justificativa||''}</div>
+      <div class="parecer-indicadores" style="margin-top:12px">
+        <div class="indicador"><div class="indicador-label">Score Geral</div><div class="indicador-valor ${(r.score_geral||0)>=70?'ind-green':(r.score_geral||0)>=50?'ind-yellow':'ind-red'}">${r.score_geral||0}<span style="font-size:11px;font-weight:400">/100</span></div></div>
+        <div class="indicador"><div class="indicador-label">Risco Agregado</div><div class="indicador-valor ${(r.risco_agregado||0)<=30?'ind-green':(r.risco_agregado||0)<=60?'ind-yellow':'ind-red'}">${r.risco_agregado||0}<span style="font-size:11px;font-weight:400">%</span></div></div>
+      </div>
+      ${alertasHtml}${roteiroHtml}
+    </div>`;
+    modalBody.insertBefore(parecerEl, modalBody.firstChild);
+    btn.textContent = '✅ Parecer gerado';
   } catch(e) {
     btn.disabled = false; btn.textContent = '🧠 Parecer IA';
     alert('Erro ao gerar parecer: ' + e.message);
