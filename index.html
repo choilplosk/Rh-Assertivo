@@ -460,6 +460,7 @@ async function openCandidate(candidateId) {
     </div>`;
   openModal('modal-candidate');
   carregarStatusQuestionario(c.id);
+  carregarUltimoParecer(c.id);
   const footer = document.getElementById('modal-candidate-footer');
   const proc = await api(`/processes/${currentProcessId}`);
   const isOpen = proc.status !== 'encerrado';
@@ -712,6 +713,36 @@ async function extractDOCX(file) {
   return result.value;
 }
 function loadScript(src) { return new Promise((resolve, reject) => { const s = document.createElement('script'); s.src = src; s.onload = resolve; s.onerror = reject; document.head.appendChild(s); }); }
+
+async function carregarUltimoParecer(candidateId) {
+  try {
+    const p = await api('/parecer/' + candidateId + '/ultimo');
+    if (!p || !p.veredicto) return;
+    const qsEl = document.getElementById('qs-content-' + candidateId);
+    if (!qsEl) return;
+    const vMap = {
+      'avançar':     { border: '#2d9e5f', bg: '#f0faf3', color: '#1a7a4a', emoji: '✅' },
+      'ressalvas':   { border: '#e6a817', bg: '#fffbf0', color: '#8a5a00', emoji: '⚠️' },
+      'não avançar': { border: '#dc3545', bg: '#fef2f2', color: '#a0192e', emoji: '✖️' }
+    };
+    const v = (p.veredicto || '').toLowerCase(), s = vMap[v] || vMap['ressalvas'];
+    const alertas = safeParseArray(p.alertas_json);
+    const roteiro = safeParseArray(p.roteiro_json);
+    const alertasHtml = alertas.length ? '<div style="margin-top:8px">' + alertas.map(a => `<span style="display:inline-block;background:var(--warn-bg);color:var(--warn);padding:2px 8px;border-radius:20px;font-size:11px;margin:2px">${a}</span>`).join('') + '</div>' : '';
+    const roteiroHtml = roteiro.length ? `<div style="margin-top:8px"><div style="font-size:11px;text-transform:uppercase;letter-spacing:.06em;color:var(--text-light);margin-bottom:4px">Roteiro</div><ul style="margin:0;padding-left:16px;font-size:12px;color:var(--text-mid);line-height:1.8">${roteiro.map(q => `<li>${q}</li>`).join('')}</ul></div>` : '';
+    const dataFmt = p.gerado_em ? `<div style="font-size:10px;color:var(--text-light);margin-top:6px">Gerado em ${p.gerado_em}</div>` : '';
+    const div = document.createElement('div');
+    div.style.cssText = `margin-top:14px;padding:14px 16px;border-radius:10px;border:1.5px solid ${s.border};background:${s.bg}`;
+    div.innerHTML = `<div style="font-weight:700;font-size:15px;color:${s.color};margin-bottom:6px">${s.emoji} ${(p.veredicto||'').toUpperCase()}</div><div style="font-size:13px;line-height:1.7;color:var(--text-mid)">${p.justificativa||'—'}</div>${alertasHtml}${roteiroHtml}${dataFmt}`;
+    qsEl.appendChild(div);
+  } catch(e) { /* nenhum parecer salvo ainda — silencioso */ }
+}
+
+function safeParseArray(val) {
+  if (!val) return [];
+  if (Array.isArray(val)) return val;
+  try { return JSON.parse(val); } catch(e) { return []; }
+}
 
 async function carregarHistoricoAnalises(candidateId) {
   const el = document.getElementById('historico-content-' + candidateId);
