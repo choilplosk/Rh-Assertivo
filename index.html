@@ -851,7 +851,7 @@ async function openCandidate(candidateId) {
       <div id="historico-content-${c.id}"><p style="font-size:13px;color:var(--text-mid)">Carregando histórico...</p></div>
     </div>`;
   carregarStatusQuestionario(c.id);
-  carregarHistoricoAnalises(c.id);
+  setTimeout(() => carregarHistoricoAnalises(c.id), 300);
   const footer = document.getElementById('modal-candidate-footer');
   const proc = await api(`/processes/${currentProcessId}`);
   const isOpen = proc.status !== 'encerrado';
