@@ -7,28 +7,12 @@
 <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
 <style>
   :root {
-    --navy: #0f1f3d;
-    --navy-mid: #1a3260;
-    --blue: #1e4db7;
-    --blue-light: #2d63e8;
-    --gold: #c9a84c;
-    --gold-light: #e8c96a;
-    --cream: #f7f4ee;
-    --cream-dark: #ede9e0;
-    --text: #1a1a2e;
-    --text-mid: #4a4a6a;
-    --text-light: #8888aa;
-    --white: #ffffff;
-    --success: #1a7a4a;
-    --success-bg: #e8f7ee;
-    --danger: #a0192e;
-    --danger-bg: #fde8eb;
-    --warn: #8a5a00;
-    --warn-bg: #fef5e0;
-    --shadow: 0 4px 24px rgba(15,31,61,0.10);
-    --shadow-lg: 0 8px 48px rgba(15,31,61,0.16);
-    --radius: 12px;
-    --radius-sm: 8px;
+    --navy: #0f1f3d; --navy-mid: #1a3260; --blue: #1e4db7; --blue-light: #2d63e8;
+    --gold: #c9a84c; --gold-light: #e8c96a; --cream: #f7f4ee; --cream-dark: #ede9e0;
+    --text: #1a1a2e; --text-mid: #4a4a6a; --text-light: #8888aa; --white: #ffffff;
+    --success: #1a7a4a; --success-bg: #e8f7ee; --danger: #a0192e; --danger-bg: #fde8eb;
+    --warn: #8a5a00; --warn-bg: #fef5e0; --shadow: 0 4px 24px rgba(15,31,61,0.10);
+    --shadow-lg: 0 8px 48px rgba(15,31,61,0.16); --radius: 12px; --radius-sm: 8px;
   }
   * { margin: 0; padding: 0; box-sizing: border-box; }
   body { font-family: 'DM Sans', sans-serif; background: var(--cream); color: var(--text); min-height: 100vh; display: flex; }
@@ -95,12 +79,9 @@
   .score-track { flex: 1; height: 6px; background: var(--cream-dark); border-radius: 3px; overflow: hidden; }
   .score-fill { height: 100%; border-radius: 3px; transition: width 0.6s; }
   .score-num { font-weight: 600; font-size: 15px; width: 36px; text-align: right; }
-  .score-high .score-fill { background: var(--success); }
-  .score-high .score-num { color: var(--success); }
-  .score-mid .score-fill { background: var(--gold); }
-  .score-mid .score-num { color: var(--warn); }
-  .score-low .score-fill { background: var(--danger); }
-  .score-low .score-num { color: var(--danger); }
+  .score-high .score-fill { background: var(--success); } .score-high .score-num { color: var(--success); }
+  .score-mid .score-fill { background: var(--gold); } .score-mid .score-num { color: var(--warn); }
+  .score-low .score-fill { background: var(--danger); } .score-low .score-num { color: var(--danger); }
   .upload-zone { border: 2px dashed var(--cream-dark); border-radius: var(--radius); padding: 40px; text-align: center; cursor: pointer; transition: all 0.2s; background: var(--cream); }
   .upload-zone:hover, .upload-zone.drag { border-color: var(--blue); background: #eff4ff; }
   .upload-zone .upload-icon { font-size: 40px; margin-bottom: 12px; }
@@ -128,10 +109,7 @@
   .indicador { background: rgba(255,255,255,0.7); border-radius: 6px; padding: 8px 12px; }
   .indicador-label { font-size: 10px; text-transform: uppercase; letter-spacing: .06em; color: var(--text-light); margin-bottom: 3px; }
   .indicador-valor { font-size: 18px; font-weight: 700; }
-  .ind-green { color: #2d9e5f; }
-  .ind-yellow { color: #e6a817; }
-  .ind-red { color: #dc3545; }
-  .ind-gray { color: #aaa; }
+  .ind-green { color: #2d9e5f; } .ind-yellow { color: #e6a817; } .ind-red { color: #dc3545; } .ind-gray { color: #aaa; }
   .detail-section h4 { font-size: 13px; text-transform: uppercase; letter-spacing: 0.05em; color: var(--text-light); font-weight: 600; margin-bottom: 10px; }
   .tag-list { display: flex; flex-wrap: wrap; gap: 6px; }
   .tag { padding: 4px 12px; border-radius: 20px; font-size: 13px; }
@@ -159,35 +137,21 @@
   .process-card-meta { font-size: 13px; color: var(--text-mid); margin-top: 4px; }
   .process-card-actions { display: flex; gap: 8px; align-items: center; }
   .processes-list { display: flex; flex-direction: column; gap: 12px; }
-  .section { display: none; }
-  .section.active { display: block; }
-  .tabs { display: flex; gap: 0; border-bottom: 2px solid var(--cream-dark); margin-bottom: 24px; }
-  .tab { padding: 10px 20px; font-size: 14px; font-weight: 500; color: var(--text-light); cursor: pointer; border-bottom: 2px solid transparent; margin-bottom: -2px; transition: all 0.15s; }
-  .tab:hover { color: var(--text); }
-  .tab.active { color: var(--blue); border-bottom-color: var(--blue); }
+  .section { display: none; } .section.active { display: block; }
   .upload-progress { background: var(--cream); border-radius: var(--radius-sm); padding: 16px; margin-top: 16px; }
   .progress-track { height: 8px; background: var(--cream-dark); border-radius: 4px; overflow: hidden; margin: 10px 0; }
   .progress-fill { height: 100%; background: var(--blue); border-radius: 4px; transition: width 0.4s; }
   .progress-label { font-size: 13px; color: var(--text-mid); }
-  .mb-4 { margin-bottom: 16px; }
-  .mb-6 { margin-bottom: 24px; }
-  .mt-4 { margin-top: 16px; }
-  .flex { display: flex; }
-  .gap-2 { gap: 8px; }
-  .items-center { align-items: center; }
-  .justify-between { justify-content: space-between; }
-  .flex-1 { flex: 1; }
-  .text-sm { font-size: 13px; }
-  .text-mid { color: var(--text-mid); }
-  .font-serif { font-family: 'DM Serif Display', serif; }
-  .w-full { width: 100%; }
+  .mb-4 { margin-bottom: 16px; } .mb-6 { margin-bottom: 24px; } .mt-4 { margin-top: 16px; }
+  .flex { display: flex; } .gap-2 { gap: 8px; } .items-center { align-items: center; }
+  .justify-between { justify-content: space-between; } .flex-1 { flex: 1; }
+  .text-sm { font-size: 13px; } .text-mid { color: var(--text-mid); }
+  .font-serif { font-family: 'DM Serif Display', serif; } .w-full { width: 100%; }
   .bloqueado-row td { opacity: 0.5; text-decoration: line-through; }
   .badge-blocked { background: #1a1a1a; color: #fff; }
 </style>
 </head>
 <body>
-
-<!-- Tela de Login -->
 <div id="login-screen" style="display:none;position:fixed;inset:0;background:var(--navy);z-index:9999;align-items:center;justify-content:center;flex-direction:column">
   <div style="background:white;border-radius:16px;padding:48px;width:100%;max-width:420px;box-shadow:0 24px 80px rgba(0,0,0,0.4)">
     <div style="text-align:center;margin-bottom:32px">
@@ -206,15 +170,9 @@
     <div id="login-msg" style="margin-top:12px;text-align:center;font-size:13px;color:var(--danger)"></div>
   </div>
 </div>
-
-<!-- App principal -->
 <div id="app-screen" style="display:none;width:100%;min-height:100vh">
-
 <aside class="sidebar">
-  <div class="sidebar-logo">
-    <h1>RH <span>Assertivo</span></h1>
-    <p>Triagem Inteligente</p>
-  </div>
+  <div class="sidebar-logo"><h1>RH <span>Assertivo</span></h1><p>Triagem Inteligente</p></div>
   <nav class="sidebar-nav">
     <button class="nav-item active" onclick="showSection('dashboard')"><span class="icon">📊</span> Dashboard</button>
     <button class="nav-item" onclick="showSection('processes')"><span class="icon">📋</span> Processos</button>
@@ -231,252 +189,46 @@
     </div>
   </div>
 </aside>
-
 <main class="main">
-  <header class="topbar">
-    <h2 id="page-title">Dashboard</h2>
-    <div class="topbar-actions" id="topbar-actions"></div>
-  </header>
+  <header class="topbar"><h2 id="page-title">Dashboard</h2><div class="topbar-actions" id="topbar-actions"></div></header>
   <div class="content">
-
-    <!-- DASHBOARD -->
     <div id="section-dashboard" class="section active">
-      <div style="margin-bottom:1rem">
-        <h2 style="font-size:16px;font-weight:600;margin-bottom:2px">Dashboard de Acompanhamento</h2>
-        <p style="font-size:12px;color:var(--text-mid)" id="dash-subtitulo">O Boticário Niterói</p>
-      </div>
-      <div class="grid-3 mb-6" id="stats-grid">
-        <div class="stat-card"><div class="stat-label">Processos Abertos</div><div class="stat-value" id="stat-open">—</div><div class="stat-sub">em andamento</div></div>
-        <div class="stat-card gold"><div class="stat-label">Candidatos Analisados</div><div class="stat-value" id="stat-candidates">—</div><div class="stat-sub" id="stat-candidates-s">total geral</div></div>
-        <div class="stat-card success"><div class="stat-label">Banco de Talentos</div><div class="stat-value" id="stat-talent">—</div><div class="stat-sub">talentos salvos</div></div>
-      </div>
-      <div style="display:grid;grid-template-columns:1fr 1fr;gap:.75rem;margin-bottom:.75rem">
-        <div class="stat-card" style="border-left:3px solid var(--blue)"><div class="stat-label">Score médio</div><div class="stat-value" id="stat-score">—</div><div class="stat-sub" id="stat-score-s">máx. 100 pontos</div></div>
-        <div class="stat-card" style="border-left:3px solid #534AB7"><div class="stat-label">Questionários respondidos</div><div class="stat-value" id="stat-quiz">—</div><div class="stat-sub" id="stat-quiz-s">comportamental</div></div>
-      </div>
-      <div style="display:grid;grid-template-columns:1fr 1fr;gap:.75rem;margin-bottom:.75rem">
-        <div class="card" style="margin-bottom:0"><div class="card-header" style="margin-bottom:.75rem"><span class="card-title">Status dos candidatos</span></div><div id="dash-status-bars"><div class="loading"><div class="spinner"></div></div></div></div>
-        <div class="card" style="margin-bottom:0"><div class="card-header" style="margin-bottom:.75rem"><span class="card-title">Indicadores comportamentais</span></div><div id="dash-comportamental"><div class="loading"><div class="spinner"></div></div></div></div>
-      </div>
+      <div style="margin-bottom:1rem"><h2 style="font-size:16px;font-weight:600;margin-bottom:2px">Dashboard de Acompanhamento</h2><p style="font-size:12px;color:var(--text-mid)" id="dash-subtitulo">O Boticário Niterói</p></div>
+      <div class="grid-3 mb-6"><div class="stat-card"><div class="stat-label">Processos Abertos</div><div class="stat-value" id="stat-open">—</div><div class="stat-sub">em andamento</div></div><div class="stat-card gold"><div class="stat-label">Candidatos Analisados</div><div class="stat-value" id="stat-candidates">—</div><div class="stat-sub" id="stat-candidates-s">total geral</div></div><div class="stat-card success"><div class="stat-label">Banco de Talentos</div><div class="stat-value" id="stat-talent">—</div><div class="stat-sub">talentos salvos</div></div></div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:.75rem;margin-bottom:.75rem"><div class="stat-card" style="border-left:3px solid var(--blue)"><div class="stat-label">Score médio</div><div class="stat-value" id="stat-score">—</div><div class="stat-sub" id="stat-score-s">máx. 100 pontos</div></div><div class="stat-card" style="border-left:3px solid #534AB7"><div class="stat-label">Questionários respondidos</div><div class="stat-value" id="stat-quiz">—</div><div class="stat-sub" id="stat-quiz-s">comportamental</div></div></div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:.75rem;margin-bottom:.75rem"><div class="card" style="margin-bottom:0"><div class="card-header" style="margin-bottom:.75rem"><span class="card-title">Status dos candidatos</span></div><div id="dash-status-bars"><div class="loading"><div class="spinner"></div></div></div></div><div class="card" style="margin-bottom:0"><div class="card-header" style="margin-bottom:.75rem"><span class="card-title">Indicadores comportamentais</span></div><div id="dash-comportamental"><div class="loading"><div class="spinner"></div></div></div></div></div>
       <div class="card"><div class="card-header"><span class="card-title">Processos seletivos</span><button class="btn btn-primary btn-sm" onclick="showSection('processes')">Ver todos</button></div><div id="dashboard-processes"><div class="loading"><div class="spinner"></div></div></div></div>
       <div class="card"><div class="card-header"><span class="card-title">Top candidatos — ranking geral</span></div><div id="dash-ranking"><div class="loading"><div class="spinner"></div></div></div></div>
     </div>
-
-    <!-- PROCESSOS -->
-    <div id="section-processes" class="section">
-      <div id="view-process-list">
-        <div class="processes-list" id="processes-list"><div class="loading"><div class="spinner"></div></div></div>
-      </div>
-      <div id="view-process-detail" style="display:none">
-        <button class="btn btn-secondary btn-sm mb-6" onclick="backToProcessList()">← Voltar</button>
-        <div id="process-detail-content"></div>
-      </div>
-    </div>
-
-    <!-- PERFIS -->
-    <div id="section-profiles" class="section">
-      <div class="grid-2">
-        <div class="card">
-          <div class="card-header"><span class="card-title">Novo Perfil de Vaga</span></div>
-          <div class="form-group"><label class="form-label">Nome do perfil</label><input type="text" class="form-control" id="profile-name" placeholder="Ex: Analista Financeiro Sênior"></div>
-          <div class="form-group">
-            <label class="form-label">Documento do perfil <span style="color:var(--text-mid);font-weight:400">(.docx ou .pdf)</span></label>
-            <div id="upload-area" style="border:1.5px dashed var(--cream-dark);border-radius:var(--radius-sm);padding:1rem;text-align:center;cursor:pointer;transition:all .15s" onclick="document.getElementById('profile-file').click()" ondragover="event.preventDefault();this.style.borderColor='var(--blue)'" ondrop="handleDrop(event)">
-              <input type="file" id="profile-file" accept=".docx,.doc,.pdf" style="display:none" onchange="handleFileSelect(this)">
-              <div id="upload-label" style="font-size:13px;color:var(--text-mid)">Clique ou arraste o arquivo aqui<br><span style="font-size:11px;opacity:.7">.doc, .docx ou .pdf</span></div>
-            </div>
-          </div>
-          <div class="form-group" style="margin-top:.25rem"><label class="form-label" style="font-size:11px;color:var(--text-light)">Ou descreva manualmente</label><textarea class="form-control" id="profile-content" rows="4" placeholder="Descreva os requisitos, competências, experiências necessárias..."></textarea></div>
-          <div id="profile-msg"></div>
-          <button class="btn btn-primary w-full" onclick="saveProfile()">💾 Salvar Perfil</button>
-        </div>
-        <div class="card"><div class="card-header"><span class="card-title">Perfis Cadastrados</span></div><div id="profiles-list"><div class="loading"><div class="spinner"></div></div></div></div>
-      </div>
-    </div>
-
-    <!-- BANCO DE TALENTOS -->
-    <div id="section-talent" class="section">
-      <div class="card">
-        <div class="card-header">
-          <span class="card-title">Banco de Talentos</span>
-          <div style="display:flex;align-items:center;gap:10px">
-            <label style="font-size:13px;color:var(--text-mid)">Filtrar por cargo:</label>
-            <select id="talent-filter-process" class="form-control" style="width:220px;padding:7px 12px" onchange="loadTalent()">
-              <option value="">Todos os cargos</option>
-            </select>
-          </div>
-        </div>
-        <div id="talent-list"><div class="loading"><div class="spinner"></div></div></div>
-      </div>
-    </div>
-
-    <!-- FUNCIONÁRIOS -->
-    <div id="section-funcionarios" class="section">
-      <div class="grid-2">
-        <div class="card">
-          <div class="card-header"><span class="card-title">Cadastrar Funcionário</span></div>
-          <div class="form-group"><label class="form-label">Nome completo *</label><input type="text" class="form-control" id="fn-nome" placeholder="Nome do funcionário"></div>
-          <div class="form-group"><label class="form-label">PDV</label><input type="text" class="form-control" id="fn-pdv" placeholder="Ponto de venda"></div>
-          <div class="form-group"><label class="form-label">Data de admissão</label><input type="date" class="form-control" id="fn-admissao"></div>
-          <div class="form-group"><label class="form-label">Raça / Cor</label><select class="form-control" id="fn-raca"><option value="">Selecionar...</option><option>Branco</option><option>Pardo</option><option>Preto</option><option>Amarelo</option><option>Indígena</option><option>Prefiro não responder</option><option>Não sei</option></select></div>
-          <div class="form-group"><label class="form-label">Grau de escolaridade</label><select class="form-control" id="fn-escolaridade"><option value="">Selecionar...</option><option>Fundamental Incompleto</option><option>Fundamental Completo</option><option>Médio Incompleto</option><option>Médio Completo</option><option>Superior Incompleto</option><option>Superior Completo</option><option>Pós-graduação Incompleta</option><option>Pós-graduação Completa</option></select></div>
-          <div class="form-group"><label class="form-label">Sexo</label><select class="form-control" id="fn-sexo"><option value="">Selecionar...</option><option>Masculino</option><option>Feminino</option></select></div>
-          <div class="form-group"><label class="form-label">Cargo</label><input type="text" class="form-control" id="fn-cargo" placeholder="Cargo/função"></div>
-          <div class="form-group"><label class="form-label">Email</label><input type="email" class="form-control" id="fn-email" placeholder="email@exemplo.com"></div>
-          <div class="form-group"><label class="form-label">Telefone</label><input type="text" class="form-control" id="fn-telefone" placeholder="(21) 99999-9999"></div>
-          <div id="fn-msg"></div>
-          <button class="btn btn-primary w-full" onclick="saveFuncionario()">💾 Cadastrar Funcionário</button>
-        </div>
-        <div class="card">
-          <div class="card-header"><span class="card-title">Funcionários Ativos</span><span id="fn-count" class="text-sm text-mid"></span></div>
-          <div id="funcionarios-list"><div class="loading"><div class="spinner"></div></div></div>
-        </div>
-      </div>
-    </div>
-
-    <!-- CONFIGURAÇÕES -->
-    <div id="section-config" class="section">
-      <div class="grid-2">
-        <div class="card">
-          <div class="card-header"><span class="card-title">Novo Usuário</span></div>
-          <div class="form-group"><label class="form-label">Nome completo *</label><input type="text" class="form-control" id="nu-nome" placeholder="Nome do usuário"></div>
-          <div class="form-group"><label class="form-label">Email *</label><input type="email" class="form-control" id="nu-email" placeholder="email@exemplo.com"></div>
-          <div class="form-group"><label class="form-label">Senha *</label><input type="password" class="form-control" id="nu-senha" placeholder="Mínimo 6 caracteres"></div>
-          <div class="form-group"><label class="form-label">Perfil</label><select class="form-control" id="nu-perfil"><option value="operador">Operador</option><option value="diretor">Diretor</option></select></div>
-          <div id="nu-msg"></div>
-          <button class="btn btn-primary w-full" onclick="criarUsuario()">➕ Criar Usuário</button>
-          <div style="margin-top:24px;padding-top:24px;border-top:1px solid var(--cream-dark)">
-            <div class="card-title" style="font-size:16px;margin-bottom:16px">Alterar minha senha</div>
-            <div class="form-group"><label class="form-label">Nova senha *</label><input type="password" class="form-control" id="mp-senha" placeholder="Nova senha"></div>
-            <div class="form-group"><label class="form-label">Confirmar senha *</label><input type="password" class="form-control" id="mp-confirma" placeholder="Confirmar nova senha"></div>
-            <div id="mp-msg"></div>
-            <button class="btn btn-secondary w-full" onclick="alterarMinhaSenha()">🔑 Alterar Senha</button>
-          </div>
-        </div>
-        <div class="card">
-          <div class="card-header"><span class="card-title">Usuários Cadastrados</span><span id="users-count" class="text-sm text-mid"></span></div>
-          <div id="users-list"><div class="loading"><div class="spinner"></div></div></div>
-        </div>
-      </div>
-    </div>
-
+    <div id="section-processes" class="section"><div id="view-process-list"><div class="processes-list" id="processes-list"><div class="loading"><div class="spinner"></div></div></div></div><div id="view-process-detail" style="display:none"><button class="btn btn-secondary btn-sm mb-6" onclick="backToProcessList()">← Voltar</button><div id="process-detail-content"></div></div></div>
+    <div id="section-profiles" class="section"><div class="grid-2"><div class="card"><div class="card-header"><span class="card-title">Novo Perfil de Vaga</span></div><div class="form-group"><label class="form-label">Nome do perfil</label><input type="text" class="form-control" id="profile-name" placeholder="Ex: Consultora de Beleza"></div><div class="form-group"><label class="form-label">Documento do perfil <span style="color:var(--text-mid);font-weight:400">(.docx ou .pdf)</span></label><div id="upload-area" style="border:1.5px dashed var(--cream-dark);border-radius:var(--radius-sm);padding:1rem;text-align:center;cursor:pointer;transition:all .15s" onclick="document.getElementById('profile-file').click()" ondragover="event.preventDefault();this.style.borderColor='var(--blue)'" ondrop="handleDrop(event)"><input type="file" id="profile-file" accept=".docx,.doc,.pdf" style="display:none" onchange="handleFileSelect(this)"><div id="upload-label" style="font-size:13px;color:var(--text-mid)">Clique ou arraste o arquivo aqui<br><span style="font-size:11px;opacity:.7">.doc, .docx ou .pdf</span></div></div></div><div class="form-group" style="margin-top:.25rem"><label class="form-label" style="font-size:11px;color:var(--text-light)">Ou descreva manualmente</label><textarea class="form-control" id="profile-content" rows="4" placeholder="Descreva os requisitos..."></textarea></div><div id="profile-msg"></div><button class="btn btn-primary w-full" onclick="saveProfile()">💾 Salvar Perfil</button></div><div class="card"><div class="card-header"><span class="card-title">Perfis Cadastrados</span></div><div id="profiles-list"><div class="loading"><div class="spinner"></div></div></div></div></div></div>
+    <div id="section-talent" class="section"><div class="card"><div class="card-header"><span class="card-title">Banco de Talentos</span><div style="display:flex;align-items:center;gap:10px"><label style="font-size:13px;color:var(--text-mid)">Filtrar por cargo:</label><select id="talent-filter-process" class="form-control" style="width:220px;padding:7px 12px" onchange="loadTalent()"><option value="">Todos os cargos</option></select></div></div><div id="talent-list"><div class="loading"><div class="spinner"></div></div></div></div></div>
+    <div id="section-funcionarios" class="section"><div class="grid-2"><div class="card"><div class="card-header"><span class="card-title">Cadastrar Funcionário</span></div><div class="form-group"><label class="form-label">Nome completo *</label><input type="text" class="form-control" id="fn-nome" placeholder="Nome do funcionário"></div><div class="form-group"><label class="form-label">PDV</label><input type="text" class="form-control" id="fn-pdv" placeholder="Ponto de venda"></div><div class="form-group"><label class="form-label">Data de admissão</label><input type="date" class="form-control" id="fn-admissao"></div><div class="form-group"><label class="form-label">Raça / Cor</label><select class="form-control" id="fn-raca"><option value="">Selecionar...</option><option>Branco</option><option>Pardo</option><option>Preto</option><option>Amarelo</option><option>Indígena</option><option>Prefiro não responder</option><option>Não sei</option></select></div><div class="form-group"><label class="form-label">Grau de escolaridade</label><select class="form-control" id="fn-escolaridade"><option value="">Selecionar...</option><option>Fundamental Incompleto</option><option>Fundamental Completo</option><option>Médio Incompleto</option><option>Médio Completo</option><option>Superior Incompleto</option><option>Superior Completo</option><option>Pós-graduação Incompleta</option><option>Pós-graduação Completa</option></select></div><div class="form-group"><label class="form-label">Sexo</label><select class="form-control" id="fn-sexo"><option value="">Selecionar...</option><option>Masculino</option><option>Feminino</option></select></div><div class="form-group"><label class="form-label">Cargo</label><input type="text" class="form-control" id="fn-cargo" placeholder="Cargo/função"></div><div class="form-group"><label class="form-label">Email</label><input type="email" class="form-control" id="fn-email" placeholder="email@exemplo.com"></div><div class="form-group"><label class="form-label">Telefone</label><input type="text" class="form-control" id="fn-telefone" placeholder="(21) 99999-9999"></div><div id="fn-msg"></div><button class="btn btn-primary w-full" onclick="saveFuncionario()">💾 Cadastrar Funcionário</button></div><div class="card"><div class="card-header"><span class="card-title">Funcionários Ativos</span><span id="fn-count" class="text-sm text-mid"></span></div><div id="funcionarios-list"><div class="loading"><div class="spinner"></div></div></div></div></div></div>
+    <div id="section-config" class="section"><div class="grid-2"><div class="card"><div class="card-header"><span class="card-title">Novo Usuário</span></div><div class="form-group"><label class="form-label">Nome completo *</label><input type="text" class="form-control" id="nu-nome" placeholder="Nome do usuário"></div><div class="form-group"><label class="form-label">Email *</label><input type="email" class="form-control" id="nu-email" placeholder="email@exemplo.com"></div><div class="form-group"><label class="form-label">Senha *</label><input type="password" class="form-control" id="nu-senha" placeholder="Mínimo 6 caracteres"></div><div class="form-group"><label class="form-label">Perfil</label><select class="form-control" id="nu-perfil"><option value="operador">Operador</option><option value="diretor">Diretor</option></select></div><div id="nu-msg"></div><button class="btn btn-primary w-full" onclick="criarUsuario()">➕ Criar Usuário</button><div style="margin-top:24px;padding-top:24px;border-top:1px solid var(--cream-dark)"><div class="card-title" style="font-size:16px;margin-bottom:16px">Alterar minha senha</div><div class="form-group"><label class="form-label">Nova senha *</label><input type="password" class="form-control" id="mp-senha" placeholder="Nova senha"></div><div class="form-group"><label class="form-label">Confirmar senha *</label><input type="password" class="form-control" id="mp-confirma" placeholder="Confirmar nova senha"></div><div id="mp-msg"></div><button class="btn btn-secondary w-full" onclick="alterarMinhaSenha()">🔑 Alterar Senha</button></div></div><div class="card"><div class="card-header"><span class="card-title">Usuários Cadastrados</span><span id="users-count" class="text-sm text-mid"></span></div><div id="users-list"><div class="loading"><div class="spinner"></div></div></div></div></div></div>
   </div>
 </main>
-
-<!-- Modal: Novo Processo -->
-<div class="modal-overlay" id="modal-new-process">
-  <div class="modal">
-    <div class="modal-header"><h3>Novo Processo Seletivo</h3><button class="modal-close" onclick="closeModal('modal-new-process')">✕</button></div>
-    <div class="modal-body">
-      <div class="form-group"><label class="form-label">Título da vaga</label><input type="text" class="form-control" id="np-title" placeholder="Ex: Consultora de Beleza"></div>
-      <div class="form-group"><label class="form-label">Perfil de vaga</label><select class="form-control" id="np-profile"><option value="">— Selecionar perfil —</option></select></div>
-      <div class="form-group"><label class="form-label">Ajustes específicos <span class="text-mid">(opcional)</span></label><textarea class="form-control" id="np-adjustments" rows="4" placeholder="Preferências adicionais para este processo..."></textarea></div>
-      <div id="np-msg"></div>
-    </div>
-    <div class="modal-footer">
-      <button class="btn btn-secondary" onclick="closeModal('modal-new-process')">Cancelar</button>
-      <button class="btn btn-primary" onclick="createProcess()">Criar Processo</button>
-    </div>
-  </div>
-</div>
-
-<!-- Modal: Candidato detalhe -->
-<div class="modal-overlay candidate-detail-modal" id="modal-candidate">
-  <div class="modal">
-    <div class="modal-header"><h3 id="modal-candidate-name">Candidato</h3><button class="modal-close" onclick="closeModal('modal-candidate')">✕</button></div>
-    <div class="modal-body" id="modal-candidate-body"></div>
-    <div class="modal-footer" id="modal-candidate-footer"></div>
-  </div>
-</div>
-
-<!-- Modal: Contratar candidato -->
-<div class="modal-overlay" id="modal-contratar">
-  <div class="modal">
-    <div class="modal-header"><h3>✅ Registrar Contratação</h3><button class="modal-close" onclick="closeModal('modal-contratar')">✕</button></div>
-    <div class="modal-body">
-      <div class="alert alert-info" style="margin-bottom:16px">Os dados do candidato foram pré-preenchidos. Complete as informações de admissão.</div>
-      <input type="hidden" id="ct-candidate-id">
-      <div class="grid-2" style="gap:12px">
-        <div class="form-group"><label class="form-label">Nome *</label><input type="text" class="form-control" id="ct-nome"></div>
-        <div class="form-group"><label class="form-label">PDV</label><input type="text" class="form-control" id="ct-pdv" placeholder="Ponto de venda"></div>
-        <div class="form-group"><label class="form-label">Data de admissão</label><input type="date" class="form-control" id="ct-admissao"></div>
-        <div class="form-group"><label class="form-label">Cargo</label><input type="text" class="form-control" id="ct-cargo"></div>
-        <div class="form-group"><label class="form-label">Raça / Cor</label><select class="form-control" id="ct-raca"><option value="">Selecionar...</option><option>Branco</option><option>Pardo</option><option>Preto</option><option>Amarelo</option><option>Indígena</option><option>Prefiro não responder</option><option>Não sei</option></select></div>
-        <div class="form-group"><label class="form-label">Grau de escolaridade</label><select class="form-control" id="ct-escolaridade"><option value="">Selecionar...</option><option>Fundamental Incompleto</option><option>Fundamental Completo</option><option>Médio Incompleto</option><option>Médio Completo</option><option>Superior Incompleto</option><option>Superior Completo</option><option>Pós-graduação Incompleta</option><option>Pós-graduação Completa</option></select></div>
-        <div class="form-group"><label class="form-label">Sexo</label><select class="form-control" id="ct-sexo"><option value="">Selecionar...</option><option>Masculino</option><option>Feminino</option></select></div>
-        <div class="form-group"><label class="form-label">Email</label><input type="email" class="form-control" id="ct-email"></div>
-        <div class="form-group"><label class="form-label">Telefone</label><input type="text" class="form-control" id="ct-telefone"></div>
-      </div>
-      <div id="ct-msg"></div>
-    </div>
-    <div class="modal-footer">
-      <button class="btn btn-secondary" onclick="closeModal('modal-contratar')">Cancelar</button>
-      <button class="btn btn-gold" onclick="confirmarContratacao()">✅ Confirmar Contratação</button>
-    </div>
-  </div>
-</div>
-
-<!-- Modal: Bloquear candidato -->
-<div class="modal-overlay" id="modal-bloquear">
-  <div class="modal" style="max-width:440px">
-    <div class="modal-header"><h3>🚫 Bloquear Candidato</h3><button class="modal-close" onclick="closeModal('modal-bloquear')">✕</button></div>
-    <div class="modal-body">
-      <div class="alert alert-warn" style="margin-bottom:16px">Este candidato ficará impedido de participar de qualquer processo futuro da empresa.</div>
-      <input type="hidden" id="blq-candidate-id">
-      <div class="form-group"><label class="form-label">Motivo do bloqueio</label><textarea class="form-control" id="blq-motivo" rows="3" placeholder="Descreva o motivo..."></textarea></div>
-      <div id="blq-msg"></div>
-    </div>
-    <div class="modal-footer">
-      <button class="btn btn-secondary" onclick="closeModal('modal-bloquear')">Cancelar</button>
-      <button class="btn btn-danger" onclick="confirmarBloqueio()">🚫 Confirmar Bloqueio</button>
-    </div>
-  </div>
-</div>
-
-<!-- Modal: Encerrar processo -->
-<div class="modal-overlay" id="modal-close-process">
-  <div class="modal">
-    <div class="modal-header"><h3>Encerrar Processo</h3><button class="modal-close" onclick="closeModal('modal-close-process')">✕</button></div>
-    <div class="modal-body">
-      <div class="form-group"><label class="form-label">Desfecho</label><select class="form-control" id="cp-outcome"><option value="contratado">Contratado</option><option value="cancelado">Cancelado</option><option value="sem_candidato">Sem candidato adequado</option><option value="suspenso">Suspenso temporariamente</option></select></div>
-      <div class="form-group"><label class="form-label">Observações</label><textarea class="form-control" id="cp-reason" rows="3" placeholder="Detalhes sobre o encerramento..."></textarea></div>
-    </div>
-    <div class="modal-footer">
-      <button class="btn btn-secondary" onclick="closeModal('modal-close-process')">Cancelar</button>
-      <button class="btn btn-danger" onclick="closeProcessConfirm()">Encerrar Processo</button>
-    </div>
-  </div>
-</div>
-
+<div class="modal-overlay" id="modal-new-process"><div class="modal"><div class="modal-header"><h3>Novo Processo Seletivo</h3><button class="modal-close" onclick="closeModal('modal-new-process')">✕</button></div><div class="modal-body"><div class="form-group"><label class="form-label">Título da vaga</label><input type="text" class="form-control" id="np-title" placeholder="Ex: Consultora de Beleza"></div><div class="form-group"><label class="form-label">Perfil de vaga</label><select class="form-control" id="np-profile"><option value="">— Selecionar perfil —</option></select></div><div class="form-group"><label class="form-label">Ajustes específicos <span class="text-mid">(opcional)</span></label><textarea class="form-control" id="np-adjustments" rows="4" placeholder="Preferências adicionais..."></textarea></div><div id="np-msg"></div></div><div class="modal-footer"><button class="btn btn-secondary" onclick="closeModal('modal-new-process')">Cancelar</button><button class="btn btn-primary" onclick="createProcess()">Criar Processo</button></div></div></div>
+<div class="modal-overlay candidate-detail-modal" id="modal-candidate"><div class="modal"><div class="modal-header"><h3 id="modal-candidate-name">Candidato</h3><button class="modal-close" onclick="closeModal('modal-candidate')">✕</button></div><div class="modal-body" id="modal-candidate-body"></div><div class="modal-footer" id="modal-candidate-footer"></div></div></div>
+<div class="modal-overlay" id="modal-contratar"><div class="modal"><div class="modal-header"><h3>✅ Registrar Contratação</h3><button class="modal-close" onclick="closeModal('modal-contratar')">✕</button></div><div class="modal-body"><div class="alert alert-info" style="margin-bottom:16px">Os dados do candidato foram pré-preenchidos.</div><input type="hidden" id="ct-candidate-id"><div class="grid-2" style="gap:12px"><div class="form-group"><label class="form-label">Nome *</label><input type="text" class="form-control" id="ct-nome"></div><div class="form-group"><label class="form-label">PDV</label><input type="text" class="form-control" id="ct-pdv"></div><div class="form-group"><label class="form-label">Data de admissão</label><input type="date" class="form-control" id="ct-admissao"></div><div class="form-group"><label class="form-label">Cargo</label><input type="text" class="form-control" id="ct-cargo"></div><div class="form-group"><label class="form-label">Raça / Cor</label><select class="form-control" id="ct-raca"><option value="">Selecionar...</option><option>Branco</option><option>Pardo</option><option>Preto</option><option>Amarelo</option><option>Indígena</option><option>Prefiro não responder</option><option>Não sei</option></select></div><div class="form-group"><label class="form-label">Escolaridade</label><select class="form-control" id="ct-escolaridade"><option value="">Selecionar...</option><option>Fundamental Incompleto</option><option>Fundamental Completo</option><option>Médio Incompleto</option><option>Médio Completo</option><option>Superior Incompleto</option><option>Superior Completo</option><option>Pós-graduação Incompleta</option><option>Pós-graduação Completa</option></select></div><div class="form-group"><label class="form-label">Sexo</label><select class="form-control" id="ct-sexo"><option value="">Selecionar...</option><option>Masculino</option><option>Feminino</option></select></div><div class="form-group"><label class="form-label">Email</label><input type="email" class="form-control" id="ct-email"></div><div class="form-group"><label class="form-label">Telefone</label><input type="text" class="form-control" id="ct-telefone"></div></div><div id="ct-msg"></div></div><div class="modal-footer"><button class="btn btn-secondary" onclick="closeModal('modal-contratar')">Cancelar</button><button class="btn btn-gold" onclick="confirmarContratacao()">✅ Confirmar Contratação</button></div></div></div>
+<div class="modal-overlay" id="modal-bloquear"><div class="modal" style="max-width:440px"><div class="modal-header"><h3>🚫 Bloquear Candidato</h3><button class="modal-close" onclick="closeModal('modal-bloquear')">✕</button></div><div class="modal-body"><div class="alert alert-warn" style="margin-bottom:16px">Este candidato ficará impedido de participar de processos futuros.</div><input type="hidden" id="blq-candidate-id"><div class="form-group"><label class="form-label">Motivo do bloqueio</label><textarea class="form-control" id="blq-motivo" rows="3" placeholder="Descreva o motivo..."></textarea></div><div id="blq-msg"></div></div><div class="modal-footer"><button class="btn btn-secondary" onclick="closeModal('modal-bloquear')">Cancelar</button><button class="btn btn-danger" onclick="confirmarBloqueio()">🚫 Confirmar Bloqueio</button></div></div></div>
+<div class="modal-overlay" id="modal-close-process"><div class="modal"><div class="modal-header"><h3>Encerrar Processo</h3><button class="modal-close" onclick="closeModal('modal-close-process')">✕</button></div><div class="modal-body"><div class="form-group"><label class="form-label">Desfecho</label><select class="form-control" id="cp-outcome"><option value="contratado">Contratado</option><option value="cancelado">Cancelado</option><option value="sem_candidato">Sem candidato adequado</option><option value="suspenso">Suspenso temporariamente</option></select></div><div class="form-group"><label class="form-label">Observações</label><textarea class="form-control" id="cp-reason" rows="3" placeholder="Detalhes..."></textarea></div></div><div class="modal-footer"><button class="btn btn-secondary" onclick="closeModal('modal-close-process')">Cancelar</button><button class="btn btn-danger" onclick="closeProcessConfirm()">Encerrar Processo</button></div></div></div>
 <script>
 const API = 'https://rh-assertivo-api.choil-plosk.workers.dev';
-let currentProcessId = null;
-let currentCandidateId = null;
-let closeProcessId = null;
+let currentProcessId = null, currentCandidateId = null, closeProcessId = null;
 let authToken = localStorage.getItem('rh_token') || null;
 let currentUser = JSON.parse(localStorage.getItem('rh_user') || 'null');
 
 function checkAuth() {
-  if (!authToken) {
-    document.getElementById('login-screen').style.display = 'flex';
-    document.getElementById('app-screen').style.display = 'none';
-  } else {
-    document.getElementById('login-screen').style.display = 'none';
-    document.getElementById('app-screen').style.display = 'flex';
-    if (currentUser) {
-      document.getElementById('user-name').textContent = currentUser.name;
-      document.getElementById('user-role').textContent = currentUser.role === 'diretor' ? 'Diretor' : 'Operador';
-      if (currentUser.role === 'diretor') document.getElementById('nav-config').style.display = '';
-    }
+  if (!authToken) { document.getElementById('login-screen').style.display = 'flex'; document.getElementById('app-screen').style.display = 'none'; }
+  else {
+    document.getElementById('login-screen').style.display = 'none'; document.getElementById('app-screen').style.display = 'flex';
+    if (currentUser) { document.getElementById('user-name').textContent = currentUser.name; document.getElementById('user-role').textContent = currentUser.role === 'diretor' ? 'Diretor' : 'Operador'; if (currentUser.role === 'diretor') document.getElementById('nav-config').style.display = ''; }
     loadDashboard();
   }
 }
-
 async function doLogin() {
-  const email = document.getElementById('login-email').value.trim();
-  const password = document.getElementById('login-password').value;
-  const msg = document.getElementById('login-msg');
-  const btn = document.getElementById('login-btn');
+  const email = document.getElementById('login-email').value.trim(), password = document.getElementById('login-password').value;
+  const msg = document.getElementById('login-msg'), btn = document.getElementById('login-btn');
   if (!email || !password) { msg.textContent = 'Preencha email e senha.'; return; }
   btn.disabled = true; btn.textContent = 'Entrando...'; msg.textContent = '';
   try {
@@ -484,37 +236,26 @@ async function doLogin() {
     const data = await r.json();
     if (!r.ok) { msg.textContent = data.error || 'Erro ao entrar.'; btn.disabled = false; btn.textContent = 'Entrar'; return; }
     authToken = data.token; currentUser = data.user;
-    localStorage.setItem('rh_token', authToken);
-    localStorage.setItem('rh_user', JSON.stringify(currentUser));
+    localStorage.setItem('rh_token', authToken); localStorage.setItem('rh_user', JSON.stringify(currentUser));
     checkAuth();
   } catch(e) { msg.textContent = 'Erro de conexão.'; btn.disabled = false; btn.textContent = 'Entrar'; }
 }
-
 function doLogout() {
   authToken = null; currentUser = null;
   localStorage.removeItem('rh_token'); localStorage.removeItem('rh_user');
-  const navConfig = document.getElementById('nav-config');
-  if (navConfig) navConfig.style.display = 'none';
+  const navConfig = document.getElementById('nav-config'); if (navConfig) navConfig.style.display = 'none';
   checkAuth();
 }
-
-document.addEventListener('DOMContentLoaded', () => {
-  document.getElementById('login-password')?.addEventListener('keydown', e => { if (e.key === 'Enter') doLogin(); });
-  checkAuth();
-});
+document.addEventListener('DOMContentLoaded', () => { document.getElementById('login-password')?.addEventListener('keydown', e => { if (e.key === 'Enter') doLogin(); }); checkAuth(); });
 
 function showSection(name) {
   document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
   document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
   document.getElementById('section-' + name).classList.add('active');
-  document.querySelectorAll('.nav-item').forEach(n => {
-    const t = n.textContent.trim().toLowerCase();
-    if ((name==='dashboard'&&t.includes('dashboard'))||(name==='processes'&&t.includes('processo'))||(name==='profiles'&&t.includes('perfis'))||(name==='talent'&&t.includes('talento'))||(name==='funcionarios'&&t.includes('funcionário'))||(name==='config'&&t.includes('configurações'))) n.classList.add('active');
-  });
+  document.querySelectorAll('.nav-item').forEach(n => { const t = n.textContent.trim().toLowerCase(); if ((name==='dashboard'&&t.includes('dashboard'))||(name==='processes'&&t.includes('processo'))||(name==='profiles'&&t.includes('perfis'))||(name==='talent'&&t.includes('talento'))||(name==='funcionarios'&&t.includes('funcionário'))||(name==='config'&&t.includes('configurações'))) n.classList.add('active'); });
   const titles = { dashboard:'Dashboard', processes:'Processos Seletivos', profiles:'Perfis de Vaga', talent:'Banco de Talentos', funcionarios:'Funcionários', config:'Configurações' };
   document.getElementById('page-title').textContent = titles[name] || name;
-  const actions = document.getElementById('topbar-actions');
-  actions.innerHTML = '';
+  const actions = document.getElementById('topbar-actions'); actions.innerHTML = '';
   if (name==='processes') actions.innerHTML = '<button class="btn btn-gold" onclick="openNewProcess()">+ Novo Processo</button>';
   if (name==='dashboard') loadDashboard();
   if (name==='processes') loadProcesses();
@@ -523,7 +264,6 @@ function showSection(name) {
   if (name==='funcionarios') loadFuncionarios();
   if (name==='config') { if (currentUser?.role !== 'diretor') { showSection('dashboard'); return; } loadUsuarios(); }
 }
-
 async function api(path, opts = {}) {
   const headers = { 'Content-Type': 'application/json', ...(opts.headers || {}) };
   if (authToken) headers['Authorization'] = 'Bearer ' + authToken;
@@ -532,18 +272,21 @@ async function api(path, opts = {}) {
   if (!r.ok) throw new Error(await r.text());
   return r.json();
 }
-
 function scoreColor(s){ return s>=70?'var(--success)':s>=50?'var(--warn)':'var(--danger)'; }
+function scoreClass(s) { return s >= 70 ? 'score-high' : s >= 50 ? 'score-mid' : 'score-low'; }
+function fmtDate(str) { if (!str) return '—'; return new Date(str).toLocaleDateString('pt-BR'); }
+function statusBadge(s) { const map = { aberto: ['badge-blue','Aberto'], em_triagem: ['badge-gold','Em triagem'], encerrado: ['badge-gray','Encerrado'] }; const [cls, label] = map[s] || ['badge-gray', s]; return `<span class="badge ${cls}">${label}</span>`; }
+function candidateStatusBadge(s) { const map = { pendente: ['badge-gray','Pendente'], aprovado: ['badge-success','Aprovado'], reprovado: ['badge-danger','Reprovado'], contratado: ['badge-blue','Contratado'], aguardando_analise: ['badge-gray','Aguardando'] }; const [cls, label] = map[s] || ['badge-gray', s]; return `<span class="badge ${cls}">${label}</span>`; }
+function openModal(id) { document.getElementById(id).classList.add('open'); }
+function closeModal(id) { document.getElementById(id).classList.remove('open'); }
+document.querySelectorAll('.modal-overlay').forEach(m => { m.addEventListener('click', e => { if (e.target === m) m.classList.remove('open'); }); });
 
 async function loadDashboard() {
   try {
     document.getElementById('dash-subtitulo').textContent = 'O Boticário Niterói · ' + new Date().toLocaleDateString('pt-BR');
     const [processes, talent] = await Promise.all([api('/processes'), api('/talent-bank')]);
     const allCandidates = [];
-    for (const p of processes) {
-      const cands = await api(`/processes/${p.id}/candidates`);
-      if (cands) allCandidates.push(...cands.map(c => ({...c, process_title: p.title})));
-    }
+    for (const p of processes) { const cands = await api(`/processes/${p.id}/candidates`); if (cands) allCandidates.push(...cands.map(c => ({...c, process_title: p.title}))); }
     const open = processes.filter(p => p.status !== 'encerrado').length;
     const scores = allCandidates.map(c => c.score).filter(s => s > 0);
     const scoreMedio = scores.length ? Math.round(scores.reduce((a,b)=>a+b,0)/scores.length) : 0;
@@ -554,24 +297,14 @@ async function loadDashboard() {
     document.getElementById('stat-score').innerHTML = scores.length ? `${scoreMedio}<span style="font-size:14px;font-weight:400;opacity:.6">/100</span>` : '—';
     document.getElementById('stat-score-s').textContent = scores.length ? `média de ${scores.length} analisados` : 'máx. 100 pontos';
     let totalQuiz = 0; const allQuizScores = [];
-    for (const p of processes) {
-      try {
-        const pend = await api(`/processes/${p.id}/questionario/pendentes`);
-        if (pend) { const resp = pend.filter(x => x.respondido); totalQuiz += resp.length; for (const c of resp) { const qr = await api(`/questionario/${c.id}/respostas`); if (qr && qr.respondido) allQuizScores.push(qr.scores); } }
-      } catch {}
-    }
+    for (const p of processes) { try { const pend = await api(`/processes/${p.id}/questionario/pendentes`); if (pend) { const resp = pend.filter(x => x.respondido); totalQuiz += resp.length; for (const c of resp) { const qr = await api(`/questionario/${c.id}/respostas`); if (qr && qr.respondido) allQuizScores.push(qr.scores); } } } catch {} }
     document.getElementById('stat-quiz').textContent = totalQuiz || '—';
     document.getElementById('stat-quiz-s').textContent = totalQuiz ? `de ${allCandidates.length} candidatos` : 'nenhum ainda';
-    const ap = allCandidates.filter(c=>c.status==='aprovado'||c.status==='contratado').length;
-    const pe = allCandidates.filter(c=>c.status==='pendente').length;
-    const rp = allCandidates.filter(c=>c.status==='reprovado').length;
-    const tot = allCandidates.length || 1;
+    const ap = allCandidates.filter(c=>c.status==='aprovado'||c.status==='contratado').length, pe = allCandidates.filter(c=>c.status==='pendente').length, rp = allCandidates.filter(c=>c.status==='reprovado').length, tot = allCandidates.length || 1;
     document.getElementById('dash-status-bars').innerHTML = allCandidates.length ? `${[['Aprovados',ap,'var(--success)'],['Pendentes',pe,'var(--blue)'],['Reprovados',rp,'var(--danger)']].map(([l,v,c])=>`<div style="margin-bottom:10px"><div style="display:flex;justify-content:space-between;font-size:12px;margin-bottom:4px"><span style="color:var(--text-mid)">${l}</span><span style="font-weight:600;color:${c}">${v} (${Math.round(v/tot*100)}%)</span></div><div style="height:6px;background:#e2e2df;border-radius:3px;overflow:hidden"><div style="height:100%;width:${Math.round(v/tot*100)}%;background:${c};border-radius:3px"></div></div></div>`).join('')}` : '<div class="text-sm text-mid">Nenhum candidato ainda.</div>';
     const compEl = document.getElementById('dash-comportamental');
-    if (allQuizScores.length) {
-      const avg = k => Math.round(allQuizScores.reduce((s,q)=>s+(q[k]||0),0)/allQuizScores.length);
-      compEl.innerHTML = `<div style="font-size:11px;color:var(--text-mid);margin-bottom:8px">${allQuizScores.length} questionário(s)</div>${[['Resiliência',avg('resiliencia'),'var(--success)'],['Confiabilidade',avg('confianca'),'var(--blue)'],['Crescimento',avg('crescimento'),'#534AB7'],['⚠ Mosca morta',avg('mosca'),'var(--danger)'],['⚠ Deslealdade',avg('traidor'),'#D85A30'],['⚠ Turnover',avg('turnover'),'var(--warn)']].map(([l,v,c])=>`<div style="display:flex;align-items:center;gap:6px;margin-bottom:7px"><span style="font-size:11px;color:var(--text-mid);min-width:110px">${l}</span><div style="flex:1;height:5px;background:#e2e2df;border-radius:3px;overflow:hidden"><div style="height:100%;width:${v}%;background:${c};border-radius:3px"></div></div><span style="font-size:11px;font-weight:600;color:${c};min-width:28px;text-align:right">${v}%</span></div>`).join('')}`;
-    } else { compEl.innerHTML = '<div class="text-sm text-mid">Aguardando questionários respondidos.</div>'; }
+    if (allQuizScores.length) { const avg = k => Math.round(allQuizScores.reduce((s,q)=>s+(q[k]||0),0)/allQuizScores.length); compEl.innerHTML = `<div style="font-size:11px;color:var(--text-mid);margin-bottom:8px">${allQuizScores.length} questionário(s)</div>${[['Resiliência',avg('resiliencia'),'var(--success)'],['Confiabilidade',avg('confianca'),'var(--blue)'],['Crescimento',avg('crescimento'),'#534AB7'],['⚠ Mosca morta',avg('mosca'),'var(--danger)'],['⚠ Deslealdade',avg('traidor'),'#D85A30'],['⚠ Turnover',avg('turnover'),'var(--warn)']].map(([l,v,c])=>`<div style="display:flex;align-items:center;gap:6px;margin-bottom:7px"><span style="font-size:11px;color:var(--text-mid);min-width:110px">${l}</span><div style="flex:1;height:5px;background:#e2e2df;border-radius:3px;overflow:hidden"><div style="height:100%;width:${v}%;background:${c};border-radius:3px"></div></div><span style="font-size:11px;font-weight:600;color:${c};min-width:28px;text-align:right">${v}%</span></div>`).join('')}`; }
+    else { compEl.innerHTML = '<div class="text-sm text-mid">Aguardando questionários respondidos.</div>'; }
     const procEl = document.getElementById('dashboard-processes');
     if (!processes.length) { procEl.innerHTML = '<div class="empty"><div class="empty-icon">📋</div><p>Nenhum processo ainda.</p></div>'; }
     else { procEl.innerHTML = `<div class="table-wrap"><table><thead><tr><th>Vaga</th><th>Status</th><th>Candidatos</th><th>Score médio</th><th>Criado em</th></tr></thead><tbody>${processes.map(p => { const cands = allCandidates.filter(c=>c.process_id===p.id); const sc = cands.length ? Math.round(cands.reduce((s,c)=>s+c.score,0)/cands.length) : 0; return `<tr style="cursor:pointer" onclick="openProcess(${p.id})"><td><strong>${p.title}</strong></td><td>${statusBadge(p.status)}</td><td>${p.candidate_count}</td><td>${sc ? `<span style="font-weight:600;color:${scoreColor(sc)}">${sc}</span>` : '—'}</td><td>${fmtDate(p.created_at)}</td></tr>`; }).join('')}</tbody></table></div>`; }
@@ -609,127 +342,35 @@ async function openProcess(id) {
 function renderProcessDetail(proc, candidates) {
   const el = document.getElementById('process-detail-content');
   const isOpen = proc.status !== 'encerrado';
-  el.innerHTML = `
-    <div class="flex items-center justify-between mb-6">
-      <div>
-        <h2 class="font-serif" style="font-size:26px;color:var(--navy)">${proc.title}</h2>
-        <div class="text-sm text-mid mt-4">${statusBadge(proc.status)} · ${candidates.length} candidato(s) · Criado em ${fmtDate(proc.created_at)}</div>
-      </div>
-      ${isOpen ? `<button class="btn btn-danger btn-sm" onclick="openCloseProcess(${proc.id})">Encerrar Processo</button>` : ''}
-    </div>
+  el.innerHTML = `<div class="flex items-center justify-between mb-6"><div><h2 class="font-serif" style="font-size:26px;color:var(--navy)">${proc.title}</h2><div class="text-sm text-mid mt-4">${statusBadge(proc.status)} · ${candidates.length} candidato(s) · Criado em ${fmtDate(proc.created_at)}</div></div>${isOpen ? `<button class="btn btn-danger btn-sm" onclick="openCloseProcess(${proc.id})">Encerrar Processo</button>` : ''}</div>
     ${proc.profile_adjustments ? `<div class="alert alert-info mb-6">📌 Ajustes: ${proc.profile_adjustments}</div>` : ''}
-    ${isOpen ? `
-    <div class="card mb-6">
-      <div class="card-header"><span class="card-title">📤 Enviar Currículos</span></div>
-      <div class="upload-zone" id="upload-zone" onclick="document.getElementById('file-input').click()" ondragover="event.preventDefault();this.classList.add('drag')" ondragleave="this.classList.remove('drag')" ondrop="handleDrop(event)">
-        <div class="upload-icon">📂</div>
-        <p><strong>Clique para selecionar</strong> ou arraste os arquivos aqui</p>
-        <p class="text-sm mt-4" style="margin-top:6px">Formatos: .doc, .docx, .pdf · Múltiplos arquivos</p>
-      </div>
-      <input type="file" id="file-input" multiple accept=".doc,.docx,.pdf" style="display:none" onchange="handleFiles(this.files)">
-      <div id="upload-progress" style="display:none">
-        <div class="upload-progress">
-          <div class="progress-label" id="progress-label">Enviando arquivos...</div>
-          <div class="progress-track"><div class="progress-fill" id="progress-fill" style="width:0%"></div></div>
-          <div class="text-sm text-mid" id="progress-detail"></div>
-        </div>
-      </div>
-      <div id="analyze-section" style="display:none;margin-top:16px;padding-top:16px;border-top:1px solid var(--cream-dark)">
-        <div style="display:flex;align-items:center;justify-content:space-between;gap:16px">
-          <div><div style="font-weight:600;color:var(--navy)" id="pending-count-label"></div><div style="font-size:13px;color:var(--text-mid)">Revise a lista e clique em Analisar quando estiver pronto.</div></div>
-          <button class="btn btn-gold" onclick="startAnalysis()" id="btn-analyze">🤖 Analisar com IA</button>
-        </div>
-      </div>
-    </div>` : `<div class="alert alert-info mb-6">Processo encerrado. Desfecho: <strong>${proc.outcome}</strong>${proc.outcome_reason ? ' — ' + proc.outcome_reason : ''}</div>`}
-    <div class="card">
-      <div class="card-header"><span class="card-title">🏆 Ranking de Candidatos</span><span class="text-sm text-mid">${candidates.length} candidato(s)</span></div>
-      <div id="candidates-table">${renderCandidatesTable(candidates, isOpen, proc.title)}</div>
-    </div>`;
+    ${isOpen ? `<div class="card mb-6"><div class="card-header"><span class="card-title">📤 Enviar Currículos</span></div><div class="upload-zone" id="upload-zone" onclick="document.getElementById('file-input').click()" ondragover="event.preventDefault();this.classList.add('drag')" ondragleave="this.classList.remove('drag')" ondrop="handleDrop(event)"><div class="upload-icon">📂</div><p><strong>Clique para selecionar</strong> ou arraste os arquivos aqui</p><p class="text-sm mt-4" style="margin-top:6px">Formatos: .doc, .docx, .pdf · Múltiplos arquivos</p></div><input type="file" id="file-input" multiple accept=".doc,.docx,.pdf" style="display:none" onchange="handleFiles(this.files)"><div id="upload-progress" style="display:none"><div class="upload-progress"><div class="progress-label" id="progress-label">Enviando arquivos...</div><div class="progress-track"><div class="progress-fill" id="progress-fill" style="width:0%"></div></div><div class="text-sm text-mid" id="progress-detail"></div></div></div><div id="analyze-section" style="display:none;margin-top:16px;padding-top:16px;border-top:1px solid var(--cream-dark)"><div style="display:flex;align-items:center;justify-content:space-between;gap:16px"><div><div style="font-weight:600;color:var(--navy)" id="pending-count-label"></div><div style="font-size:13px;color:var(--text-mid)">Revise a lista e clique em Analisar quando estiver pronto.</div></div><button class="btn btn-gold" onclick="startAnalysis()" id="btn-analyze">🤖 Analisar com IA</button></div></div></div>` : `<div class="alert alert-info mb-6">Processo encerrado. Desfecho: <strong>${proc.outcome}</strong>${proc.outcome_reason ? ' — ' + proc.outcome_reason : ''}</div>`}
+    <div class="card"><div class="card-header"><span class="card-title">🏆 Ranking de Candidatos</span><span class="text-sm text-mid">${candidates.length} candidato(s)</span></div><div id="candidates-table">${renderCandidatesTable(candidates, isOpen, proc.title)}</div></div>`;
 }
 
-// ── ITEM 5: renderCandidatesTable com badges de pesquisa ─────────
 function renderCandidatesTable(candidates, isOpen, processTitle) {
   if (!candidates.length) return '<div class="empty"><div class="empty-icon">👥</div><p>Nenhum currículo enviado ainda.</p></div>';
   const rows = candidates.map(c => {
-    const sc = scoreClass(c.score);
-    const bloqueado = c.bloqueado;
-    return `<tr data-candidate-id="${c.id}" class="${bloqueado ? 'bloqueado-row' : ''}">
-      <td><strong>${c.ranking_position}</strong></td>
-      <td>
-        <div><strong>${c.name || c.filename}</strong> ${bloqueado ? '<span class="badge badge-blocked" style="font-size:10px">🚫 Bloqueado</span>' : ''}</div>
-        ${c.email ? `<div class="text-sm text-mid">${c.email}</div>` : ''}
-      </td>
-      <td>
-        <div class="score-bar ${sc}">
-          <div class="score-track"><div class="score-fill" style="width:${c.score}%"></div></div>
-          <div class="score-num">${c.status === 'aguardando_analise' ? '—' : Math.round(c.score) + '/100'}</div>
-        </div>
-      </td>
-      <td>
-        ${candidateStatusBadge(c.status)}
-        <span id="pesquisa-badge-${c.id}" style="display:block;margin-top:3px"></span>
-      </td>
-      <td>
-        <div class="flex gap-2" style="flex-wrap:wrap">
-          ${c.status === 'aguardando_analise'
-            ? `<span style="font-size:12px;color:var(--text-light)">⏳ Aguardando análise</span>`
-            : `<button class="btn btn-secondary btn-sm" onclick="openCandidate(${c.id})">Ver detalhes</button>`
-          }
-          ${isOpen && c.status === 'pendente' ? `
-            <button class="btn btn-sm" style="background:var(--success-bg);color:var(--success)" onclick="updateStatus(${c.id},'aprovado')">✓</button>
-            <button class="btn btn-sm" style="background:var(--danger-bg);color:var(--danger)" onclick="updateStatus(${c.id},'reprovado')">✗</button>
-          ` : ''}
-          ${isOpen && c.status === 'aprovado' ? `
-            <button class="btn btn-sm btn-gold" onclick="abrirModalContratar(${c.id},'${(c.name||'').replace(/'/g,"\\'")}','${(c.email||'')}','${(c.phone||'')}','${(processTitle||'').replace(/'/g,"\\'")}')">✅ Contratado</button>
-          ` : ''}
-          ${!bloqueado && c.status !== 'aguardando_analise' ? `
-            <button class="btn btn-sm" style="background:#1a1a1a;color:#fff;font-size:11px" onclick="abrirModalBloquear(${c.id})">🚫</button>
-          ` : ''}
-        </div>
-      </td>
-    </tr>`;
+    const sc = scoreClass(c.score), bloqueado = c.bloqueado;
+    return `<tr data-candidate-id="${c.id}" class="${bloqueado ? 'bloqueado-row' : ''}"><td><strong>${c.ranking_position}</strong></td><td><div><strong>${c.name || c.filename}</strong> ${bloqueado ? '<span class="badge badge-blocked" style="font-size:10px">🚫 Bloqueado</span>' : ''}</div>${c.email ? `<div class="text-sm text-mid">${c.email}</div>` : ''}</td><td><div class="score-bar ${sc}"><div class="score-track"><div class="score-fill" style="width:${c.score}%"></div></div><div class="score-num">${c.status === 'aguardando_analise' ? '—' : Math.round(c.score) + '/100'}</div></div></td><td>${candidateStatusBadge(c.status)}<span id="pesquisa-badge-${c.id}" style="display:block;margin-top:3px"></span></td><td><div class="flex gap-2" style="flex-wrap:wrap">${c.status === 'aguardando_analise' ? `<span style="font-size:12px;color:var(--text-light)">⏳ Aguardando análise</span>` : `<button class="btn btn-secondary btn-sm" onclick="openCandidate(${c.id})">Ver detalhes</button>`}${isOpen && c.status === 'pendente' ? `<button class="btn btn-sm" style="background:var(--success-bg);color:var(--success)" onclick="updateStatus(${c.id},'aprovado')">✓</button><button class="btn btn-sm" style="background:var(--danger-bg);color:var(--danger)" onclick="updateStatus(${c.id},'reprovado')">✗</button>` : ''}${isOpen && c.status === 'aprovado' ? `<button class="btn btn-sm btn-gold" onclick="abrirModalContratar(${c.id},'${(c.name||'').replace(/'/g,"\\'")}','${(c.email||'')}','${(c.phone||'')}','${(processTitle||'').replace(/'/g,"\\'")}')">✅ Contratado</button>` : ''}${!bloqueado && c.status !== 'aguardando_analise' ? `<button class="btn btn-sm" style="background:#1a1a1a;color:#fff;font-size:11px" onclick="abrirModalBloquear(${c.id})">🚫</button>` : ''}</div></td></tr>`;
   }).join('');
-
-  // Carrega badges de pesquisa de forma assíncrona após render
   setTimeout(() => enriquecerBadgesTabela(candidates.map(c => c.id)), 400);
-
-  return `<div class="table-wrap"><table>
-    <thead><tr><th>#</th><th>Candidato</th><th>Score</th><th>Status / Pesquisa</th><th>Ações</th></tr></thead>
-    <tbody>${rows}</tbody>
-  </table></div>`;
+  return `<div class="table-wrap"><table><thead><tr><th>#</th><th>Candidato</th><th>Score</th><th>Status / Pesquisa</th><th>Ações</th></tr></thead><tbody>${rows}</tbody></table></div>`;
 }
 
-// ITEM 5: carrega badges assíncronos
 async function enriquecerBadgesTabela(candidateIds) {
   for (const id of candidateIds) {
-    const el = document.getElementById('pesquisa-badge-' + id);
-    if (!el) continue;
-    try {
-      const r = await api('/questionario/' + id + '/respostas');
-      if (r && r.respondido) {
-        el.innerHTML = '<span class="badge" style="background:#e8f7ee;color:#1a7a4a;font-size:10px">✅ Pesquisa recebida</span>';
-      } else if (localStorage.getItem('quiz_sent_' + id)) {
-        el.innerHTML = '<span class="badge" style="background:#dbeafe;color:#1e40af;font-size:10px">📬 Pesquisa enviada</span>';
-      }
-    } catch(e) { /* silencioso */ }
+    const el = document.getElementById('pesquisa-badge-' + id); if (!el) continue;
+    try { const r = await api('/questionario/' + id + '/respostas'); if (r && r.respondido) { el.innerHTML = '<span class="badge" style="background:#e8f7ee;color:#1a7a4a;font-size:10px">✅ Pesquisa recebida</span>'; } else if (localStorage.getItem('quiz_sent_' + id)) { el.innerHTML = '<span class="badge" style="background:#dbeafe;color:#1e40af;font-size:10px">📬 Pesquisa enviada</span>'; } } catch(e) {}
   }
 }
 
-function backToProcessList() {
-  document.getElementById('view-process-list').style.display = '';
-  document.getElementById('view-process-detail').style.display = 'none';
-  currentProcessId = null;
-  loadProcesses();
-}
+function backToProcessList() { document.getElementById('view-process-list').style.display = ''; document.getElementById('view-process-detail').style.display = 'none'; currentProcessId = null; loadProcesses(); }
 
 async function openNewProcess() {
-  document.getElementById('np-msg').innerHTML = '';
-  document.getElementById('np-title').value = '';
-  document.getElementById('np-adjustments').value = '';
-  const sel = document.getElementById('np-profile');
-  sel.innerHTML = '<option value="">— Selecionar perfil (opcional) —</option>';
-  const profiles = await api('/profiles');
-  profiles.forEach(p => { sel.innerHTML += `<option value="${p.id}">${p.name}</option>`; });
+  document.getElementById('np-msg').innerHTML = ''; document.getElementById('np-title').value = ''; document.getElementById('np-adjustments').value = '';
+  const sel = document.getElementById('np-profile'); sel.innerHTML = '<option value="">— Selecionar perfil (opcional) —</option>';
+  const profiles = await api('/profiles'); profiles.forEach(p => { sel.innerHTML += `<option value="${p.id}">${p.name}</option>`; });
   openModal('modal-new-process');
 }
 
@@ -737,37 +378,23 @@ async function createProcess() {
   const title = document.getElementById('np-title').value.trim();
   if (!title) { document.getElementById('np-msg').innerHTML = '<div class="alert alert-danger">Informe o título da vaga.</div>'; return; }
   const body = { title, profile_id: document.getElementById('np-profile').value ? parseInt(document.getElementById('np-profile').value) : null, profile_adjustments: document.getElementById('np-adjustments').value.trim() };
-  try {
-    const proc = await api('/processes', { method: 'POST', body: JSON.stringify(body) });
-    closeModal('modal-new-process');
-    showSection('processes');
-    openProcess(proc.id);
-  } catch(e) { document.getElementById('np-msg').innerHTML = `<div class="alert alert-danger">Erro: ${e.message}</div>`; }
+  try { const proc = await api('/processes', { method: 'POST', body: JSON.stringify(body) }); closeModal('modal-new-process'); showSection('processes'); openProcess(proc.id); }
+  catch(e) { document.getElementById('np-msg').innerHTML = `<div class="alert alert-danger">Erro: ${e.message}</div>`; }
 }
 
 function handleDrop(e) { e.preventDefault(); document.getElementById('upload-zone')?.classList.remove('drag'); handleFiles(e.dataTransfer.files); }
 
 async function handleFiles(files) {
   if (!files.length) return;
-  const zone = document.getElementById('upload-zone');
-  const progressEl = document.getElementById('upload-progress');
-  const fill = document.getElementById('progress-fill');
-  const label = document.getElementById('progress-label');
-  const detail = document.getElementById('progress-detail');
-  zone.style.display = 'none'; progressEl.style.display = 'block';
-  label.textContent = `Extraindo texto de ${files.length} arquivo(s)...`; fill.style.width = '30%';
+  const zone = document.getElementById('upload-zone'), progressEl = document.getElementById('upload-progress'), fill = document.getElementById('progress-fill'), label = document.getElementById('progress-label'), detail = document.getElementById('progress-detail');
+  zone.style.display = 'none'; progressEl.style.display = 'block'; label.textContent = `Extraindo texto de ${files.length} arquivo(s)...`; fill.style.width = '30%';
   try {
     const candidates = [];
-    for (let i = 0; i < files.length; i++) {
-      const f = files[i]; label.textContent = `Lendo ${i+1}/${files.length}: ${f.name}`;
-      const text = await extractTextFromFile(f);
-      candidates.push({ filename: f.name, text });
-    }
+    for (let i = 0; i < files.length; i++) { const f = files[i]; label.textContent = `Lendo ${i+1}/${files.length}: ${f.name}`; const text = await extractTextFromFile(f); candidates.push({ filename: f.name, text }); }
     fill.style.width = '60%'; label.textContent = `Enviando ${candidates.length} currículo(s)...`;
     const r = await fetch(`${API}/processes/${currentProcessId}/upload`, { method: 'POST', headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + authToken }, body: JSON.stringify({ candidates }) });
     if (!r.ok) throw new Error(await r.text());
-    const data = await r.json();
-    fill.style.width = '100%';
+    const data = await r.json(); fill.style.width = '100%';
     const temDup = data.skipped && data.skipped.length > 0;
     label.textContent = `✅ ${data.uploaded} currículo(s) recebido(s)` + (temDup ? ` · ⚠️ ${data.skipped.length} ignorado(s)` : '');
     detail.textContent = temDup ? `Ignorados: ${data.skipped.join(', ')}` : 'Clique em "Analisar com IA" quando estiver pronto.';
@@ -776,38 +403,20 @@ async function handleFiles(files) {
 }
 
 async function checkPendingAnalysis() {
-  try {
-    const candidates = await api(`/processes/${currentProcessId}/candidates`);
-    const pending = candidates.filter(c => c.status === 'aguardando_analise');
-    const section = document.getElementById('analyze-section');
-    const lbl = document.getElementById('pending-count-label');
-    if (!section) return;
-    if (pending.length > 0) { section.style.display = 'block'; lbl.textContent = `${pending.length} currículo(s) prontos para análise`; }
-    else { section.style.display = 'none'; }
-  } catch(e) {}
+  try { const candidates = await api(`/processes/${currentProcessId}/candidates`); const pending = candidates.filter(c => c.status === 'aguardando_analise'); const section = document.getElementById('analyze-section'), lbl = document.getElementById('pending-count-label'); if (!section) return; if (pending.length > 0) { section.style.display = 'block'; lbl.textContent = `${pending.length} currículo(s) prontos para análise`; } else { section.style.display = 'none'; } } catch(e) {}
 }
 
 async function startAnalysis() {
-  const btn = document.getElementById('btn-analyze');
-  if (!btn) return;
+  const btn = document.getElementById('btn-analyze'); if (!btn) return;
   btn.disabled = true; btn.textContent = '⏳ Analisando...';
-  const progressEl = document.getElementById('upload-progress');
-  const fill = document.getElementById('progress-fill');
-  const label = document.getElementById('progress-label');
-  const detail = document.getElementById('progress-detail');
+  const progressEl = document.getElementById('upload-progress'), fill = document.getElementById('progress-fill'), label = document.getElementById('progress-label'), detail = document.getElementById('progress-detail');
   if (progressEl) {
-    progressEl.style.display = 'block';
-    label.textContent = 'A IA está analisando os currículos...';
-    detail.textContent = 'Isso pode levar alguns minutos.';
-    fill.style.width = '15%';
-    let prog = 15;
-    const interval = setInterval(() => { prog = Math.min(prog + 4, 85); fill.style.width = prog + '%'; }, 2000);
+    progressEl.style.display = 'block'; label.textContent = 'A IA está analisando os currículos...'; detail.textContent = 'Isso pode levar alguns minutos.'; fill.style.width = '15%';
+    let prog = 15; const interval = setInterval(() => { prog = Math.min(prog + 4, 85); fill.style.width = prog + '%'; }, 2000);
     try {
       const r = await fetch(`${API}/processes/${currentProcessId}/analyze`, { method: 'POST', headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + authToken } });
-      clearInterval(interval);
-      if (!r.ok) throw new Error(await r.text());
-      const data = await r.json();
-      fill.style.width = '100%'; label.textContent = `✅ ${data.analyzed} currículo(s) analisado(s)!`; detail.textContent = 'Atualizando ranking...';
+      clearInterval(interval); if (!r.ok) throw new Error(await r.text());
+      const data = await r.json(); fill.style.width = '100%'; label.textContent = `✅ ${data.analyzed} currículo(s) analisado(s)!`; detail.textContent = 'Atualizando ranking...';
       setTimeout(() => { progressEl.style.display = 'none'; openProcess(currentProcessId); }, 1000);
     } catch(e) { clearInterval(interval); fill.style.background = 'var(--danger)'; label.textContent = '❌ Erro na análise'; detail.textContent = e.message; if (btn) { btn.disabled = false; btn.textContent = '🤖 Analisar com IA'; } }
   }
@@ -816,8 +425,7 @@ async function startAnalysis() {
 async function openCandidate(candidateId) {
   currentCandidateId = candidateId;
   const candidates = await api(`/processes/${currentProcessId}/candidates`);
-  const c = candidates.find(x => x.id === candidateId);
-  if (!c) return;
+  const c = candidates.find(x => x.id === candidateId); if (!c) return;
   document.getElementById('modal-candidate-name').textContent = c.name || c.filename;
   let analyzedLabel = '';
   if (c.analyzed_at) { const d = new Date(c.analyzed_at); analyzedLabel = `<div style="font-size:11px;color:var(--text-light);margin-top:6px">🕐 Analisado em ${d.toLocaleString('pt-BR',{day:'2-digit',month:'2-digit',year:'numeric',hour:'2-digit',minute:'2-digit'})}</div>`; }
@@ -851,22 +459,7 @@ async function openCandidate(candidateId) {
       <div id="historico-content-${c.id}"><p style="font-size:13px;color:var(--text-mid)">Carregando histórico...</p></div>
     </div>`;
   openModal('modal-candidate');
- openModal('modal-candidate');
   carregarStatusQuestionario(c.id);
-  const footer = document.getElementById('modal-candidate-footer');
-  const proc = await api(`/processes/${currentProcessId}`);
-  const isOpen = proc.status !== 'encerrado';
-  const btnTalent = c.in_talent_bank ? `<button class="btn btn-secondary" disabled style="opacity:.5">⭐ No banco</button>` : `<button class="btn btn-secondary" style="background:var(--warn-bg);color:var(--warn)" onclick="addToTalentBank(${c.id})">⭐ Banco de talentos</button>`;
-  const btnPrint = `<button class="btn btn-secondary btn-sm" onclick="printCandidate(${c.id})">🖨️ Imprimir</button>`;
-  const btnBloquear = !c.bloqueado ? `<button class="btn btn-sm" style="background:#1a1a1a;color:#fff" onclick="closeModal('modal-candidate');abrirModalBloquear(${c.id})">🚫 Bloquear</button>` : '';
-  const btnContratar = isOpen && c.status === 'aprovado' ? `<button class="btn btn-gold" onclick="closeModal('modal-candidate');abrirModalContratar(${c.id},'${(c.name||'').replace(/'/g,"\\'")}','${c.email||''}','${c.phone||''}','${proc.title.replace(/'/g,"\\'")}')">✅ Contratado</button>` : '';
-  if (c.status === 'pendente' && isOpen) {
-    footer.innerHTML = `<button class="btn btn-secondary" onclick="closeModal('modal-candidate')">Fechar</button>${btnPrint}${btnTalent}${btnBloquear}<button class="btn btn-danger" onclick="updateStatus(${c.id},'reprovado');closeModal('modal-candidate')">Reprovar</button><button class="btn btn-primary" onclick="updateStatus(${c.id},'aprovado');closeModal('modal-candidate')">Aprovar</button>${btnContratar}`;
-  } else {
-    footer.innerHTML = `<button class="btn btn-secondary" onclick="closeModal('modal-candidate')">Fechar</button>${btnPrint}${btnTalent}${btnBloquear}${btnContratar}`;
-  }
-  setTimeout(() => carregarHistoricoAnalises(c.id), 2000);
-}
   const footer = document.getElementById('modal-candidate-footer');
   const proc = await api(`/processes/${currentProcessId}`);
   const isOpen = proc.status !== 'encerrado';
@@ -883,54 +476,29 @@ async function openCandidate(candidateId) {
 }
 
 function abrirModalContratar(candidateId, nome, email, telefone, cargo) {
-  document.getElementById('ct-candidate-id').value = candidateId;
-  document.getElementById('ct-nome').value = nome || '';
-  document.getElementById('ct-email').value = email || '';
-  document.getElementById('ct-telefone').value = telefone || '';
-  document.getElementById('ct-cargo').value = cargo || '';
-  document.getElementById('ct-admissao').value = new Date().toISOString().split('T')[0];
-  document.getElementById('ct-pdv').value = '';
-  document.getElementById('ct-raca').value = '';
-  document.getElementById('ct-escolaridade').value = '';
-  document.getElementById('ct-sexo').value = '';
-  document.getElementById('ct-msg').innerHTML = '';
+  document.getElementById('ct-candidate-id').value = candidateId; document.getElementById('ct-nome').value = nome || ''; document.getElementById('ct-email').value = email || ''; document.getElementById('ct-telefone').value = telefone || ''; document.getElementById('ct-cargo').value = cargo || '';
+  document.getElementById('ct-admissao').value = new Date().toISOString().split('T')[0]; document.getElementById('ct-pdv').value = ''; document.getElementById('ct-raca').value = ''; document.getElementById('ct-escolaridade').value = ''; document.getElementById('ct-sexo').value = ''; document.getElementById('ct-msg').innerHTML = '';
   openModal('modal-contratar');
 }
 
 async function confirmarContratacao() {
-  const candidateId = parseInt(document.getElementById('ct-candidate-id').value);
-  const nome = document.getElementById('ct-nome').value.trim();
+  const candidateId = parseInt(document.getElementById('ct-candidate-id').value), nome = document.getElementById('ct-nome').value.trim();
   if (!nome) { document.getElementById('ct-msg').innerHTML = '<div class="alert alert-danger">Informe o nome.</div>'; return; }
   const body = { nome, email: document.getElementById('ct-email').value, telefone: document.getElementById('ct-telefone').value, pdv: document.getElementById('ct-pdv').value, data_admissao: document.getElementById('ct-admissao').value || null, raca: document.getElementById('ct-raca').value, escolaridade: document.getElementById('ct-escolaridade').value, sexo: document.getElementById('ct-sexo').value, cargo: document.getElementById('ct-cargo').value };
-  try {
-    await api(`/candidates/${candidateId}/contratar`, { method: 'POST', body: JSON.stringify(body) });
-    closeModal('modal-contratar');
-    openProcess(currentProcessId);
-    alert('✅ Candidato contratado e registrado como funcionário!');
-  } catch(e) { document.getElementById('ct-msg').innerHTML = `<div class="alert alert-danger">Erro: ${e.message}</div>`; }
+  try { await api(`/candidates/${candidateId}/contratar`, { method: 'POST', body: JSON.stringify(body) }); closeModal('modal-contratar'); openProcess(currentProcessId); alert('✅ Candidato contratado e registrado como funcionário!'); }
+  catch(e) { document.getElementById('ct-msg').innerHTML = `<div class="alert alert-danger">Erro: ${e.message}</div>`; }
 }
 
-function abrirModalBloquear(candidateId) {
-  document.getElementById('blq-candidate-id').value = candidateId;
-  document.getElementById('blq-motivo').value = '';
-  document.getElementById('blq-msg').innerHTML = '';
-  openModal('modal-bloquear');
-}
+function abrirModalBloquear(candidateId) { document.getElementById('blq-candidate-id').value = candidateId; document.getElementById('blq-motivo').value = ''; document.getElementById('blq-msg').innerHTML = ''; openModal('modal-bloquear'); }
 
 async function confirmarBloqueio() {
-  const candidateId = parseInt(document.getElementById('blq-candidate-id').value);
-  const motivo = document.getElementById('blq-motivo').value.trim();
-  try {
-    await api(`/candidates/${candidateId}/bloquear`, { method: 'PUT', body: JSON.stringify({ bloqueado: true, motivo }) });
-    closeModal('modal-bloquear');
-    openProcess(currentProcessId);
-  } catch(e) { document.getElementById('blq-msg').innerHTML = `<div class="alert alert-danger">Erro: ${e.message}</div>`; }
+  const candidateId = parseInt(document.getElementById('blq-candidate-id').value), motivo = document.getElementById('blq-motivo').value.trim();
+  try { await api(`/candidates/${candidateId}/bloquear`, { method: 'PUT', body: JSON.stringify({ bloqueado: true, motivo }) }); closeModal('modal-bloquear'); openProcess(currentProcessId); }
+  catch(e) { document.getElementById('blq-msg').innerHTML = `<div class="alert alert-danger">Erro: ${e.message}</div>`; }
 }
 
 async function printCandidate(candidateId) {
-  const candidates = await api(`/processes/${currentProcessId}/candidates`);
-  const c = candidates.find(x => x.id === candidateId);
-  if (!c) return;
+  const candidates = await api(`/processes/${currentProcessId}/candidates`), c = candidates.find(x => x.id === candidateId); if (!c) return;
   const analyzedStr = c.analyzed_at ? new Date(c.analyzed_at).toLocaleString('pt-BR',{day:'2-digit',month:'2-digit',year:'numeric',hour:'2-digit',minute:'2-digit'}) : '—';
   const win = window.open('', '_blank');
   win.document.write(`<!DOCTYPE html><html><head><meta charset="UTF-8"><title>Parecer — ${c.name}</title><style>body{font-family:Arial,sans-serif;max-width:800px;margin:40px auto;color:#222;font-size:14px;line-height:1.6}h1{font-size:22px;color:#0f1f3d;margin-bottom:4px}.meta{font-size:12px;color:#888;margin-bottom:24px}h2{font-size:14px;text-transform:uppercase;letter-spacing:.05em;color:#555;border-bottom:1px solid #eee;padding-bottom:4px;margin:20px 0 10px}.score-big{font-size:36px;font-weight:bold;color:#1e4db7}.tag{display:inline-block;padding:3px 10px;border-radius:20px;font-size:12px;margin:2px}.met{background:#e8f7ee;color:#1a7a4a}.miss{background:#fde8eb;color:#a0192e}.alert{background:#fef5e0;color:#8a5a00}.script{white-space:pre-line;background:#f7f4ee;padding:12px;border-radius:6px;font-size:13px}@media print{body{margin:20px}}</style></head><body><h1>${c.name||c.filename}</h1><div class="meta">${c.email?`📧 ${c.email} &nbsp;`:''}${c.phone?`📞 ${c.phone} &nbsp;`:''} 🕐 Analisado em ${analyzedStr}</div><h2>Score</h2><div class="score-big">${Math.round(c.score)}<span style="font-size:18px;font-weight:normal;color:#888">/100</span></div><h2>Resumo da IA</h2><p>${c.ai_summary||'—'}</p>${c.requirements_met.length?`<h2>Requisitos Atendidos</h2><div>${c.requirements_met.map(r=>`<span class="tag met">✓ ${r}</span>`).join('')}</div>`:''}${c.requirements_missing.length?`<h2>Requisitos Faltantes</h2><div>${c.requirements_missing.map(r=>`<span class="tag miss">✗ ${r}</span>`).join('')}</div>`:''}${c.alerts.length?`<h2>Alertas</h2><div>${c.alerts.map(a=>`<span class="tag alert">⚠ ${a}</span>`).join('')}</div>`:''}${c.interview_script?`<h2>Roteiro de Entrevista</h2><div class="script">${c.interview_script}</div>`:''}<div style="margin-top:40px;font-size:11px;color:#aaa;text-align:center">RH Assertivo — O Boticário Niterói</div></body></html>`);
@@ -942,171 +510,78 @@ async function updateStatus(candidateId, status) {
   openProcess(currentProcessId);
 }
 
-// ── ITEM 3 + 4: carregarStatusQuestionario ───────────────────────
 async function carregarStatusQuestionario(candidateId) {
   try {
     const r = await api(`/questionario/${candidateId}/respostas`);
-    const el = document.getElementById(`qs-content-${candidateId}`);
-    if (!el) return;
+    const el = document.getElementById(`qs-content-${candidateId}`); if (!el) return;
     if (r && r.respondido) {
-      // ITEM 3: botão de Análise IA aparece quando questionário foi respondido
-      el.innerHTML = `
-        <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px;margin-bottom:10px">
-          <span style="color:var(--success);font-size:13px;font-weight:500">✅ Respondido em ${r.respondido_em}</span>
-          <button class="btn btn-sm" style="background:#534AB7;color:#fff;font-size:12px"
-            onclick="gerarParecerRapidoModal(${candidateId})" id="btn-parecer-rapido-${candidateId}">
-            🤖 Análise IA completa
-          </button>
-        </div>
-        <div style="display:grid;grid-template-columns:1fr 1fr;gap:6px">
-          ${[['Resiliência',r.scores.resiliencia,'#3B6D11'],['Confiabilidade',r.scores.confianca,'#185FA5'],
-             ['Crescimento',r.scores.crescimento,'#534AB7'],['Risco mosca morta',r.scores.mosca,'#E24B4A'],
-             ['Risco deslealdade',r.scores.traidor,'#D85A30'],['Risco turnover',r.scores.turnover,'#BA7517']]
-            .map(([l,v,c]) => `<div style="font-size:11px;color:var(--text-mid)">${l}: <strong style="color:${c}">${v}%</strong></div>`)
-            .join('')}
-        </div>`;
-      // Atualiza badge na tabela
-      const badge = document.getElementById('pesquisa-badge-' + candidateId);
-      if (badge) badge.innerHTML = '<span class="badge" style="background:#e8f7ee;color:#1a7a4a;font-size:10px">✅ Pesquisa recebida</span>';
+      el.innerHTML = `<div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px;margin-bottom:10px"><span style="color:var(--success);font-size:13px;font-weight:500">✅ Respondido em ${r.respondido_em}</span><button class="btn btn-sm" style="background:#534AB7;color:#fff;font-size:12px" onclick="gerarParecerRapidoModal(${candidateId})" id="btn-parecer-rapido-${candidateId}">🤖 Análise IA completa</button></div><div style="display:grid;grid-template-columns:1fr 1fr;gap:6px">${[['Resiliência',r.scores.resiliencia,'#3B6D11'],['Confiabilidade',r.scores.confianca,'#185FA5'],['Crescimento',r.scores.crescimento,'#534AB7'],['Risco mosca morta',r.scores.mosca,'#E24B4A'],['Risco deslealdade',r.scores.traidor,'#D85A30'],['Risco turnover',r.scores.turnover,'#BA7517']].map(([l,v,c]) => `<div style="font-size:11px;color:var(--text-mid)">${l}: <strong style="color:${c}">${v}%</strong></div>`).join('')}</div>`;
+      const badge = document.getElementById('pesquisa-badge-' + candidateId); if (badge) badge.innerHTML = '<span class="badge" style="background:#e8f7ee;color:#1a7a4a;font-size:10px">✅ Pesquisa recebida</span>';
     } else {
-      // ITEM 4: botão "Link da pesquisa" substituiu "Enviar por email"
-      el.innerHTML = `
-        <span style="color:var(--text-light);font-size:13px">Questionário ainda não respondido.</span>
-        <div style="margin-top:8px;display:flex;gap:8px;flex-wrap:wrap">
-          <button class="btn btn-secondary" style="font-size:12px;background:#e8f7ee;color:#1a7a4a"
-            onclick="gerarLinkWhatsApp(${candidateId})">
-            💬 Enviar via WhatsApp
-          </button>
-          <button class="btn btn-secondary" style="font-size:12px"
-            onclick="copiarLinkPesquisa(${candidateId}, event)">
-            🔗 Link da pesquisa
-          </button>
-        </div>
-        <div id="link-result-${candidateId}" style="margin-top:8px"></div>`;
+      el.innerHTML = `<span style="color:var(--text-light);font-size:13px">Questionário ainda não respondido.</span><div style="margin-top:8px;display:flex;gap:8px;flex-wrap:wrap"><button class="btn btn-secondary" style="font-size:12px;background:#e8f7ee;color:#1a7a4a" onclick="gerarLinkWhatsApp(${candidateId})">💬 Enviar via WhatsApp</button><button class="btn btn-secondary" style="font-size:12px" onclick="copiarLinkPesquisa(${candidateId}, event)">🔗 Link da pesquisa</button></div><div id="link-result-${candidateId}" style="margin-top:8px"></div>`;
     }
   } catch(e) { console.log('Erro ao verificar questionário:', e); }
 }
 
-// ITEM 4: gera link sem abrir WhatsApp — para copiar/compartilhar manualmente
 async function copiarLinkPesquisa(candidateId, evt) {
-  const btn = evt ? evt.target : null;
-  if (btn) { btn.disabled = true; btn.textContent = 'Gerando...'; }
+  const btn = evt ? evt.target : null; if (btn) { btn.disabled = true; btn.textContent = 'Gerando...'; }
   try {
-    const r = await api('/questionario/gerar-link', {
-      method: 'POST',
-      body: JSON.stringify({ candidate_id: candidateId, process_id: currentProcessId })
-    });
+    const r = await api('/questionario/gerar-link', { method: 'POST', body: JSON.stringify({ candidate_id: candidateId, process_id: currentProcessId }) });
     if (r && r.link) {
-      // Marca como enviado para o badge da tabela
       localStorage.setItem('quiz_sent_' + candidateId, '1');
-      // Atualiza badge na tabela imediatamente
-      const badge = document.getElementById('pesquisa-badge-' + candidateId);
-      if (badge) badge.innerHTML = '<span class="badge" style="background:#dbeafe;color:#1e40af;font-size:10px">📬 Pesquisa enviada</span>';
+      const badge = document.getElementById('pesquisa-badge-' + candidateId); if (badge) badge.innerHTML = '<span class="badge" style="background:#dbeafe;color:#1e40af;font-size:10px">📬 Pesquisa enviada</span>';
       const el = document.getElementById('link-result-' + candidateId);
-      if (el) {
-        el.innerHTML = `<div style="background:var(--cream);border:1px solid var(--cream-dark);border-radius:8px;padding:12px;font-size:12px">
-          <div style="font-weight:600;margin-bottom:6px;color:var(--navy)">🔗 Link gerado — válido por 7 dias (expira ${r.expira_em})</div>
-          <div style="word-break:break-all;color:var(--blue);font-size:11px;margin-bottom:8px">${r.link}</div>
-          <div style="display:flex;gap:6px;flex-wrap:wrap">
-            <button class="btn btn-sm" style="background:var(--blue);color:#fff;font-size:11px"
-              onclick="navigator.clipboard.writeText('${r.link}').then(()=>this.textContent='✅ Copiado!').catch(()=>this.textContent='❌ Erro')">
-              📋 Copiar link
-            </button>
-            ${r.whatsapp_url ? `<a href="${r.whatsapp_url}" target="_blank" class="btn btn-sm" style="background:#25D366;color:#fff;text-decoration:none;font-size:11px">💬 Abrir WhatsApp</a>` : ''}
-          </div>
-        </div>`;
-      }
+      if (el) { el.innerHTML = `<div style="background:var(--cream);border:1px solid var(--cream-dark);border-radius:8px;padding:12px;font-size:12px"><div style="font-weight:600;margin-bottom:6px;color:var(--navy)">🔗 Link gerado — válido por 7 dias (expira ${r.expira_em})</div><div style="word-break:break-all;color:var(--blue);font-size:11px;margin-bottom:8px">${r.link}</div><div style="display:flex;gap:6px;flex-wrap:wrap"><button class="btn btn-sm" style="background:var(--blue);color:#fff;font-size:11px" onclick="navigator.clipboard.writeText('${r.link}').then(()=>this.textContent='✅ Copiado!').catch(()=>this.textContent='❌ Erro')">📋 Copiar link</button>${r.whatsapp_url ? `<a href="${r.whatsapp_url}" target="_blank" class="btn btn-sm" style="background:#25D366;color:#fff;text-decoration:none;font-size:11px">💬 Abrir WhatsApp</a>` : ''}</div></div>`; }
       if (btn) btn.style.display = 'none';
     }
-  } catch(e) {
-    if (btn) { btn.disabled = false; btn.textContent = '🔗 Link da pesquisa'; }
-    alert('Erro ao gerar link: ' + e.message);
-  }
+  } catch(e) { if (btn) { btn.disabled = false; btn.textContent = '🔗 Link da pesquisa'; } alert('Erro ao gerar link: ' + e.message); }
 }
 
-// ITEM 3: gera análise IA rápida e exibe no modal após questionário respondido
 async function gerarParecerRapidoModal(candidateId) {
-  const btn = document.getElementById('btn-parecer-rapido-' + candidateId);
-  if (btn) { btn.disabled = true; btn.textContent = '⏳ Gerando análise...'; }
+  const btn = document.getElementById('btn-parecer-rapido-' + candidateId); if (btn) { btn.disabled = true; btn.textContent = '⏳ Gerando análise...'; }
   try {
-    const r = await api('/parecer-rapido/' + candidateId, { method: 'POST' });
-    if (!r) throw new Error('Resposta vazia');
-    const vMap = {
-      'avançar':     { border: '#2d9e5f', bg: '#f0faf3', color: '#1a7a4a', emoji: '✅' },
-      'ressalvas':   { border: '#e6a817', bg: '#fffbf0', color: '#8a5a00', emoji: '⚠️' },
-      'não avançar': { border: '#dc3545', bg: '#fef2f2', color: '#a0192e', emoji: '✖️' }
-    };
-    const v = (r.veredicto || '').toLowerCase();
-    const s = vMap[v] || vMap['ressalvas'];
+    const r = await api('/parecer-rapido/' + candidateId, { method: 'POST' }); if (!r) throw new Error('Resposta vazia');
+    const vMap = { 'avançar': { border: '#2d9e5f', bg: '#f0faf3', color: '#1a7a4a', emoji: '✅' }, 'ressalvas': { border: '#e6a817', bg: '#fffbf0', color: '#8a5a00', emoji: '⚠️' }, 'não avançar': { border: '#dc3545', bg: '#fef2f2', color: '#a0192e', emoji: '✖️' } };
+    const v = (r.veredicto || '').toLowerCase(), s = vMap[v] || vMap['ressalvas'];
     const qsEl = document.getElementById('qs-content-' + candidateId);
     if (qsEl) {
-      const div = document.createElement('div');
-      div.style.cssText = `margin-top:14px;padding:14px 16px;border-radius:10px;border:1.5px solid ${s.border};background:${s.bg}`;
-      const alertasHtml = r.alertas && r.alertas.length
-        ? '<div style="margin-top:8px">' + r.alertas.map(a => `<span style="display:inline-block;background:var(--warn-bg);color:var(--warn);padding:2px 8px;border-radius:20px;font-size:11px;margin:2px">${a}</span>`).join('') + '</div>'
-        : '';
-      const roteiroHtml = r.roteiro_entrevista && r.roteiro_entrevista.length
-        ? `<div style="margin-top:8px"><div style="font-size:11px;text-transform:uppercase;letter-spacing:.06em;color:var(--text-light);margin-bottom:4px">Roteiro</div><ul style="margin:0;padding-left:16px;font-size:12px;color:var(--text-mid);line-height:1.8">${r.roteiro_entrevista.map(q => `<li>${q}</li>`).join('')}</ul></div>`
-        : '';
+      const div = document.createElement('div'); div.style.cssText = `margin-top:14px;padding:14px 16px;border-radius:10px;border:1.5px solid ${s.border};background:${s.bg}`;
+      const alertasHtml = r.alertas && r.alertas.length ? '<div style="margin-top:8px">' + r.alertas.map(a => `<span style="display:inline-block;background:var(--warn-bg);color:var(--warn);padding:2px 8px;border-radius:20px;font-size:11px;margin:2px">${a}</span>`).join('') + '</div>' : '';
+      const roteiroHtml = r.roteiro_entrevista && r.roteiro_entrevista.length ? `<div style="margin-top:8px"><div style="font-size:11px;text-transform:uppercase;letter-spacing:.06em;color:var(--text-light);margin-bottom:4px">Roteiro</div><ul style="margin:0;padding-left:16px;font-size:12px;color:var(--text-mid);line-height:1.8">${r.roteiro_entrevista.map(q => `<li>${q}</li>`).join('')}</ul></div>` : '';
       div.innerHTML = `<div style="font-weight:700;font-size:15px;color:${s.color};margin-bottom:6px">${s.emoji} ${(r.veredicto||'').toUpperCase()}</div><div style="font-size:13px;line-height:1.7;color:var(--text-mid)">${r.justificativa||'—'}</div>${alertasHtml}${roteiroHtml}`;
       qsEl.appendChild(div);
     }
-   if (btn) btn.textContent = '✅ Análise gerada';
-    // Recarrega histórico automaticamente
+    if (btn) btn.textContent = '✅ Análise gerada';
     await carregarHistoricoAnalises(candidateId);
-  } catch(e) {
-    if (btn) { btn.disabled = false; btn.textContent = '🤖 Análise IA completa'; }
-    alert('Erro na análise: ' + e.message);
-  }
+  } catch(e) { if (btn) { btn.disabled = false; btn.textContent = '🤖 Análise IA completa'; } alert('Erro na análise: ' + e.message); }
 }
 
 async function gerarLinkWhatsApp(candidateId) {
-  const btn = event.target;
-  btn.disabled = true; btn.textContent = 'Gerando...';
+  const btn = event.target; btn.disabled = true; btn.textContent = 'Gerando...';
   try {
     const r = await api('/questionario/gerar-link', { method: 'POST', body: JSON.stringify({ candidate_id: candidateId, process_id: currentProcessId }) });
     const el = document.getElementById(`link-result-${candidateId}`);
     if (r && r.link) {
       localStorage.setItem('quiz_sent_' + candidateId, '1');
-      const badge = document.getElementById('pesquisa-badge-' + candidateId);
-      if (badge) badge.innerHTML = '<span class="badge" style="background:#dbeafe;color:#1e40af;font-size:10px">📬 Pesquisa enviada</span>';
-      if (r.whatsapp_url) {
-        el.innerHTML = `<div style="background:var(--cream);border:0.5px solid var(--cream-dark);border-radius:8px;padding:10px;font-size:12px">
-          <div style="font-weight:500;margin-bottom:6px">Link gerado — válido por 7 dias · Expira em ${r.expira_em}</div>
-          <a href="${r.whatsapp_url}" target="_blank" class="btn btn-sm" style="background:#25D366;color:#fff;text-decoration:none;display:inline-flex;align-items:center;gap:6px">💬 Abrir WhatsApp (${r.telefone})</a>
-          <div style="margin-top:8px;word-break:break-all;color:var(--text-light);font-size:11px">${r.link}</div>
-        </div>`;
-        btn.style.display = 'none';
-        window.open(r.whatsapp_url, '_blank');
-      } else {
-        el.innerHTML = `<div style="background:var(--warn-bg);border:1px solid var(--gold);border-radius:8px;padding:10px;font-size:12px;margin-bottom:8px">⚠️ Candidato sem telefone cadastrado.</div>
-          <div style="background:var(--cream);border:0.5px solid var(--cream-dark);border-radius:8px;padding:10px;font-size:12px">
-            <div style="font-weight:500;margin-bottom:4px">Link gerado — válido por 7 dias</div>
-            <div style="word-break:break-all;color:var(--blue);margin-bottom:8px">${r.link}</div>
-            <button class="btn btn-secondary" style="font-size:11px" onclick="navigator.clipboard.writeText('${r.link}').then(()=>this.textContent='✅ Copiado!')">📋 Copiar link</button>
-          </div>`;
-        btn.style.display = 'none';
-      }
+      const badge = document.getElementById('pesquisa-badge-' + candidateId); if (badge) badge.innerHTML = '<span class="badge" style="background:#dbeafe;color:#1e40af;font-size:10px">📬 Pesquisa enviada</span>';
+      if (r.whatsapp_url) { el.innerHTML = `<div style="background:var(--cream);border:0.5px solid var(--cream-dark);border-radius:8px;padding:10px;font-size:12px"><div style="font-weight:500;margin-bottom:6px">Link gerado — válido por 7 dias · Expira em ${r.expira_em}</div><a href="${r.whatsapp_url}" target="_blank" class="btn btn-sm" style="background:#25D366;color:#fff;text-decoration:none;display:inline-flex;align-items:center;gap:6px">💬 Abrir WhatsApp (${r.telefone})</a><div style="margin-top:8px;word-break:break-all;color:var(--text-light);font-size:11px">${r.link}</div></div>`; btn.style.display = 'none'; window.open(r.whatsapp_url, '_blank'); }
+      else { el.innerHTML = `<div style="background:var(--warn-bg);border:1px solid var(--gold);border-radius:8px;padding:10px;font-size:12px;margin-bottom:8px">⚠️ Candidato sem telefone cadastrado.</div><div style="background:var(--cream);border:0.5px solid var(--cream-dark);border-radius:8px;padding:10px;font-size:12px"><div style="font-weight:500;margin-bottom:4px">Link gerado — válido por 7 dias</div><div style="word-break:break-all;color:var(--blue);margin-bottom:8px">${r.link}</div><button class="btn btn-secondary" style="font-size:11px" onclick="navigator.clipboard.writeText('${r.link}').then(()=>this.textContent='✅ Copiado!')">📋 Copiar link</button></div>`; btn.style.display = 'none'; }
     }
   } catch(e) { btn.disabled = false; btn.textContent = '💬 Enviar via WhatsApp'; alert('Erro ao gerar link.'); }
 }
 
 function montarParecerIntegrado(c, quiz) {
-  const scoreCurriculo = Math.round(c.score || 0);
-  const temQuiz = quiz && quiz.respondido;
+  const scoreCurriculo = Math.round(c.score || 0), temQuiz = quiz && quiz.respondido;
   const scoreQuiz = temQuiz ? Math.round(quiz.score_comportamental || 0) : null;
-  const mosca = temQuiz ? (quiz.scores?.mosca || 0) : null;
-  const traidor = temQuiz ? (quiz.scores?.traidor || 0) : null;
-  const turnover = temQuiz ? (quiz.scores?.turnover || 0) : null;
-  const altoRisco = temQuiz && (mosca >= 65 || traidor >= 65 || turnover >= 65);
-  const temAlertas = c.alerts && c.alerts.length > 0;
+  const mosca = temQuiz ? (quiz.scores?.mosca || 0) : null, traidor = temQuiz ? (quiz.scores?.traidor || 0) : null, turnover = temQuiz ? (quiz.scores?.turnover || 0) : null;
+  const altoRisco = temQuiz && (mosca >= 65 || traidor >= 65 || turnover >= 65), temAlertas = c.alerts && c.alerts.length > 0;
   const scoreCombinado = temQuiz ? Math.round(scoreCurriculo * 0.6 + scoreQuiz * 0.4) : scoreCurriculo;
   let veredicto, justificativa, classe, emoji;
   if (!temQuiz) {
     if (scoreCurriculo >= 70 && !temAlertas) { veredicto = "AVANÇAR — Aguardando questionário"; justificativa = "Currículo sólido. Recomenda-se enviar o questionário comportamental antes da decisão final."; classe = "parecer-ressalvas"; emoji = "⏳"; }
-    else if (scoreCurriculo >= 70) { veredicto = "AVANÇAR COM ATENÇÃO — Aguardando questionário"; justificativa = "Currículo acima da média, mas com pontos de atenção. O questionário é essencial antes de avançar."; classe = "parecer-ressalvas"; emoji = "⚠️"; }
+    else if (scoreCurriculo >= 70) { veredicto = "AVANÇAR COM ATENÇÃO — Aguardando questionário"; justificativa = "Currículo acima da média, mas com pontos de atenção."; classe = "parecer-ressalvas"; emoji = "⚠️"; }
     else if (scoreCurriculo >= 50) { veredicto = "AVALIAR COM CAUTELA — Aguardando questionário"; justificativa = "Currículo abaixo do esperado. O questionário pode complementar a análise."; classe = "parecer-ressalvas"; emoji = "⚠️"; }
-    else { veredicto = "NÃO AVANÇAR"; justificativa = "Currículo com score baixo e lacunas significativas. Não recomendamos avançar."; classe = "parecer-nao-avancar"; emoji = "✖️"; }
+    else { veredicto = "NÃO AVANÇAR"; justificativa = "Currículo com score baixo e lacunas significativas."; classe = "parecer-nao-avancar"; emoji = "✖️"; }
   } else {
     if (altoRisco) { const riscos = []; if (mosca >= 65) riscos.push("perfil de baixo engajamento"); if (traidor >= 65) riscos.push("indicadores de deslealdade"); if (turnover >= 65) riscos.push("alto risco de rotatividade"); veredicto = "NÃO AVANÇAR — Risco comportamental elevado"; justificativa = `A análise comportamental identificou ${riscos.join(', ')}.`; classe = "parecer-nao-avancar"; emoji = "✖️"; }
     else if (scoreCombinado >= 72 && !temAlertas) { veredicto = "AVANÇAR PARA ENTREVISTA"; justificativa = `Score combinado de ${scoreCombinado}/100. Currículo e perfil comportamental alinhados.`; classe = "parecer-avancar"; emoji = "✅"; }
@@ -1118,33 +593,25 @@ function montarParecerIntegrado(c, quiz) {
 }
 
 async function addToTalentBank(candidateId) {
-  try {
-    const r = await api('/talent-bank/add', { method: 'POST', body: JSON.stringify({ candidate_id: candidateId, process_id: currentProcessId }) });
-    if (r && r.ok) { closeModal('modal-candidate'); openProcess(currentProcessId); }
-  } catch(e) { alert('Erro ao adicionar ao banco de talentos.'); }
+  try { const r = await api('/talent-bank/add', { method: 'POST', body: JSON.stringify({ candidate_id: candidateId, process_id: currentProcessId }) }); if (r && r.ok) { closeModal('modal-candidate'); openProcess(currentProcessId); } }
+  catch(e) { alert('Erro ao adicionar ao banco de talentos.'); }
 }
 
 function openCloseProcess(id) { closeProcessId = id; document.getElementById('cp-outcome').value = 'contratado'; document.getElementById('cp-reason').value = ''; openModal('modal-close-process'); }
 async function closeProcessConfirm() { await api(`/processes/${closeProcessId}/close`, { method: 'POST', body: JSON.stringify({ outcome: document.getElementById('cp-outcome').value, outcome_reason: document.getElementById('cp-reason').value }) }); closeModal('modal-close-process'); openProcess(closeProcessId); }
 
 async function loadProfiles() {
-  const el = document.getElementById('profiles-list');
-  el.innerHTML = '<div class="loading"><div class="spinner"></div></div>';
+  const el = document.getElementById('profiles-list'); el.innerHTML = '<div class="loading"><div class="spinner"></div></div>';
   const profiles = await api('/profiles');
   if (!profiles.length) { el.innerHTML = '<div class="empty"><div class="empty-icon">📄</div><p>Nenhum perfil cadastrado.</p></div>'; return; }
   el.innerHTML = profiles.map(p => `<div class="process-card mb-4" style="cursor:default;margin-bottom:12px"><div class="process-card-info"><div class="process-card-title" style="font-size:15px">${p.name}</div><div class="text-sm text-mid">Criado em ${fmtDate(p.created_at)}</div></div><button class="btn btn-danger btn-sm" onclick="deleteProfile(${p.id})">Remover</button></div>`).join('');
 }
 
 let selectedProfileFile = null;
-
-function handleFileSelect(input) {
-  if (input.files[0]) { selectedProfileFile = input.files[0]; document.getElementById('upload-label').innerHTML = `<strong>${selectedProfileFile.name}</strong><br><span style="font-size:11px;color:var(--success)">Arquivo selecionado</span>`; document.getElementById('upload-area').style.borderColor = 'var(--success)'; }
-}
+function handleFileSelect(input) { if (input.files[0]) { selectedProfileFile = input.files[0]; document.getElementById('upload-label').innerHTML = `<strong>${selectedProfileFile.name}</strong><br><span style="font-size:11px;color:var(--success)">Arquivo selecionado</span>`; document.getElementById('upload-area').style.borderColor = 'var(--success)'; } }
 
 async function saveProfile() {
-  const name = document.getElementById('profile-name').value.trim();
-  const textContent = document.getElementById('profile-content').value.trim();
-  const msg = document.getElementById('profile-msg');
+  const name = document.getElementById('profile-name').value.trim(), textContent = document.getElementById('profile-content').value.trim(), msg = document.getElementById('profile-msg');
   if (!name) { msg.innerHTML = '<div class="alert alert-danger">Informe o nome do perfil.</div>'; return; }
   if (!selectedProfileFile && !textContent) { msg.innerHTML = '<div class="alert alert-danger">Anexe um documento ou descreva manualmente.</div>'; return; }
   msg.innerHTML = '<div class="alert alert-info">Salvando...</div>';
@@ -1153,10 +620,8 @@ async function saveProfile() {
     if (selectedProfileFile) { content = await extractTextFromFile(selectedProfileFile); filename = selectedProfileFile.name; }
     await api('/profiles', { method: 'POST', body: JSON.stringify({ name, content, filename }) });
     msg.innerHTML = '<div class="alert alert-success">Perfil salvo!</div>';
-    document.getElementById('profile-name').value = ''; document.getElementById('profile-content').value = '';
-    selectedProfileFile = null;
-    document.getElementById('upload-label').innerHTML = 'Clique ou arraste o arquivo aqui<br><span style="font-size:11px;opacity:.7">.doc, .docx ou .pdf</span>';
-    document.getElementById('upload-area').style.borderColor = 'var(--cream-dark)';
+    document.getElementById('profile-name').value = ''; document.getElementById('profile-content').value = ''; selectedProfileFile = null;
+    document.getElementById('upload-label').innerHTML = 'Clique ou arraste o arquivo aqui<br><span style="font-size:11px;opacity:.7">.doc, .docx ou .pdf</span>'; document.getElementById('upload-area').style.borderColor = 'var(--cream-dark)';
     loadProfiles(); setTimeout(() => msg.innerHTML = '', 3000);
   } catch(e) { msg.innerHTML = '<div class="alert alert-danger">Erro: ' + e.message + '</div>'; }
 }
@@ -1164,17 +629,11 @@ async function saveProfile() {
 async function deleteProfile(id) { if (!confirm('Remover este perfil?')) return; await api(`/profiles/${id}`, { method: 'DELETE' }); loadProfiles(); }
 
 async function loadProcessesForFilter() {
-  try {
-    const processes = await api('/processes');
-    const sel = document.getElementById('talent-filter-process');
-    sel.innerHTML = '<option value="">Todos os cargos</option>';
-    processes.forEach(p => { sel.innerHTML += `<option value="${p.id}">${p.title}</option>`; });
-  } catch(e) {}
+  try { const processes = await api('/processes'); const sel = document.getElementById('talent-filter-process'); sel.innerHTML = '<option value="">Todos os cargos</option>'; processes.forEach(p => { sel.innerHTML += `<option value="${p.id}">${p.title}</option>`; }); } catch(e) {}
 }
 
 async function loadTalent() {
-  const el = document.getElementById('talent-list');
-  el.innerHTML = '<div class="loading"><div class="spinner"></div></div>';
+  const el = document.getElementById('talent-list'); el.innerHTML = '<div class="loading"><div class="spinner"></div></div>';
   const processId = document.getElementById('talent-filter-process')?.value || '';
   const url = '/talent-bank' + (processId ? `?process_id=${processId}` : '');
   const talents = await api(url);
@@ -1183,86 +642,56 @@ async function loadTalent() {
 }
 
 async function loadFuncionarios() {
-  const el = document.getElementById('funcionarios-list');
-  el.innerHTML = '<div class="loading"><div class="spinner"></div></div>';
+  const el = document.getElementById('funcionarios-list'); el.innerHTML = '<div class="loading"><div class="spinner"></div></div>';
   try {
-    const fn = await api('/funcionarios');
-    document.getElementById('fn-count').textContent = fn.length + ' registrado(s)';
+    const fn = await api('/funcionarios'); document.getElementById('fn-count').textContent = fn.length + ' registrado(s)';
     if (!fn.length) { el.innerHTML = '<div class="empty"><div class="empty-icon">👤</div><p>Nenhum funcionário cadastrado ainda.</p></div>'; return; }
     el.innerHTML = `<div class="table-wrap"><table><thead><tr><th>Nome</th><th>Cargo</th><th>PDV</th><th>Admissão</th><th>Sexo</th><th>Escolaridade</th></tr></thead><tbody>${fn.map(f=>`<tr><td><strong>${f.nome}</strong>${f.email?`<div class="text-sm text-mid">${f.email}</div>`:''}</td><td>${f.cargo||'—'}</td><td>${f.pdv||'—'}</td><td>${f.data_admissao?new Date(f.data_admissao).toLocaleDateString('pt-BR'):'—'}</td><td>${f.sexo||'—'}</td><td style="font-size:12px">${f.escolaridade||'—'}</td></tr>`).join('')}</tbody></table></div>`;
   } catch(e) { el.innerHTML = `<div class="alert alert-danger">Erro: ${e.message}</div>`; }
 }
 
 async function saveFuncionario() {
-  const nome = document.getElementById('fn-nome').value.trim();
-  const msg = document.getElementById('fn-msg');
+  const nome = document.getElementById('fn-nome').value.trim(), msg = document.getElementById('fn-msg');
   if (!nome) { msg.innerHTML = '<div class="alert alert-danger">Nome é obrigatório.</div>'; return; }
   try {
     await api('/funcionarios', { method: 'POST', body: JSON.stringify({ nome, pdv: document.getElementById('fn-pdv').value, data_admissao: document.getElementById('fn-admissao').value || null, raca: document.getElementById('fn-raca').value, escolaridade: document.getElementById('fn-escolaridade').value, sexo: document.getElementById('fn-sexo').value, cargo: document.getElementById('fn-cargo').value, email: document.getElementById('fn-email').value, telefone: document.getElementById('fn-telefone').value })});
     msg.innerHTML = '<div class="alert alert-success">Funcionário cadastrado!</div>';
     ['fn-nome','fn-pdv','fn-admissao','fn-cargo','fn-email','fn-telefone'].forEach(id => document.getElementById(id).value = '');
     ['fn-raca','fn-escolaridade','fn-sexo'].forEach(id => document.getElementById(id).value = '');
-    loadFuncionarios();
-    setTimeout(() => msg.innerHTML = '', 3000);
+    loadFuncionarios(); setTimeout(() => msg.innerHTML = '', 3000);
   } catch(e) { msg.innerHTML = `<div class="alert alert-danger">Erro: ${e.message}</div>`; }
 }
 
 async function loadUsuarios() {
-  const el = document.getElementById('users-list');
-  el.innerHTML = '<div class="loading"><div class="spinner"></div></div>';
+  const el = document.getElementById('users-list'); el.innerHTML = '<div class="loading"><div class="spinner"></div></div>';
   try {
-    const users = await api('/users');
-    document.getElementById('users-count').textContent = users.length + ' usuário(s)';
+    const users = await api('/users'); document.getElementById('users-count').textContent = users.length + ' usuário(s)';
     if (!users.length) { el.innerHTML = '<div class="empty"><div class="empty-icon">👥</div><p>Nenhum usuário.</p></div>'; return; }
     el.innerHTML = `<div class="table-wrap"><table><thead><tr><th>Nome</th><th>Email</th><th>Perfil</th><th>Status</th><th></th></tr></thead><tbody>${users.map(u => `<tr><td><strong>${u.name}</strong></td><td style="font-size:12px">${u.email}</td><td><span class="badge ${u.role==='diretor'?'badge-blue':'badge-gray'}">${u.role==='diretor'?'Diretor':'Operador'}</span></td><td><span class="badge ${u.ativo?'badge-success':'badge-danger'}">${u.ativo?'Ativo':'Inativo'}</span></td><td>${u.id!==currentUser?.id?`<button class="btn btn-sm ${u.ativo?'btn-danger':'btn-secondary'}" onclick="toggleUsuario(${u.id},${!u.ativo})">${u.ativo?'Desativar':'Ativar'}</button>`:'<span style="font-size:11px;color:var(--text-light)">você</span>'}</td></tr>`).join('')}</tbody></table></div>`;
   } catch(e) { el.innerHTML = `<div class="alert alert-danger">Erro: ${e.message}</div>`; }
 }
 
 async function criarUsuario() {
-  const nome = document.getElementById('nu-nome').value.trim();
-  const email = document.getElementById('nu-email').value.trim();
-  const senha = document.getElementById('nu-senha').value;
-  const perfil = document.getElementById('nu-perfil').value;
-  const msg = document.getElementById('nu-msg');
+  const nome = document.getElementById('nu-nome').value.trim(), email = document.getElementById('nu-email').value.trim(), senha = document.getElementById('nu-senha').value, perfil = document.getElementById('nu-perfil').value, msg = document.getElementById('nu-msg');
   if (!nome || !email || !senha) { msg.innerHTML = '<div class="alert alert-danger">Preencha todos os campos.</div>'; return; }
   if (senha.length < 6) { msg.innerHTML = '<div class="alert alert-danger">Senha deve ter no mínimo 6 caracteres.</div>'; return; }
-  try {
-    await api('/users', { method: 'POST', body: JSON.stringify({ name: nome, email, password: senha, role: perfil }) });
-    msg.innerHTML = '<div class="alert alert-success">Usuário criado!</div>';
-    document.getElementById('nu-nome').value = ''; document.getElementById('nu-email').value = ''; document.getElementById('nu-senha').value = ''; document.getElementById('nu-perfil').value = 'operador';
-    loadUsuarios(); setTimeout(() => msg.innerHTML = '', 3000);
-  } catch(e) { msg.innerHTML = `<div class="alert alert-danger">Erro: ${e.message}</div>`; }
+  try { await api('/users', { method: 'POST', body: JSON.stringify({ name: nome, email, password: senha, role: perfil }) }); msg.innerHTML = '<div class="alert alert-success">Usuário criado!</div>'; document.getElementById('nu-nome').value = ''; document.getElementById('nu-email').value = ''; document.getElementById('nu-senha').value = ''; document.getElementById('nu-perfil').value = 'operador'; loadUsuarios(); setTimeout(() => msg.innerHTML = '', 3000); }
+  catch(e) { msg.innerHTML = `<div class="alert alert-danger">Erro: ${e.message}</div>`; }
 }
 
 async function toggleUsuario(id, ativo) {
   if (!confirm(ativo ? 'Ativar este usuário?' : 'Desativar este usuário?')) return;
-  try { await api(`/users/${id}/toggle`, { method: 'PUT', body: JSON.stringify({ ativo }) }); loadUsuarios(); }
-  catch(e) { alert('Erro: ' + e.message); }
+  try { await api(`/users/${id}/toggle`, { method: 'PUT', body: JSON.stringify({ ativo }) }); loadUsuarios(); } catch(e) { alert('Erro: ' + e.message); }
 }
 
 async function alterarMinhaSenha() {
-  const senha = document.getElementById('mp-senha').value;
-  const confirma = document.getElementById('mp-confirma').value;
-  const msg = document.getElementById('mp-msg');
+  const senha = document.getElementById('mp-senha').value, confirma = document.getElementById('mp-confirma').value, msg = document.getElementById('mp-msg');
   if (!senha || !confirma) { msg.innerHTML = '<div class="alert alert-danger">Preencha os dois campos.</div>'; return; }
   if (senha !== confirma) { msg.innerHTML = '<div class="alert alert-danger">Senhas não conferem.</div>'; return; }
   if (senha.length < 6) { msg.innerHTML = '<div class="alert alert-danger">Mínimo 6 caracteres.</div>'; return; }
-  try {
-    await api(`/users/${currentUser.id}/senha`, { method: 'PUT', body: JSON.stringify({ password: senha }) });
-    msg.innerHTML = '<div class="alert alert-success">Senha alterada!</div>';
-    document.getElementById('mp-senha').value = ''; document.getElementById('mp-confirma').value = '';
-    setTimeout(() => msg.innerHTML = '', 3000);
-  } catch(e) { msg.innerHTML = `<div class="alert alert-danger">Erro: ${e.message}</div>`; }
+  try { await api(`/users/${currentUser.id}/senha`, { method: 'PUT', body: JSON.stringify({ password: senha }) }); msg.innerHTML = '<div class="alert alert-success">Senha alterada!</div>'; document.getElementById('mp-senha').value = ''; document.getElementById('mp-confirma').value = ''; setTimeout(() => msg.innerHTML = '', 3000); }
+  catch(e) { msg.innerHTML = `<div class="alert alert-danger">Erro: ${e.message}</div>`; }
 }
-
-function openModal(id) { document.getElementById(id).classList.add('open'); }
-function closeModal(id) { document.getElementById(id).classList.remove('open'); }
-document.querySelectorAll('.modal-overlay').forEach(m => { m.addEventListener('click', e => { if (e.target === m) m.classList.remove('open'); }); });
-
-function fmtDate(str) { if (!str) return '—'; return new Date(str).toLocaleDateString('pt-BR'); }
-function scoreClass(s) { return s >= 70 ? 'score-high' : s >= 50 ? 'score-mid' : 'score-low'; }
-function statusBadge(s) { const map = { aberto: ['badge-blue','Aberto'], em_triagem: ['badge-gold','Em triagem'], encerrado: ['badge-gray','Encerrado'] }; const [cls, label] = map[s] || ['badge-gray', s]; return `<span class="badge ${cls}">${label}</span>`; }
-function candidateStatusBadge(s) { const map = { pendente: ['badge-gray','Pendente'], aprovado: ['badge-success','Aprovado'], reprovado: ['badge-danger','Reprovado'], contratado: ['badge-blue','Contratado'], aguardando_analise: ['badge-gray','Aguardando'] }; const [cls, label] = map[s] || ['badge-gray', s]; return `<span class="badge ${cls}">${label}</span>`; }
 
 async function extractTextFromFile(file) {
   const ext = file.name.split('.').pop().toLowerCase();
@@ -1272,60 +701,31 @@ async function extractTextFromFile(file) {
 }
 async function extractPDF(file) {
   if (!window.pdfjsLib) { await loadScript('https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js'); window.pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js'; }
-  const arrayBuffer = await file.arrayBuffer();
-  const pdf = await window.pdfjsLib.getDocument({ data: arrayBuffer }).promise;
+  const arrayBuffer = await file.arrayBuffer(), pdf = await window.pdfjsLib.getDocument({ data: arrayBuffer }).promise;
   let text = '';
   for (let i = 1; i <= pdf.numPages; i++) { const page = await pdf.getPage(i); const content = await page.getTextContent(); text += content.items.map(item => item.str).join(' ') + '\n'; }
   return text;
 }
 async function extractDOCX(file) {
   if (!window.mammoth) { await loadScript('https://cdnjs.cloudflare.com/ajax/libs/mammoth/1.6.0/mammoth.browser.min.js'); }
-  const arrayBuffer = await file.arrayBuffer();
-  const result = await window.mammoth.extractRawText({ arrayBuffer });
+  const arrayBuffer = await file.arrayBuffer(), result = await window.mammoth.extractRawText({ arrayBuffer });
   return result.value;
 }
 function loadScript(src) { return new Promise((resolve, reject) => { const s = document.createElement('script'); s.src = src; s.onload = resolve; s.onerror = reject; document.head.appendChild(s); }); }
 
-// ── Histórico de análises ──────────────────────────────────────
 async function carregarHistoricoAnalises(candidateId) {
-  await new Promise(r => requestAnimationFrame(() => requestAnimationFrame(r)));
   const el = document.getElementById('historico-content-' + candidateId);
   if (!el) return;
   try {
     const analyses = await api('/candidates/' + candidateId + '/analyses');
-    if (!analyses || !analyses.length) {
-      el.innerHTML = '<p style="font-size:13px;color:var(--text-light)">Nenhuma análise registrada ainda.</p>';
-      return;
-    }
+    if (!analyses || !analyses.length) { el.innerHTML = '<p style="font-size:13px;color:var(--text-light)">Nenhuma análise registrada ainda.</p>'; return; }
     el.innerHTML = analyses.map((a, i) => {
-      const sc = a.score || 0;
-      const cor = sc >= 70 ? 'var(--success)' : sc >= 50 ? 'var(--warn)' : 'var(--danger)';
-      const isLast = i === 0;
-      const met = (a.requirements_met || []).slice(0, 3);
-      const miss = (a.requirements_missing || []).slice(0, 3);
-      const alts = (a.alerts || []).slice(0, 2);
-      return `<details style="margin-bottom:8px;border:1px solid var(--cream-dark);border-radius:8px;overflow:hidden" ${isLast ? 'open' : ''}>
-        <summary style="padding:10px 14px;cursor:pointer;display:flex;align-items:center;justify-content:space-between;background:${isLast ? '#f0f4ff' : 'var(--cream)'};list-style:none;gap:8px">
-          <div style="display:flex;align-items:center;gap:10px">
-            <span style="font-size:20px;font-weight:700;color:${cor}">${sc}</span>
-            <span style="font-size:10px;color:var(--text-light);font-weight:400">/100</span>
-            ${isLast ? '<span class="badge badge-blue" style="font-size:10px">Atual</span>' : ''}
-          </div>
-          <span style="font-size:11px;color:var(--text-light)">${a.analisado_em_fmt}</span>
-        </summary>
-        <div style="padding:12px 14px;font-size:12px;line-height:1.7">
-          ${a.ai_summary ? `<p style="color:var(--text-mid);margin-bottom:8px">${a.ai_summary}</p>` : ''}
-          ${met.length ? `<div style="margin-bottom:6px"><strong style="color:var(--success)">✅ Atendidos:</strong> ${met.map(r=>`<span style="background:var(--success-bg);color:var(--success);padding:1px 8px;border-radius:20px;font-size:11px;margin:1px;display:inline-block">${r}</span>`).join('')}</div>` : ''}
-          ${miss.length ? `<div style="margin-bottom:6px"><strong style="color:var(--danger)">❌ Faltantes:</strong> ${miss.map(r=>`<span style="background:var(--danger-bg);color:var(--danger);padding:1px 8px;border-radius:20px;font-size:11px;margin:1px;display:inline-block">${r}</span>`).join('')}</div>` : ''}
-          ${alts.length ? `<div><strong style="color:var(--warn)">⚠️ Alertas:</strong> ${alts.map(a=>`<span style="background:var(--warn-bg);color:var(--warn);padding:1px 8px;border-radius:20px;font-size:11px;margin:1px;display:inline-block">${a}</span>`).join('')}</div>` : ''}
-        </div>
-      </details>`;
+      const sc = a.score || 0, cor = sc >= 70 ? 'var(--success)' : sc >= 50 ? 'var(--warn)' : 'var(--danger)', isLast = i === 0;
+      const met = (a.requirements_met || []).slice(0, 3), miss = (a.requirements_missing || []).slice(0, 3), alts = (a.alerts || []).slice(0, 2);
+      return `<details style="margin-bottom:8px;border:1px solid var(--cream-dark);border-radius:8px;overflow:hidden" ${isLast ? 'open' : ''}><summary style="padding:10px 14px;cursor:pointer;display:flex;align-items:center;justify-content:space-between;background:${isLast ? '#f0f4ff' : 'var(--cream)'};list-style:none;gap:8px"><div style="display:flex;align-items:center;gap:10px"><span style="font-size:20px;font-weight:700;color:${cor}">${sc}</span><span style="font-size:10px;color:var(--text-light);font-weight:400">/100</span>${isLast ? '<span class="badge badge-blue" style="font-size:10px">Atual</span>' : ''}</div><span style="font-size:11px;color:var(--text-light)">${a.analisado_em_fmt}</span></summary><div style="padding:12px 14px;font-size:12px;line-height:1.7">${a.ai_summary ? `<p style="color:var(--text-mid);margin-bottom:8px">${a.ai_summary}</p>` : ''}${met.length ? `<div style="margin-bottom:6px"><strong style="color:var(--success)">✅ Atendidos:</strong> ${met.map(r=>`<span style="background:var(--success-bg);color:var(--success);padding:1px 8px;border-radius:20px;font-size:11px;margin:1px;display:inline-block">${r}</span>`).join('')}</div>` : ''}${miss.length ? `<div style="margin-bottom:6px"><strong style="color:var(--danger)">❌ Faltantes:</strong> ${miss.map(r=>`<span style="background:var(--danger-bg);color:var(--danger);padding:1px 8px;border-radius:20px;font-size:11px;margin:1px;display:inline-block">${r}</span>`).join('')}</div>` : ''}${alts.length ? `<div><strong style="color:var(--warn)">⚠️ Alertas:</strong> ${alts.map(a=>`<span style="background:var(--warn-bg);color:var(--warn);padding:1px 8px;border-radius:20px;font-size:11px;margin:1px;display:inline-block">${a}</span>`).join('')}</div>` : ''}</div></details>`;
     }).join('');
-  } catch(e) {
-    if (el) el.innerHTML = '<p style="font-size:13px;color:var(--text-light)">Histórico não disponível.</p>';
-  }
+  } catch(e) { if (el) el.innerHTML = '<p style="font-size:13px;color:var(--text-light)">Histórico não disponível.</p>'; }
 }
-
 </script>
 </div>
 </body>
