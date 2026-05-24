@@ -851,8 +851,21 @@ async function openCandidate(candidateId) {
       <div id="historico-content-${c.id}"><p style="font-size:13px;color:var(--text-mid)">Carregando histórico...</p></div>
     </div>`;
   openModal('modal-candidate');
+ openModal('modal-candidate');
   carregarStatusQuestionario(c.id);
-  carregarHistoricoAnalises(c.id);
+  const footer = document.getElementById('modal-candidate-footer');
+  const proc = await api(`/processes/${currentProcessId}`);
+  const isOpen = proc.status !== 'encerrado';
+  const btnTalent = c.in_talent_bank ? `<button class="btn btn-secondary" disabled style="opacity:.5">⭐ No banco</button>` : `<button class="btn btn-secondary" style="background:var(--warn-bg);color:var(--warn)" onclick="addToTalentBank(${c.id})">⭐ Banco de talentos</button>`;
+  const btnPrint = `<button class="btn btn-secondary btn-sm" onclick="printCandidate(${c.id})">🖨️ Imprimir</button>`;
+  const btnBloquear = !c.bloqueado ? `<button class="btn btn-sm" style="background:#1a1a1a;color:#fff" onclick="closeModal('modal-candidate');abrirModalBloquear(${c.id})">🚫 Bloquear</button>` : '';
+  const btnContratar = isOpen && c.status === 'aprovado' ? `<button class="btn btn-gold" onclick="closeModal('modal-candidate');abrirModalContratar(${c.id},'${(c.name||'').replace(/'/g,"\\'")}','${c.email||''}','${c.phone||''}','${proc.title.replace(/'/g,"\\'")}')">✅ Contratado</button>` : '';
+  if (c.status === 'pendente' && isOpen) {
+    footer.innerHTML = `<button class="btn btn-secondary" onclick="closeModal('modal-candidate')">Fechar</button>${btnPrint}${btnTalent}${btnBloquear}<button class="btn btn-danger" onclick="updateStatus(${c.id},'reprovado');closeModal('modal-candidate')">Reprovar</button><button class="btn btn-primary" onclick="updateStatus(${c.id},'aprovado');closeModal('modal-candidate')">Aprovar</button>${btnContratar}`;
+  } else {
+    footer.innerHTML = `<button class="btn btn-secondary" onclick="closeModal('modal-candidate')">Fechar</button>${btnPrint}${btnTalent}${btnBloquear}${btnContratar}`;
+  }
+  setTimeout(() => carregarHistoricoAnalises(c.id), 2000);
 }
   const footer = document.getElementById('modal-candidate-footer');
   const proc = await api(`/processes/${currentProcessId}`);
