@@ -866,6 +866,7 @@ async function openCandidate(candidateId) {
   } else {
     footer.innerHTML = `<button class="btn btn-secondary" onclick="closeModal('modal-candidate')">Fechar</button>${btnPrint}${btnTalent}${btnBloquear}${btnContratar}`;
   }
+  setTimeout(() => carregarHistoricoAnalises(c.id), 2000);
 }
 
 function abrirModalContratar(candidateId, nome, email, telefone, cargo) {
