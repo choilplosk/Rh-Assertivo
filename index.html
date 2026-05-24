@@ -850,8 +850,9 @@ async function openCandidate(candidateId) {
       <h4>📊 Histórico de Análises</h4>
       <div id="historico-content-${c.id}"><p style="font-size:13px;color:var(--text-mid)">Carregando histórico...</p></div>
     </div>`;
+  openModal('modal-candidate');
   carregarStatusQuestionario(c.id);
-  setTimeout(() => carregarHistoricoAnalises(c.id), 300);
+  carregarHistoricoAnalises(c.id);
   const footer = document.getElementById('modal-candidate-footer');
   const proc = await api(`/processes/${currentProcessId}`);
   const isOpen = proc.status !== 'encerrado';
@@ -864,7 +865,6 @@ async function openCandidate(candidateId) {
   } else {
     footer.innerHTML = `<button class="btn btn-secondary" onclick="closeModal('modal-candidate')">Fechar</button>${btnPrint}${btnTalent}${btnBloquear}${btnContratar}`;
   }
-  openModal('modal-candidate');
 }
 
 function abrirModalContratar(candidateId, nome, email, telefone, cargo) {
