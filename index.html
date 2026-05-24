@@ -845,8 +845,13 @@ async function openCandidate(candidateId) {
     <div class="detail-section" id="questionario-status-${c.id}">
       <h4>📋 Questionário Comportamental</h4>
       <div id="qs-content-${c.id}"><p style="font-size:13px;color:var(--text-mid)">Verificando status...</p></div>
+    </div>
+    <div class="detail-section" id="historico-analises-${c.id}">
+      <h4>📊 Histórico de Análises</h4>
+      <div id="historico-content-${c.id}"><p style="font-size:13px;color:var(--text-mid)">Carregando histórico...</p></div>
     </div>`;
   carregarStatusQuestionario(c.id);
+  carregarHistoricoAnalises(c.id);
   const footer = document.getElementById('modal-candidate-footer');
   const proc = await api(`/processes/${currentProcessId}`);
   const isOpen = proc.status !== 'encerrado';
@@ -1263,6 +1268,46 @@ async function extractDOCX(file) {
   return result.value;
 }
 function loadScript(src) { return new Promise((resolve, reject) => { const s = document.createElement('script'); s.src = src; s.onload = resolve; s.onerror = reject; document.head.appendChild(s); }); }
+
+// ── Histórico de análises ──────────────────────────────────────
+async function carregarHistoricoAnalises(candidateId) {
+  const el = document.getElementById('historico-content-' + candidateId);
+  if (!el) return;
+  try {
+    const analyses = await api('/candidates/' + candidateId + '/analyses');
+    if (!analyses || !analyses.length) {
+      el.innerHTML = '<p style="font-size:13px;color:var(--text-light)">Nenhuma análise registrada ainda.</p>';
+      return;
+    }
+    el.innerHTML = analyses.map((a, i) => {
+      const sc = a.score || 0;
+      const cor = sc >= 70 ? 'var(--success)' : sc >= 50 ? 'var(--warn)' : 'var(--danger)';
+      const isLast = i === 0;
+      const met = (a.requirements_met || []).slice(0, 3);
+      const miss = (a.requirements_missing || []).slice(0, 3);
+      const alts = (a.alerts || []).slice(0, 2);
+      return `<details style="margin-bottom:8px;border:1px solid var(--cream-dark);border-radius:8px;overflow:hidden" ${isLast ? 'open' : ''}>
+        <summary style="padding:10px 14px;cursor:pointer;display:flex;align-items:center;justify-content:space-between;background:${isLast ? '#f0f4ff' : 'var(--cream)'};list-style:none;gap:8px">
+          <div style="display:flex;align-items:center;gap:10px">
+            <span style="font-size:20px;font-weight:700;color:${cor}">${sc}</span>
+            <span style="font-size:10px;color:var(--text-light);font-weight:400">/100</span>
+            ${isLast ? '<span class="badge badge-blue" style="font-size:10px">Atual</span>' : ''}
+          </div>
+          <span style="font-size:11px;color:var(--text-light)">${a.analisado_em_fmt}</span>
+        </summary>
+        <div style="padding:12px 14px;font-size:12px;line-height:1.7">
+          ${a.ai_summary ? `<p style="color:var(--text-mid);margin-bottom:8px">${a.ai_summary}</p>` : ''}
+          ${met.length ? `<div style="margin-bottom:6px"><strong style="color:var(--success)">✅ Atendidos:</strong> ${met.map(r=>`<span style="background:var(--success-bg);color:var(--success);padding:1px 8px;border-radius:20px;font-size:11px;margin:1px;display:inline-block">${r}</span>`).join('')}</div>` : ''}
+          ${miss.length ? `<div style="margin-bottom:6px"><strong style="color:var(--danger)">❌ Faltantes:</strong> ${miss.map(r=>`<span style="background:var(--danger-bg);color:var(--danger);padding:1px 8px;border-radius:20px;font-size:11px;margin:1px;display:inline-block">${r}</span>`).join('')}</div>` : ''}
+          ${alts.length ? `<div><strong style="color:var(--warn)">⚠️ Alertas:</strong> ${alts.map(a=>`<span style="background:var(--warn-bg);color:var(--warn);padding:1px 8px;border-radius:20px;font-size:11px;margin:1px;display:inline-block">${a}</span>`).join('')}</div>` : ''}
+        </div>
+      </details>`;
+    }).join('');
+  } catch(e) {
+    if (el) el.innerHTML = '<p style="font-size:13px;color:var(--text-light)">Histórico não disponível.</p>';
+  }
+}
+
 </script>
 </div>
 </body>
