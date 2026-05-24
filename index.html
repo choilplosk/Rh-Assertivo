@@ -181,7 +181,6 @@
   .text-mid { color: var(--text-mid); }
   .font-serif { font-family: 'DM Serif Display', serif; }
   .w-full { width: 100%; }
-  /* Bloqueado */
   .bloqueado-row td { opacity: 0.5; text-decoration: line-through; }
   .badge-blocked { background: #1a1a1a; color: #fff; }
 </style>
@@ -217,24 +216,12 @@
     <p>Triagem Inteligente</p>
   </div>
   <nav class="sidebar-nav">
-    <button class="nav-item active" onclick="showSection('dashboard')">
-      <span class="icon">📊</span> Dashboard
-    </button>
-    <button class="nav-item" onclick="showSection('processes')">
-      <span class="icon">📋</span> Processos
-    </button>
-    <button class="nav-item" onclick="showSection('profiles')">
-      <span class="icon">📄</span> Perfis de Vaga
-    </button>
-    <button class="nav-item" onclick="showSection('talent')">
-      <span class="icon">⭐</span> Banco de Talentos
-    </button>
-    <button class="nav-item" onclick="showSection('funcionarios')">
-      <span class="icon">👤</span> Funcionários
-    </button>
-    <button class="nav-item" id="nav-config" style="display:none" onclick="showSection('config')">
-      <span class="icon">⚙️</span> Configurações
-    </button>
+    <button class="nav-item active" onclick="showSection('dashboard')"><span class="icon">📊</span> Dashboard</button>
+    <button class="nav-item" onclick="showSection('processes')"><span class="icon">📋</span> Processos</button>
+    <button class="nav-item" onclick="showSection('profiles')"><span class="icon">📄</span> Perfis de Vaga</button>
+    <button class="nav-item" onclick="showSection('talent')"><span class="icon">⭐</span> Banco de Talentos</button>
+    <button class="nav-item" onclick="showSection('funcionarios')"><span class="icon">👤</span> Funcionários</button>
+    <button class="nav-item" id="nav-config" style="display:none" onclick="showSection('config')"><span class="icon">⚙️</span> Configurações</button>
   </nav>
   <div class="sidebar-footer">
     <div class="status-dot" style="flex-direction:column;align-items:flex-start;gap:8px">
@@ -312,7 +299,6 @@
       <div class="card">
         <div class="card-header">
           <span class="card-title">Banco de Talentos</span>
-          <!-- [EVOLUÇÃO 1] Filtro por cargo do processo -->
           <div style="display:flex;align-items:center;gap:10px">
             <label style="font-size:13px;color:var(--text-mid)">Filtrar por cargo:</label>
             <select id="talent-filter-process" class="form-control" style="width:220px;padding:7px 12px" onchange="loadTalent()">
@@ -324,7 +310,7 @@
       </div>
     </div>
 
-    <!-- [NOVO] FUNCIONÁRIOS -->
+    <!-- FUNCIONÁRIOS -->
     <div id="section-funcionarios" class="section">
       <div class="grid-2">
         <div class="card">
@@ -332,32 +318,9 @@
           <div class="form-group"><label class="form-label">Nome completo *</label><input type="text" class="form-control" id="fn-nome" placeholder="Nome do funcionário"></div>
           <div class="form-group"><label class="form-label">PDV</label><input type="text" class="form-control" id="fn-pdv" placeholder="Ponto de venda"></div>
           <div class="form-group"><label class="form-label">Data de admissão</label><input type="date" class="form-control" id="fn-admissao"></div>
-          <div class="form-group">
-            <label class="form-label">Raça / Cor</label>
-            <select class="form-control" id="fn-raca">
-              <option value="">Selecionar...</option>
-              <option>Branco</option><option>Pardo</option><option>Preto</option>
-              <option>Amarelo</option><option>Indígena</option>
-              <option>Prefiro não responder</option><option>Não sei</option>
-            </select>
-          </div>
-          <div class="form-group">
-            <label class="form-label">Grau de escolaridade</label>
-            <select class="form-control" id="fn-escolaridade">
-              <option value="">Selecionar...</option>
-              <option>Fundamental Incompleto</option><option>Fundamental Completo</option>
-              <option>Médio Incompleto</option><option>Médio Completo</option>
-              <option>Superior Incompleto</option><option>Superior Completo</option>
-              <option>Pós-graduação Incompleta</option><option>Pós-graduação Completa</option>
-            </select>
-          </div>
-          <div class="form-group">
-            <label class="form-label">Sexo</label>
-            <select class="form-control" id="fn-sexo">
-              <option value="">Selecionar...</option>
-              <option>Masculino</option><option>Feminino</option>
-            </select>
-          </div>
+          <div class="form-group"><label class="form-label">Raça / Cor</label><select class="form-control" id="fn-raca"><option value="">Selecionar...</option><option>Branco</option><option>Pardo</option><option>Preto</option><option>Amarelo</option><option>Indígena</option><option>Prefiro não responder</option><option>Não sei</option></select></div>
+          <div class="form-group"><label class="form-label">Grau de escolaridade</label><select class="form-control" id="fn-escolaridade"><option value="">Selecionar...</option><option>Fundamental Incompleto</option><option>Fundamental Completo</option><option>Médio Incompleto</option><option>Médio Completo</option><option>Superior Incompleto</option><option>Superior Completo</option><option>Pós-graduação Incompleta</option><option>Pós-graduação Completa</option></select></div>
+          <div class="form-group"><label class="form-label">Sexo</label><select class="form-control" id="fn-sexo"><option value="">Selecionar...</option><option>Masculino</option><option>Feminino</option></select></div>
           <div class="form-group"><label class="form-label">Cargo</label><input type="text" class="form-control" id="fn-cargo" placeholder="Cargo/função"></div>
           <div class="form-group"><label class="form-label">Email</label><input type="email" class="form-control" id="fn-email" placeholder="email@exemplo.com"></div>
           <div class="form-group"><label class="form-label">Telefone</label><input type="text" class="form-control" id="fn-telefone" placeholder="(21) 99999-9999"></div>
@@ -379,13 +342,7 @@
           <div class="form-group"><label class="form-label">Nome completo *</label><input type="text" class="form-control" id="nu-nome" placeholder="Nome do usuário"></div>
           <div class="form-group"><label class="form-label">Email *</label><input type="email" class="form-control" id="nu-email" placeholder="email@exemplo.com"></div>
           <div class="form-group"><label class="form-label">Senha *</label><input type="password" class="form-control" id="nu-senha" placeholder="Mínimo 6 caracteres"></div>
-          <div class="form-group">
-            <label class="form-label">Perfil</label>
-            <select class="form-control" id="nu-perfil">
-              <option value="operador">Operador</option>
-              <option value="diretor">Diretor</option>
-            </select>
-          </div>
+          <div class="form-group"><label class="form-label">Perfil</label><select class="form-control" id="nu-perfil"><option value="operador">Operador</option><option value="diretor">Diretor</option></select></div>
           <div id="nu-msg"></div>
           <button class="btn btn-primary w-full" onclick="criarUsuario()">➕ Criar Usuário</button>
           <div style="margin-top:24px;padding-top:24px;border-top:1px solid var(--cream-dark)">
@@ -432,7 +389,7 @@
   </div>
 </div>
 
-<!-- [NOVO] Modal: Contratar candidato como funcionário -->
+<!-- Modal: Contratar candidato -->
 <div class="modal-overlay" id="modal-contratar">
   <div class="modal">
     <div class="modal-header"><h3>✅ Registrar Contratação</h3><button class="modal-close" onclick="closeModal('modal-contratar')">✕</button></div>
@@ -444,25 +401,8 @@
         <div class="form-group"><label class="form-label">PDV</label><input type="text" class="form-control" id="ct-pdv" placeholder="Ponto de venda"></div>
         <div class="form-group"><label class="form-label">Data de admissão</label><input type="date" class="form-control" id="ct-admissao"></div>
         <div class="form-group"><label class="form-label">Cargo</label><input type="text" class="form-control" id="ct-cargo"></div>
-        <div class="form-group">
-          <label class="form-label">Raça / Cor</label>
-          <select class="form-control" id="ct-raca">
-            <option value="">Selecionar...</option>
-            <option>Branco</option><option>Pardo</option><option>Preto</option>
-            <option>Amarelo</option><option>Indígena</option>
-            <option>Prefiro não responder</option><option>Não sei</option>
-          </select>
-        </div>
-        <div class="form-group">
-          <label class="form-label">Grau de escolaridade</label>
-          <select class="form-control" id="ct-escolaridade">
-            <option value="">Selecionar...</option>
-            <option>Fundamental Incompleto</option><option>Fundamental Completo</option>
-            <option>Médio Incompleto</option><option>Médio Completo</option>
-            <option>Superior Incompleto</option><option>Superior Completo</option>
-            <option>Pós-graduação Incompleta</option><option>Pós-graduação Completa</option>
-          </select>
-        </div>
+        <div class="form-group"><label class="form-label">Raça / Cor</label><select class="form-control" id="ct-raca"><option value="">Selecionar...</option><option>Branco</option><option>Pardo</option><option>Preto</option><option>Amarelo</option><option>Indígena</option><option>Prefiro não responder</option><option>Não sei</option></select></div>
+        <div class="form-group"><label class="form-label">Grau de escolaridade</label><select class="form-control" id="ct-escolaridade"><option value="">Selecionar...</option><option>Fundamental Incompleto</option><option>Fundamental Completo</option><option>Médio Incompleto</option><option>Médio Completo</option><option>Superior Incompleto</option><option>Superior Completo</option><option>Pós-graduação Incompleta</option><option>Pós-graduação Completa</option></select></div>
         <div class="form-group"><label class="form-label">Sexo</label><select class="form-control" id="ct-sexo"><option value="">Selecionar...</option><option>Masculino</option><option>Feminino</option></select></div>
         <div class="form-group"><label class="form-label">Email</label><input type="email" class="form-control" id="ct-email"></div>
         <div class="form-group"><label class="form-label">Telefone</label><input type="text" class="form-control" id="ct-telefone"></div>
@@ -476,19 +416,14 @@
   </div>
 </div>
 
-<!-- [NOVO] Modal: Bloquear candidato -->
+<!-- Modal: Bloquear candidato -->
 <div class="modal-overlay" id="modal-bloquear">
   <div class="modal" style="max-width:440px">
     <div class="modal-header"><h3>🚫 Bloquear Candidato</h3><button class="modal-close" onclick="closeModal('modal-bloquear')">✕</button></div>
     <div class="modal-body">
-      <div class="alert alert-warn" style="margin-bottom:16px">
-        Este candidato ficará impedido de participar de qualquer processo futuro da empresa. O bloqueio também se aplica a outros registros com o mesmo email.
-      </div>
+      <div class="alert alert-warn" style="margin-bottom:16px">Este candidato ficará impedido de participar de qualquer processo futuro da empresa.</div>
       <input type="hidden" id="blq-candidate-id">
-      <div class="form-group">
-        <label class="form-label">Motivo do bloqueio</label>
-        <textarea class="form-control" id="blq-motivo" rows="3" placeholder="Descreva o motivo..."></textarea>
-      </div>
+      <div class="form-group"><label class="form-label">Motivo do bloqueio</label><textarea class="form-control" id="blq-motivo" rows="3" placeholder="Descreva o motivo..."></textarea></div>
       <div id="blq-msg"></div>
     </div>
     <div class="modal-footer">
@@ -521,7 +456,6 @@ let closeProcessId = null;
 let authToken = localStorage.getItem('rh_token') || null;
 let currentUser = JSON.parse(localStorage.getItem('rh_user') || 'null');
 
-// ── Login ──────────────────────────────────────────────────────
 function checkAuth() {
   if (!authToken) {
     document.getElementById('login-screen').style.display = 'flex';
@@ -569,36 +503,27 @@ document.addEventListener('DOMContentLoaded', () => {
   checkAuth();
 });
 
-// ── Navigation ─────────────────────────────────────────────────
 function showSection(name) {
   document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
   document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
   document.getElementById('section-' + name).classList.add('active');
   document.querySelectorAll('.nav-item').forEach(n => {
     const t = n.textContent.trim().toLowerCase();
-    if (
-      (name === 'dashboard' && t.includes('dashboard')) ||
-      (name === 'processes' && t.includes('processo')) ||
-      (name === 'profiles' && t.includes('perfis')) ||
-      (name === 'talent' && t.includes('talento')) ||
-      (name === 'funcionarios' && t.includes('funcionário')) ||
-      (name === 'config' && t.includes('configurações'))
-    ) n.classList.add('active');
+    if ((name==='dashboard'&&t.includes('dashboard'))||(name==='processes'&&t.includes('processo'))||(name==='profiles'&&t.includes('perfis'))||(name==='talent'&&t.includes('talento'))||(name==='funcionarios'&&t.includes('funcionário'))||(name==='config'&&t.includes('configurações'))) n.classList.add('active');
   });
-  const titles = { dashboard: 'Dashboard', processes: 'Processos Seletivos', profiles: 'Perfis de Vaga', talent: 'Banco de Talentos', funcionarios: 'Funcionários', config: 'Configurações' };
+  const titles = { dashboard:'Dashboard', processes:'Processos Seletivos', profiles:'Perfis de Vaga', talent:'Banco de Talentos', funcionarios:'Funcionários', config:'Configurações' };
   document.getElementById('page-title').textContent = titles[name] || name;
   const actions = document.getElementById('topbar-actions');
   actions.innerHTML = '';
-  if (name === 'processes') actions.innerHTML = '<button class="btn btn-gold" onclick="openNewProcess()">+ Novo Processo</button>';
-  if (name === 'dashboard') loadDashboard();
-  if (name === 'processes') loadProcesses();
-  if (name === 'profiles') loadProfiles();
-  if (name === 'talent') { loadProcessesForFilter(); loadTalent(); }
-  if (name === 'funcionarios') loadFuncionarios();
-  if (name === 'config') { if (currentUser?.role !== 'diretor') { showSection('dashboard'); return; } loadUsuarios(); }
+  if (name==='processes') actions.innerHTML = '<button class="btn btn-gold" onclick="openNewProcess()">+ Novo Processo</button>';
+  if (name==='dashboard') loadDashboard();
+  if (name==='processes') loadProcesses();
+  if (name==='profiles') loadProfiles();
+  if (name==='talent') { loadProcessesForFilter(); loadTalent(); }
+  if (name==='funcionarios') loadFuncionarios();
+  if (name==='config') { if (currentUser?.role !== 'diretor') { showSection('dashboard'); return; } loadUsuarios(); }
 }
 
-// ── API helpers ─────────────────────────────────────────────────
 async function api(path, opts = {}) {
   const headers = { 'Content-Type': 'application/json', ...(opts.headers || {}) };
   if (authToken) headers['Authorization'] = 'Bearer ' + authToken;
@@ -608,7 +533,6 @@ async function api(path, opts = {}) {
   return r.json();
 }
 
-// ── Dashboard ───────────────────────────────────────────────────
 function scoreColor(s){ return s>=70?'var(--success)':s>=50?'var(--warn)':'var(--danger)'; }
 
 async function loadDashboard() {
@@ -642,9 +566,7 @@ async function loadDashboard() {
     const pe = allCandidates.filter(c=>c.status==='pendente').length;
     const rp = allCandidates.filter(c=>c.status==='reprovado').length;
     const tot = allCandidates.length || 1;
-    document.getElementById('dash-status-bars').innerHTML = allCandidates.length ? `
-      ${[['Aprovados',ap,'var(--success)','var(--success-bg)'],['Pendentes',pe,'var(--blue)','#E6F1FB'],['Reprovados',rp,'var(--danger)','var(--danger-bg)']].map(([l,v,c,bg])=>`
-        <div style="margin-bottom:10px"><div style="display:flex;justify-content:space-between;font-size:12px;margin-bottom:4px"><span style="color:var(--text-mid)">${l}</span><span style="font-weight:600;color:${c}">${v} (${Math.round(v/tot*100)}%)</span></div><div style="height:6px;background:#e2e2df;border-radius:3px;overflow:hidden"><div style="height:100%;width:${Math.round(v/tot*100)}%;background:${c};border-radius:3px"></div></div></div>`).join('')}` : '<div class="text-sm text-mid">Nenhum candidato ainda.</div>';
+    document.getElementById('dash-status-bars').innerHTML = allCandidates.length ? `${[['Aprovados',ap,'var(--success)'],['Pendentes',pe,'var(--blue)'],['Reprovados',rp,'var(--danger)']].map(([l,v,c])=>`<div style="margin-bottom:10px"><div style="display:flex;justify-content:space-between;font-size:12px;margin-bottom:4px"><span style="color:var(--text-mid)">${l}</span><span style="font-weight:600;color:${c}">${v} (${Math.round(v/tot*100)}%)</span></div><div style="height:6px;background:#e2e2df;border-radius:3px;overflow:hidden"><div style="height:100%;width:${Math.round(v/tot*100)}%;background:${c};border-radius:3px"></div></div></div>`).join('')}` : '<div class="text-sm text-mid">Nenhum candidato ainda.</div>';
     const compEl = document.getElementById('dash-comportamental');
     if (allQuizScores.length) {
       const avg = k => Math.round(allQuizScores.reduce((s,q)=>s+(q[k]||0),0)/allQuizScores.length);
@@ -660,7 +582,6 @@ async function loadDashboard() {
   } catch(e) { document.getElementById('dashboard-processes').innerHTML = `<div class="alert alert-danger">Erro ao carregar: ${e.message}</div>`; }
 }
 
-// ── Processes ───────────────────────────────────────────────────
 async function loadProcesses() {
   const el = document.getElementById('processes-list');
   el.innerHTML = '<div class="loading"><div class="spinner"></div><span class="loading-text">Carregando...</span></div>';
@@ -726,47 +647,72 @@ function renderProcessDetail(proc, candidates) {
     </div>`;
 }
 
+// ── ITEM 5: renderCandidatesTable com badges de pesquisa ─────────
 function renderCandidatesTable(candidates, isOpen, processTitle) {
   if (!candidates.length) return '<div class="empty"><div class="empty-icon">👥</div><p>Nenhum currículo enviado ainda.</p></div>';
+  const rows = candidates.map(c => {
+    const sc = scoreClass(c.score);
+    const bloqueado = c.bloqueado;
+    return `<tr data-candidate-id="${c.id}" class="${bloqueado ? 'bloqueado-row' : ''}">
+      <td><strong>${c.ranking_position}</strong></td>
+      <td>
+        <div><strong>${c.name || c.filename}</strong> ${bloqueado ? '<span class="badge badge-blocked" style="font-size:10px">🚫 Bloqueado</span>' : ''}</div>
+        ${c.email ? `<div class="text-sm text-mid">${c.email}</div>` : ''}
+      </td>
+      <td>
+        <div class="score-bar ${sc}">
+          <div class="score-track"><div class="score-fill" style="width:${c.score}%"></div></div>
+          <div class="score-num">${c.status === 'aguardando_analise' ? '—' : Math.round(c.score) + '/100'}</div>
+        </div>
+      </td>
+      <td>
+        ${candidateStatusBadge(c.status)}
+        <span id="pesquisa-badge-${c.id}" style="display:block;margin-top:3px"></span>
+      </td>
+      <td>
+        <div class="flex gap-2" style="flex-wrap:wrap">
+          ${c.status === 'aguardando_analise'
+            ? `<span style="font-size:12px;color:var(--text-light)">⏳ Aguardando análise</span>`
+            : `<button class="btn btn-secondary btn-sm" onclick="openCandidate(${c.id})">Ver detalhes</button>`
+          }
+          ${isOpen && c.status === 'pendente' ? `
+            <button class="btn btn-sm" style="background:var(--success-bg);color:var(--success)" onclick="updateStatus(${c.id},'aprovado')">✓</button>
+            <button class="btn btn-sm" style="background:var(--danger-bg);color:var(--danger)" onclick="updateStatus(${c.id},'reprovado')">✗</button>
+          ` : ''}
+          ${isOpen && c.status === 'aprovado' ? `
+            <button class="btn btn-sm btn-gold" onclick="abrirModalContratar(${c.id},'${(c.name||'').replace(/'/g,"\\'")}','${(c.email||'')}','${(c.phone||'')}','${(processTitle||'').replace(/'/g,"\\'")}')">✅ Contratado</button>
+          ` : ''}
+          ${!bloqueado && c.status !== 'aguardando_analise' ? `
+            <button class="btn btn-sm" style="background:#1a1a1a;color:#fff;font-size:11px" onclick="abrirModalBloquear(${c.id})">🚫</button>
+          ` : ''}
+        </div>
+      </td>
+    </tr>`;
+  }).join('');
+
+  // Carrega badges de pesquisa de forma assíncrona após render
+  setTimeout(() => enriquecerBadgesTabela(candidates.map(c => c.id)), 400);
+
   return `<div class="table-wrap"><table>
-    <thead><tr><th>#</th><th>Candidato</th><th>Score</th><th>Status</th><th>Ações</th></tr></thead>
-    <tbody>${candidates.map(c => {
-      const sc = scoreClass(c.score);
-      const bloqueado = c.bloqueado;
-      return `<tr class="${bloqueado ? 'bloqueado-row' : ''}">
-        <td><strong>${c.ranking_position}</strong></td>
-        <td>
-          <div><strong>${c.name || c.filename}</strong> ${bloqueado ? '<span class="badge badge-blocked" style="font-size:10px">🚫 Bloqueado</span>' : ''}</div>
-          ${c.email ? `<div class="text-sm text-mid">${c.email}</div>` : ''}
-        </td>
-        <td>
-          <div class="score-bar ${sc}">
-            <div class="score-track"><div class="score-fill" style="width:${c.score}%"></div></div>
-            <div class="score-num">${c.status === 'aguardando_analise' ? '—' : Math.round(c.score) + '/100'}</div>
-          </div>
-        </td>
-        <td>${candidateStatusBadge(c.status)}</td>
-        <td>
-          <div class="flex gap-2" style="flex-wrap:wrap">
-            ${c.status === 'aguardando_analise'
-              ? `<span style="font-size:12px;color:var(--text-light)">⏳ Aguardando análise</span>`
-              : `<button class="btn btn-secondary btn-sm" onclick="openCandidate(${c.id})">Ver detalhes</button>`
-            }
-            ${isOpen && c.status === 'pendente' ? `
-              <button class="btn btn-sm" style="background:var(--success-bg);color:var(--success)" onclick="updateStatus(${c.id},'aprovado')">✓</button>
-              <button class="btn btn-sm" style="background:var(--danger-bg);color:var(--danger)" onclick="updateStatus(${c.id},'reprovado')">✗</button>
-            ` : ''}
-            ${isOpen && c.status !== 'aguardando_analise' && c.status === 'aprovado' ? `
-              <button class="btn btn-sm btn-gold" onclick="abrirModalContratar(${c.id},'${(c.name||'').replace(/'/g,"\\'")}','${(c.email||'')}','${(c.phone||'')}','${(processTitle||'').replace(/'/g,"\\'")}')">✅ Contratado</button>
-            ` : ''}
-            ${!bloqueado && c.status !== 'aguardando_analise' ? `
-              <button class="btn btn-sm" style="background:#1a1a1a;color:#fff;font-size:11px" onclick="abrirModalBloquear(${c.id})">🚫</button>
-            ` : ''}
-          </div>
-        </td>
-      </tr>`;
-    }).join('')}</tbody>
+    <thead><tr><th>#</th><th>Candidato</th><th>Score</th><th>Status / Pesquisa</th><th>Ações</th></tr></thead>
+    <tbody>${rows}</tbody>
   </table></div>`;
+}
+
+// ITEM 5: carrega badges assíncronos
+async function enriquecerBadgesTabela(candidateIds) {
+  for (const id of candidateIds) {
+    const el = document.getElementById('pesquisa-badge-' + id);
+    if (!el) continue;
+    try {
+      const r = await api('/questionario/' + id + '/respostas');
+      if (r && r.respondido) {
+        el.innerHTML = '<span class="badge" style="background:#e8f7ee;color:#1a7a4a;font-size:10px">✅ Pesquisa recebida</span>';
+      } else if (localStorage.getItem('quiz_sent_' + id)) {
+        el.innerHTML = '<span class="badge" style="background:#dbeafe;color:#1e40af;font-size:10px">📬 Pesquisa enviada</span>';
+      }
+    } catch(e) { /* silencioso */ }
+  }
 }
 
 function backToProcessList() {
@@ -776,7 +722,6 @@ function backToProcessList() {
   loadProcesses();
 }
 
-// ── Create process ──────────────────────────────────────────────
 async function openNewProcess() {
   document.getElementById('np-msg').innerHTML = '';
   document.getElementById('np-title').value = '';
@@ -800,7 +745,6 @@ async function createProcess() {
   } catch(e) { document.getElementById('np-msg').innerHTML = `<div class="alert alert-danger">Erro: ${e.message}</div>`; }
 }
 
-// ── Upload ──────────────────────────────────────────────────────
 function handleDrop(e) { e.preventDefault(); document.getElementById('upload-zone')?.classList.remove('drag'); handleFiles(e.dataTransfer.files); }
 
 async function handleFiles(files) {
@@ -869,7 +813,6 @@ async function startAnalysis() {
   }
 }
 
-// ── Candidate detail ────────────────────────────────────────────
 async function openCandidate(candidateId) {
   currentCandidateId = candidateId;
   const candidates = await api(`/processes/${currentProcessId}/candidates`);
@@ -883,7 +826,7 @@ async function openCandidate(candidateId) {
   try { const qr = await api(`/questionario/${c.id}/respostas`); if (qr && qr.respondido) quizData = qr; } catch(e) {}
   const parecerHtml = montarParecerIntegrado(c, quizData);
   document.getElementById('modal-candidate-body').innerHTML = `
-    ${c.bloqueado ? `<div class="alert alert-danger">🚫 Este candidato está <strong>bloqueado</strong>${c.bloqueado_motivo ? ': ' + c.bloqueado_motivo : ''}. Não pode participar de novos processos.</div>` : ''}
+    ${c.bloqueado ? `<div class="alert alert-danger">🚫 Este candidato está <strong>bloqueado</strong>${c.bloqueado_motivo ? ': ' + c.bloqueado_motivo : ''}.</div>` : ''}
     ${parecerHtml}
     <div class="detail-section">
       <div class="flex items-center gap-2 mb-4" style="gap:16px">
@@ -907,14 +850,10 @@ async function openCandidate(candidateId) {
   const footer = document.getElementById('modal-candidate-footer');
   const proc = await api(`/processes/${currentProcessId}`);
   const isOpen = proc.status !== 'encerrado';
-  const btnTalent = c.in_talent_bank
-    ? `<button class="btn btn-secondary" disabled style="opacity:.5">⭐ No banco</button>`
-    : `<button class="btn btn-secondary" style="background:var(--warn-bg);color:var(--warn)" onclick="addToTalentBank(${c.id})">⭐ Banco de talentos</button>`;
+  const btnTalent = c.in_talent_bank ? `<button class="btn btn-secondary" disabled style="opacity:.5">⭐ No banco</button>` : `<button class="btn btn-secondary" style="background:var(--warn-bg);color:var(--warn)" onclick="addToTalentBank(${c.id})">⭐ Banco de talentos</button>`;
   const btnPrint = `<button class="btn btn-secondary btn-sm" onclick="printCandidate(${c.id})">🖨️ Imprimir</button>`;
   const btnBloquear = !c.bloqueado ? `<button class="btn btn-sm" style="background:#1a1a1a;color:#fff" onclick="closeModal('modal-candidate');abrirModalBloquear(${c.id})">🚫 Bloquear</button>` : '';
-  const btnContratar = isOpen && c.status === 'aprovado'
-    ? `<button class="btn btn-gold" onclick="closeModal('modal-candidate');abrirModalContratar(${c.id},'${(c.name||'').replace(/'/g,"\\'")}','${c.email||''}','${c.phone||''}','${proc.title.replace(/'/g,"\\'")}')">✅ Contratado</button>`
-    : '';
+  const btnContratar = isOpen && c.status === 'aprovado' ? `<button class="btn btn-gold" onclick="closeModal('modal-candidate');abrirModalContratar(${c.id},'${(c.name||'').replace(/'/g,"\\'")}','${c.email||''}','${c.phone||''}','${proc.title.replace(/'/g,"\\'")}')">✅ Contratado</button>` : '';
   if (c.status === 'pendente' && isOpen) {
     footer.innerHTML = `<button class="btn btn-secondary" onclick="closeModal('modal-candidate')">Fechar</button>${btnPrint}${btnTalent}${btnBloquear}<button class="btn btn-danger" onclick="updateStatus(${c.id},'reprovado');closeModal('modal-candidate')">Reprovar</button><button class="btn btn-primary" onclick="updateStatus(${c.id},'aprovado');closeModal('modal-candidate')">Aprovar</button>${btnContratar}`;
   } else {
@@ -923,7 +862,6 @@ async function openCandidate(candidateId) {
   openModal('modal-candidate');
 }
 
-// ── [EVOLUÇÃO 3] Contratar candidato ───────────────────────────
 function abrirModalContratar(candidateId, nome, email, telefone, cargo) {
   document.getElementById('ct-candidate-id').value = candidateId;
   document.getElementById('ct-nome').value = nome || '';
@@ -943,16 +881,7 @@ async function confirmarContratacao() {
   const candidateId = parseInt(document.getElementById('ct-candidate-id').value);
   const nome = document.getElementById('ct-nome').value.trim();
   if (!nome) { document.getElementById('ct-msg').innerHTML = '<div class="alert alert-danger">Informe o nome.</div>'; return; }
-  const body = {
-    nome, email: document.getElementById('ct-email').value,
-    telefone: document.getElementById('ct-telefone').value,
-    pdv: document.getElementById('ct-pdv').value,
-    data_admissao: document.getElementById('ct-admissao').value || null,
-    raca: document.getElementById('ct-raca').value,
-    escolaridade: document.getElementById('ct-escolaridade').value,
-    sexo: document.getElementById('ct-sexo').value,
-    cargo: document.getElementById('ct-cargo').value
-  };
+  const body = { nome, email: document.getElementById('ct-email').value, telefone: document.getElementById('ct-telefone').value, pdv: document.getElementById('ct-pdv').value, data_admissao: document.getElementById('ct-admissao').value || null, raca: document.getElementById('ct-raca').value, escolaridade: document.getElementById('ct-escolaridade').value, sexo: document.getElementById('ct-sexo').value, cargo: document.getElementById('ct-cargo').value };
   try {
     await api(`/candidates/${candidateId}/contratar`, { method: 'POST', body: JSON.stringify(body) });
     closeModal('modal-contratar');
@@ -961,7 +890,6 @@ async function confirmarContratacao() {
   } catch(e) { document.getElementById('ct-msg').innerHTML = `<div class="alert alert-danger">Erro: ${e.message}</div>`; }
 }
 
-// ── [EVOLUÇÃO 6] Bloquear candidato ────────────────────────────
 function abrirModalBloquear(candidateId) {
   document.getElementById('blq-candidate-id').value = candidateId;
   document.getElementById('blq-motivo').value = '';
@@ -979,7 +907,6 @@ async function confirmarBloqueio() {
   } catch(e) { document.getElementById('blq-msg').innerHTML = `<div class="alert alert-danger">Erro: ${e.message}</div>`; }
 }
 
-// ── Print + WhatsApp (parecer) ──────────────────────────────────
 async function printCandidate(candidateId) {
   const candidates = await api(`/processes/${currentProcessId}/candidates`);
   const c = candidates.find(x => x.id === candidateId);
@@ -995,33 +922,44 @@ async function updateStatus(candidateId, status) {
   openProcess(currentProcessId);
 }
 
-// ── [EVOLUÇÃO 5] Questionário — WhatsApp no lugar de Copiar Link ─
+// ── ITEM 3 + 4: carregarStatusQuestionario ───────────────────────
 async function carregarStatusQuestionario(candidateId) {
   try {
     const r = await api(`/questionario/${candidateId}/respostas`);
     const el = document.getElementById(`qs-content-${candidateId}`);
     if (!el) return;
     if (r && r.respondido) {
-      const parecer = r.parecer_comportamental || '';
+      // ITEM 3: botão de Análise IA aparece quando questionário foi respondido
       el.innerHTML = `
-        <span style="color:var(--success);font-size:13px;font-weight:500">✅ Respondido em ${r.respondido_em}</span>
-        ${parecer ? `<div style="margin-top:10px;padding:10px 12px;background:var(--cream);border-radius:8px;font-size:13px;line-height:1.6;color:var(--text-mid)">${parecer}</div>` : ''}
-        <div style="margin-top:10px;display:grid;grid-template-columns:1fr 1fr;gap:6px">
+        <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px;margin-bottom:10px">
+          <span style="color:var(--success);font-size:13px;font-weight:500">✅ Respondido em ${r.respondido_em}</span>
+          <button class="btn btn-sm" style="background:#534AB7;color:#fff;font-size:12px"
+            onclick="gerarParecerRapidoModal(${candidateId})" id="btn-parecer-rapido-${candidateId}">
+            🤖 Análise IA completa
+          </button>
+        </div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:6px">
           ${[['Resiliência',r.scores.resiliencia,'#3B6D11'],['Confiabilidade',r.scores.confianca,'#185FA5'],
              ['Crescimento',r.scores.crescimento,'#534AB7'],['Risco mosca morta',r.scores.mosca,'#E24B4A'],
              ['Risco deslealdade',r.scores.traidor,'#D85A30'],['Risco turnover',r.scores.turnover,'#BA7517']]
             .map(([l,v,c]) => `<div style="font-size:11px;color:var(--text-mid)">${l}: <strong style="color:${c}">${v}%</strong></div>`)
             .join('')}
         </div>`;
+      // Atualiza badge na tabela
+      const badge = document.getElementById('pesquisa-badge-' + candidateId);
+      if (badge) badge.innerHTML = '<span class="badge" style="background:#e8f7ee;color:#1a7a4a;font-size:10px">✅ Pesquisa recebida</span>';
     } else {
+      // ITEM 4: botão "Link da pesquisa" substituiu "Enviar por email"
       el.innerHTML = `
         <span style="color:var(--text-light);font-size:13px">Questionário ainda não respondido.</span>
         <div style="margin-top:8px;display:flex;gap:8px;flex-wrap:wrap">
-          <button class="btn btn-secondary" style="font-size:12px;background:#e8f7ee;color:#1a7a4a" onclick="gerarLinkWhatsApp(${candidateId})">
+          <button class="btn btn-secondary" style="font-size:12px;background:#e8f7ee;color:#1a7a4a"
+            onclick="gerarLinkWhatsApp(${candidateId})">
             💬 Enviar via WhatsApp
           </button>
-          <button class="btn btn-secondary" style="font-size:12px" onclick="enviarEmailQuestionario(${candidateId})">
-            📧 Enviar por email
+          <button class="btn btn-secondary" style="font-size:12px"
+            onclick="copiarLinkPesquisa(${candidateId}, event)">
+            🔗 Link da pesquisa
           </button>
         </div>
         <div id="link-result-${candidateId}" style="margin-top:8px"></div>`;
@@ -1029,58 +967,106 @@ async function carregarStatusQuestionario(candidateId) {
   } catch(e) { console.log('Erro ao verificar questionário:', e); }
 }
 
-// [EVOLUÇÃO 5] Abre WhatsApp já com mensagem e link
-async function gerarLinkWhatsApp(candidateId) {
-  const btn = event.target;
-  btn.disabled = true; btn.textContent = 'Gerando...';
+// ITEM 4: gera link sem abrir WhatsApp — para copiar/compartilhar manualmente
+async function copiarLinkPesquisa(candidateId, evt) {
+  const btn = evt ? evt.target : null;
+  if (btn) { btn.disabled = true; btn.textContent = 'Gerando...'; }
   try {
     const r = await api('/questionario/gerar-link', {
       method: 'POST',
       body: JSON.stringify({ candidate_id: candidateId, process_id: currentProcessId })
     });
+    if (r && r.link) {
+      // Marca como enviado para o badge da tabela
+      localStorage.setItem('quiz_sent_' + candidateId, '1');
+      // Atualiza badge na tabela imediatamente
+      const badge = document.getElementById('pesquisa-badge-' + candidateId);
+      if (badge) badge.innerHTML = '<span class="badge" style="background:#dbeafe;color:#1e40af;font-size:10px">📬 Pesquisa enviada</span>';
+      const el = document.getElementById('link-result-' + candidateId);
+      if (el) {
+        el.innerHTML = `<div style="background:var(--cream);border:1px solid var(--cream-dark);border-radius:8px;padding:12px;font-size:12px">
+          <div style="font-weight:600;margin-bottom:6px;color:var(--navy)">🔗 Link gerado — válido por 7 dias (expira ${r.expira_em})</div>
+          <div style="word-break:break-all;color:var(--blue);font-size:11px;margin-bottom:8px">${r.link}</div>
+          <div style="display:flex;gap:6px;flex-wrap:wrap">
+            <button class="btn btn-sm" style="background:var(--blue);color:#fff;font-size:11px"
+              onclick="navigator.clipboard.writeText('${r.link}').then(()=>this.textContent='✅ Copiado!').catch(()=>this.textContent='❌ Erro')">
+              📋 Copiar link
+            </button>
+            ${r.whatsapp_url ? `<a href="${r.whatsapp_url}" target="_blank" class="btn btn-sm" style="background:#25D366;color:#fff;text-decoration:none;font-size:11px">💬 Abrir WhatsApp</a>` : ''}
+          </div>
+        </div>`;
+      }
+      if (btn) btn.style.display = 'none';
+    }
+  } catch(e) {
+    if (btn) { btn.disabled = false; btn.textContent = '🔗 Link da pesquisa'; }
+    alert('Erro ao gerar link: ' + e.message);
+  }
+}
+
+// ITEM 3: gera análise IA rápida e exibe no modal após questionário respondido
+async function gerarParecerRapidoModal(candidateId) {
+  const btn = document.getElementById('btn-parecer-rapido-' + candidateId);
+  if (btn) { btn.disabled = true; btn.textContent = '⏳ Gerando análise...'; }
+  try {
+    const r = await api('/parecer-rapido/' + candidateId, { method: 'POST' });
+    if (!r) throw new Error('Resposta vazia');
+    const vMap = {
+      'avançar':     { border: '#2d9e5f', bg: '#f0faf3', color: '#1a7a4a', emoji: '✅' },
+      'ressalvas':   { border: '#e6a817', bg: '#fffbf0', color: '#8a5a00', emoji: '⚠️' },
+      'não avançar': { border: '#dc3545', bg: '#fef2f2', color: '#a0192e', emoji: '✖️' }
+    };
+    const v = (r.veredicto || '').toLowerCase();
+    const s = vMap[v] || vMap['ressalvas'];
+    const qsEl = document.getElementById('qs-content-' + candidateId);
+    if (qsEl) {
+      const div = document.createElement('div');
+      div.style.cssText = `margin-top:14px;padding:14px 16px;border-radius:10px;border:1.5px solid ${s.border};background:${s.bg}`;
+      const alertasHtml = r.alertas && r.alertas.length
+        ? '<div style="margin-top:8px">' + r.alertas.map(a => `<span style="display:inline-block;background:var(--warn-bg);color:var(--warn);padding:2px 8px;border-radius:20px;font-size:11px;margin:2px">${a}</span>`).join('') + '</div>'
+        : '';
+      const roteiroHtml = r.roteiro_entrevista && r.roteiro_entrevista.length
+        ? `<div style="margin-top:8px"><div style="font-size:11px;text-transform:uppercase;letter-spacing:.06em;color:var(--text-light);margin-bottom:4px">Roteiro</div><ul style="margin:0;padding-left:16px;font-size:12px;color:var(--text-mid);line-height:1.8">${r.roteiro_entrevista.map(q => `<li>${q}</li>`).join('')}</ul></div>`
+        : '';
+      div.innerHTML = `<div style="font-weight:700;font-size:15px;color:${s.color};margin-bottom:6px">${s.emoji} ${(r.veredicto||'').toUpperCase()}</div><div style="font-size:13px;line-height:1.7;color:var(--text-mid)">${r.justificativa||'—'}</div>${alertasHtml}${roteiroHtml}`;
+      qsEl.appendChild(div);
+    }
+    if (btn) btn.textContent = '✅ Análise gerada';
+  } catch(e) {
+    if (btn) { btn.disabled = false; btn.textContent = '🤖 Análise IA completa'; }
+    alert('Erro na análise: ' + e.message);
+  }
+}
+
+async function gerarLinkWhatsApp(candidateId) {
+  const btn = event.target;
+  btn.disabled = true; btn.textContent = 'Gerando...';
+  try {
+    const r = await api('/questionario/gerar-link', { method: 'POST', body: JSON.stringify({ candidate_id: candidateId, process_id: currentProcessId }) });
     const el = document.getElementById(`link-result-${candidateId}`);
     if (r && r.link) {
+      localStorage.setItem('quiz_sent_' + candidateId, '1');
+      const badge = document.getElementById('pesquisa-badge-' + candidateId);
+      if (badge) badge.innerHTML = '<span class="badge" style="background:#dbeafe;color:#1e40af;font-size:10px">📬 Pesquisa enviada</span>';
       if (r.whatsapp_url) {
-        // Tem telefone — abre WhatsApp direto
-        el.innerHTML = `
-          <div style="background:var(--cream);border:0.5px solid var(--cream-dark);border-radius:8px;padding:10px;font-size:12px">
-            <div style="font-weight:500;margin-bottom:6px">Link gerado — válido por 7 dias · Expira em ${r.expira_em}</div>
-            <a href="${r.whatsapp_url}" target="_blank" class="btn btn-sm" style="background:#25D366;color:#fff;text-decoration:none;display:inline-flex;align-items:center;gap:6px">
-              💬 Abrir WhatsApp (${r.telefone})
-            </a>
-            <div style="margin-top:8px;word-break:break-all;color:var(--text-light);font-size:11px">${r.link}</div>
-          </div>`;
+        el.innerHTML = `<div style="background:var(--cream);border:0.5px solid var(--cream-dark);border-radius:8px;padding:10px;font-size:12px">
+          <div style="font-weight:500;margin-bottom:6px">Link gerado — válido por 7 dias · Expira em ${r.expira_em}</div>
+          <a href="${r.whatsapp_url}" target="_blank" class="btn btn-sm" style="background:#25D366;color:#fff;text-decoration:none;display:inline-flex;align-items:center;gap:6px">💬 Abrir WhatsApp (${r.telefone})</a>
+          <div style="margin-top:8px;word-break:break-all;color:var(--text-light);font-size:11px">${r.link}</div>
+        </div>`;
         btn.style.display = 'none';
-        // Abre automaticamente
         window.open(r.whatsapp_url, '_blank');
       } else {
-        // Sem telefone — mostra link para copiar com aviso
-        el.innerHTML = `
-          <div style="background:var(--warn-bg);border:1px solid var(--gold);border-radius:8px;padding:10px;font-size:12px;margin-bottom:8px">
-            ⚠️ Candidato sem telefone cadastrado. Compartilhe o link manualmente.
-          </div>
+        el.innerHTML = `<div style="background:var(--warn-bg);border:1px solid var(--gold);border-radius:8px;padding:10px;font-size:12px;margin-bottom:8px">⚠️ Candidato sem telefone cadastrado.</div>
           <div style="background:var(--cream);border:0.5px solid var(--cream-dark);border-radius:8px;padding:10px;font-size:12px">
             <div style="font-weight:500;margin-bottom:4px">Link gerado — válido por 7 dias</div>
             <div style="word-break:break-all;color:var(--blue);margin-bottom:8px">${r.link}</div>
-            <button class="btn btn-secondary" style="font-size:11px" onclick="navigator.clipboard.writeText('${r.link}').then(()=>this.textContent='✅ Copiado!')">
-              📋 Copiar link
-            </button>
+            <button class="btn btn-secondary" style="font-size:11px" onclick="navigator.clipboard.writeText('${r.link}').then(()=>this.textContent='✅ Copiado!')">📋 Copiar link</button>
           </div>`;
         btn.style.display = 'none';
       }
     }
   } catch(e) { btn.disabled = false; btn.textContent = '💬 Enviar via WhatsApp'; alert('Erro ao gerar link.'); }
-}
-
-async function enviarEmailQuestionario(candidateId) {
-  const btn = event.target;
-  btn.disabled = true; btn.textContent = 'Enviando...';
-  try {
-    const r = await api('/questionario/enviar-email', { method: 'POST', body: JSON.stringify({ candidate_id: candidateId, process_id: currentProcessId, base_url: window.location.origin }) });
-    const el = document.getElementById(`link-result-${candidateId}`);
-    if (r && r.ok) { el.innerHTML = `<div style="background:#e8f7ee;border-radius:8px;padding:10px;font-size:12px;color:#1a7a4a">✅ ${r.mensagem}</div>`; btn.style.display = 'none'; }
-    else { el.innerHTML = `<div style="color:var(--danger);font-size:12px">Erro ao enviar email.</div>`; btn.disabled = false; btn.textContent = '📧 Enviar por email'; }
-  } catch(e) { btn.disabled = false; btn.textContent = '📧 Enviar por email'; const el = document.getElementById(`link-result-${candidateId}`); if (el) el.innerHTML = `<div style="color:var(--danger);font-size:12px">Erro: ${e.message}</div>`; }
 }
 
 function montarParecerIntegrado(c, quiz) {
@@ -1116,11 +1102,9 @@ async function addToTalentBank(candidateId) {
   } catch(e) { alert('Erro ao adicionar ao banco de talentos.'); }
 }
 
-// ── Close process ───────────────────────────────────────────────
 function openCloseProcess(id) { closeProcessId = id; document.getElementById('cp-outcome').value = 'contratado'; document.getElementById('cp-reason').value = ''; openModal('modal-close-process'); }
 async function closeProcessConfirm() { await api(`/processes/${closeProcessId}/close`, { method: 'POST', body: JSON.stringify({ outcome: document.getElementById('cp-outcome').value, outcome_reason: document.getElementById('cp-reason').value }) }); closeModal('modal-close-process'); openProcess(closeProcessId); }
 
-// ── Profiles ────────────────────────────────────────────────────
 async function loadProfiles() {
   const el = document.getElementById('profiles-list');
   el.innerHTML = '<div class="loading"><div class="spinner"></div></div>';
@@ -1157,7 +1141,6 @@ async function saveProfile() {
 
 async function deleteProfile(id) { if (!confirm('Remover este perfil?')) return; await api(`/profiles/${id}`, { method: 'DELETE' }); loadProfiles(); }
 
-// ── [EVOLUÇÃO 1] Banco de Talentos — filtro por cargo ────────────
 async function loadProcessesForFilter() {
   try {
     const processes = await api('/processes');
@@ -1177,7 +1160,6 @@ async function loadTalent() {
   el.innerHTML = `<div class="table-wrap"><table><thead><tr><th>Candidato</th><th>Vaga avaliada</th><th>Score</th><th>Contato</th></tr></thead><tbody>${talents.map(t => `<tr><td><strong>${t.candidate_name||t.name||'—'}</strong></td><td>${t.vaga_nome||'—'}</td><td><div class="score-bar ${scoreClass(t.last_score||t.vaga_score||0)}" style="max-width:120px"><div class="score-track"><div class="score-fill" style="width:${t.last_score||t.vaga_score||0}%"></div></div><div class="score-num">${Math.round(t.last_score||t.vaga_score||0)}</div></div></td><td>${t.email||'—'}${t.phone?`<br><span class="text-sm text-mid">${t.phone}</span>`:''}</td></tr>`).join('')}</tbody></table></div>`;
 }
 
-// ── [NOVO] Funcionários ─────────────────────────────────────────
 async function loadFuncionarios() {
   const el = document.getElementById('funcionarios-list');
   el.innerHTML = '<div class="loading"><div class="spinner"></div></div>';
@@ -1194,16 +1176,7 @@ async function saveFuncionario() {
   const msg = document.getElementById('fn-msg');
   if (!nome) { msg.innerHTML = '<div class="alert alert-danger">Nome é obrigatório.</div>'; return; }
   try {
-    await api('/funcionarios', { method: 'POST', body: JSON.stringify({
-      nome, pdv: document.getElementById('fn-pdv').value,
-      data_admissao: document.getElementById('fn-admissao').value || null,
-      raca: document.getElementById('fn-raca').value,
-      escolaridade: document.getElementById('fn-escolaridade').value,
-      sexo: document.getElementById('fn-sexo').value,
-      cargo: document.getElementById('fn-cargo').value,
-      email: document.getElementById('fn-email').value,
-      telefone: document.getElementById('fn-telefone').value
-    })});
+    await api('/funcionarios', { method: 'POST', body: JSON.stringify({ nome, pdv: document.getElementById('fn-pdv').value, data_admissao: document.getElementById('fn-admissao').value || null, raca: document.getElementById('fn-raca').value, escolaridade: document.getElementById('fn-escolaridade').value, sexo: document.getElementById('fn-sexo').value, cargo: document.getElementById('fn-cargo').value, email: document.getElementById('fn-email').value, telefone: document.getElementById('fn-telefone').value })});
     msg.innerHTML = '<div class="alert alert-success">Funcionário cadastrado!</div>';
     ['fn-nome','fn-pdv','fn-admissao','fn-cargo','fn-email','fn-telefone'].forEach(id => document.getElementById(id).value = '');
     ['fn-raca','fn-escolaridade','fn-sexo'].forEach(id => document.getElementById(id).value = '');
@@ -1212,7 +1185,6 @@ async function saveFuncionario() {
   } catch(e) { msg.innerHTML = `<div class="alert alert-danger">Erro: ${e.message}</div>`; }
 }
 
-// ── Configurações — Usuários ───────────────────────────────────
 async function loadUsuarios() {
   const el = document.getElementById('users-list');
   el.innerHTML = '<div class="loading"><div class="spinner"></div></div>';
@@ -1220,13 +1192,7 @@ async function loadUsuarios() {
     const users = await api('/users');
     document.getElementById('users-count').textContent = users.length + ' usuário(s)';
     if (!users.length) { el.innerHTML = '<div class="empty"><div class="empty-icon">👥</div><p>Nenhum usuário.</p></div>'; return; }
-    el.innerHTML = `<div class="table-wrap"><table><thead><tr><th>Nome</th><th>Email</th><th>Perfil</th><th>Status</th><th></th></tr></thead><tbody>${users.map(u => `<tr>
-      <td><strong>${u.name}</strong></td>
-      <td style="font-size:12px">${u.email}</td>
-      <td><span class="badge ${u.role === 'diretor' ? 'badge-blue' : 'badge-gray'}">${u.role === 'diretor' ? 'Diretor' : 'Operador'}</span></td>
-      <td><span class="badge ${u.ativo ? 'badge-success' : 'badge-danger'}">${u.ativo ? 'Ativo' : 'Inativo'}</span></td>
-      <td>${u.id !== currentUser?.id ? `<button class="btn btn-sm ${u.ativo ? 'btn-danger' : 'btn-secondary'}" onclick="toggleUsuario(${u.id}, ${!u.ativo})">${u.ativo ? 'Desativar' : 'Ativar'}</button>` : '<span style="font-size:11px;color:var(--text-light)">você</span>'}</td>
-    </tr>`).join('')}</tbody></table></div>`;
+    el.innerHTML = `<div class="table-wrap"><table><thead><tr><th>Nome</th><th>Email</th><th>Perfil</th><th>Status</th><th></th></tr></thead><tbody>${users.map(u => `<tr><td><strong>${u.name}</strong></td><td style="font-size:12px">${u.email}</td><td><span class="badge ${u.role==='diretor'?'badge-blue':'badge-gray'}">${u.role==='diretor'?'Diretor':'Operador'}</span></td><td><span class="badge ${u.ativo?'badge-success':'badge-danger'}">${u.ativo?'Ativo':'Inativo'}</span></td><td>${u.id!==currentUser?.id?`<button class="btn btn-sm ${u.ativo?'btn-danger':'btn-secondary'}" onclick="toggleUsuario(${u.id},${!u.ativo})">${u.ativo?'Desativar':'Ativar'}</button>`:'<span style="font-size:11px;color:var(--text-light)">você</span>'}</td></tr>`).join('')}</tbody></table></div>`;
   } catch(e) { el.innerHTML = `<div class="alert alert-danger">Erro: ${e.message}</div>`; }
 }
 
@@ -1241,21 +1207,15 @@ async function criarUsuario() {
   try {
     await api('/users', { method: 'POST', body: JSON.stringify({ name: nome, email, password: senha, role: perfil }) });
     msg.innerHTML = '<div class="alert alert-success">Usuário criado!</div>';
-    document.getElementById('nu-nome').value = '';
-    document.getElementById('nu-email').value = '';
-    document.getElementById('nu-senha').value = '';
-    document.getElementById('nu-perfil').value = 'operador';
-    loadUsuarios();
-    setTimeout(() => msg.innerHTML = '', 3000);
+    document.getElementById('nu-nome').value = ''; document.getElementById('nu-email').value = ''; document.getElementById('nu-senha').value = ''; document.getElementById('nu-perfil').value = 'operador';
+    loadUsuarios(); setTimeout(() => msg.innerHTML = '', 3000);
   } catch(e) { msg.innerHTML = `<div class="alert alert-danger">Erro: ${e.message}</div>`; }
 }
 
 async function toggleUsuario(id, ativo) {
   if (!confirm(ativo ? 'Ativar este usuário?' : 'Desativar este usuário?')) return;
-  try {
-    await api(`/users/${id}/toggle`, { method: 'PUT', body: JSON.stringify({ ativo }) });
-    loadUsuarios();
-  } catch(e) { alert('Erro: ' + e.message); }
+  try { await api(`/users/${id}/toggle`, { method: 'PUT', body: JSON.stringify({ ativo }) }); loadUsuarios(); }
+  catch(e) { alert('Erro: ' + e.message); }
 }
 
 async function alterarMinhaSenha() {
@@ -1268,24 +1228,20 @@ async function alterarMinhaSenha() {
   try {
     await api(`/users/${currentUser.id}/senha`, { method: 'PUT', body: JSON.stringify({ password: senha }) });
     msg.innerHTML = '<div class="alert alert-success">Senha alterada!</div>';
-    document.getElementById('mp-senha').value = '';
-    document.getElementById('mp-confirma').value = '';
+    document.getElementById('mp-senha').value = ''; document.getElementById('mp-confirma').value = '';
     setTimeout(() => msg.innerHTML = '', 3000);
   } catch(e) { msg.innerHTML = `<div class="alert alert-danger">Erro: ${e.message}</div>`; }
 }
 
-// ── Modal helpers ───────────────────────────────────────────────
 function openModal(id) { document.getElementById(id).classList.add('open'); }
 function closeModal(id) { document.getElementById(id).classList.remove('open'); }
 document.querySelectorAll('.modal-overlay').forEach(m => { m.addEventListener('click', e => { if (e.target === m) m.classList.remove('open'); }); });
 
-// ── Formatters ──────────────────────────────────────────────────
 function fmtDate(str) { if (!str) return '—'; return new Date(str).toLocaleDateString('pt-BR'); }
 function scoreClass(s) { return s >= 70 ? 'score-high' : s >= 50 ? 'score-mid' : 'score-low'; }
 function statusBadge(s) { const map = { aberto: ['badge-blue','Aberto'], em_triagem: ['badge-gold','Em triagem'], encerrado: ['badge-gray','Encerrado'] }; const [cls, label] = map[s] || ['badge-gray', s]; return `<span class="badge ${cls}">${label}</span>`; }
 function candidateStatusBadge(s) { const map = { pendente: ['badge-gray','Pendente'], aprovado: ['badge-success','Aprovado'], reprovado: ['badge-danger','Reprovado'], contratado: ['badge-blue','Contratado'], aguardando_analise: ['badge-gray','Aguardando'] }; const [cls, label] = map[s] || ['badge-gray', s]; return `<span class="badge ${cls}">${label}</span>`; }
 
-// ── Extração de texto ───────────────────────────────────────────
 async function extractTextFromFile(file) {
   const ext = file.name.split('.').pop().toLowerCase();
   if (ext === 'pdf') return extractPDF(file);
