@@ -1,0 +1,398 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Dashboard — RH Assertivo</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --navy: #0f1f3d; --blue: #1e4db7; --blue-light: #2d63e8;
+    --gold: #c9a84c; --cream: #f7f4ee; --cream-dark: #ede9e0;
+    --text: #1a1a2e; --text-mid: #4a4a6a; --text-light: #8888aa; --white: #ffffff;
+    --success: #1a7a4a; --success-bg: #e8f7ee; --danger: #a0192e; --danger-bg: #fde8eb;
+    --warn: #8a5a00; --warn-bg: #fef5e0; --shadow: 0 4px 24px rgba(15,31,61,0.10);
+    --radius: 12px; --radius-sm: 8px;
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { font-family: 'DM Sans', sans-serif; background: var(--cream); color: var(--text); }
+  .dashboard { max-width: 1200px; margin: 0 auto; padding: 32px; }
+  .section-title { font-family: 'DM Serif Display', serif; font-size: 22px; color: var(--navy); margin-bottom: 4px; }
+  .section-sub { font-size: 13px; color: var(--text-light); margin-bottom: 20px; }
+  .divider { height: 2px; background: var(--cream-dark); margin: 36px 0; }
+  .grid-4 { display: grid; grid-template-columns: repeat(4,1fr); gap: 16px; margin-bottom: 20px; }
+  .grid-3 { display: grid; grid-template-columns: repeat(3,1fr); gap: 16px; margin-bottom: 20px; }
+  .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 20px; }
+  .stat { background: var(--white); border-radius: var(--radius); padding: 20px; box-shadow: var(--shadow); border-left: 4px solid var(--blue); }
+  .stat.gold { border-left-color: var(--gold); }
+  .stat.success { border-left-color: var(--success); }
+  .stat.danger { border-left-color: var(--danger); }
+  .stat.purple { border-left-color: #534AB7; }
+  .stat-label { font-size: 11px; text-transform: uppercase; letter-spacing: 0.06em; color: var(--text-light); font-weight: 600; margin-bottom: 6px; }
+  .stat-value { font-family: 'DM Serif Display', serif; font-size: 32px; color: var(--navy); }
+  .stat-value span { font-size: 13px; font-weight: 400; opacity: 0.6; }
+  .stat-sub { font-size: 12px; color: var(--text-mid); margin-top: 4px; }
+  .card { background: var(--white); border-radius: var(--radius); box-shadow: var(--shadow); padding: 24px; margin-bottom: 20px; }
+  .card-title { font-family: 'DM Serif Display', serif; font-size: 16px; color: var(--navy); margin-bottom: 16px; }
+  .bar-row { display: flex; align-items: center; gap: 10px; margin-bottom: 10px; }
+  .bar-label { font-size: 12px; color: var(--text-mid); min-width: 120px; }
+  .bar-track { flex: 1; height: 8px; background: var(--cream-dark); border-radius: 4px; overflow: hidden; }
+  .bar-fill { height: 100%; border-radius: 4px; transition: width 0.6s; }
+  .bar-num { font-size: 12px; font-weight: 600; min-width: 36px; text-align: right; }
+  .funil { display: flex; flex-direction: column; gap: 8px; }
+  .funil-step { display: flex; align-items: center; gap: 12px; }
+  .funil-bar { height: 36px; border-radius: 6px; display: flex; align-items: center; padding: 0 14px; color: white; font-size: 13px; font-weight: 600; transition: width 0.6s; min-width: 60px; }
+  .funil-info { font-size: 12px; color: var(--text-mid); }
+  .badge { display: inline-flex; align-items: center; padding: 3px 10px; border-radius: 20px; font-size: 12px; font-weight: 500; }
+  .badge-blue { background: #dbeafe; color: #1e40af; }
+  .badge-success { background: var(--success-bg); color: var(--success); }
+  .badge-danger { background: var(--danger-bg); color: var(--danger); }
+  .badge-gray { background: #f1f0f5; color: var(--text-mid); }
+  .loading { text-align: center; padding: 40px; color: var(--text-light); }
+  .spinner { width: 32px; height: 32px; border: 3px solid var(--cream-dark); border-top-color: var(--blue); border-radius: 50%; animation: spin 0.8s linear infinite; display: inline-block; }
+  @keyframes spin { to { transform: rotate(360deg); } }
+  table { width: 100%; border-collapse: collapse; }
+  th { text-align: left; padding: 8px 12px; font-size: 11px; text-transform: uppercase; letter-spacing: 0.04em; color: var(--text-light); font-weight: 600; border-bottom: 2px solid var(--cream-dark); }
+  td { padding: 10px 12px; border-bottom: 1px solid var(--cream-dark); font-size: 13px; }
+  tr:last-child td { border-bottom: none; }
+  tr:hover td { background: var(--cream); }
+  .donut-container { display: flex; align-items: center; gap: 24px; }
+  .legend { display: flex; flex-direction: column; gap: 8px; }
+  .legend-item { display: flex; align-items: center; gap: 8px; font-size: 12px; color: var(--text-mid); }
+  .legend-dot { width: 10px; height: 10px; border-radius: 50%; flex-shrink: 0; }
+  .tabs { display: flex; gap: 0; border-bottom: 2px solid var(--cream-dark); margin-bottom: 24px; }
+  .tab { padding: 10px 24px; font-size: 14px; font-weight: 500; color: var(--text-light); cursor: pointer; border-bottom: 2px solid transparent; margin-bottom: -2px; transition: all 0.15s; background: none; border-top: none; border-left: none; border-right: none; font-family: 'DM Sans', sans-serif; }
+  .tab:hover { color: var(--text); }
+  .tab.active { color: var(--blue); border-bottom-color: var(--blue); }
+  .tab-content { display: none; }
+  .tab-content.active { display: block; }
+  .empty { text-align: center; padding: 32px; color: var(--text-light); font-size: 13px; }
+</style>
+</head>
+<body>
+<div class="dashboard">
+
+  <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:28px">
+    <div>
+      <div style="font-family:'DM Serif Display',serif;font-size:28px;color:var(--navy)">Dashboard RH</div>
+      <div style="font-size:13px;color:var(--text-light);margin-top:2px" id="dash-data">O Boticário Niterói</div>
+    </div>
+    <button onclick="recarregar()" style="background:var(--blue);color:white;border:none;padding:10px 20px;border-radius:8px;font-size:13px;cursor:pointer;font-family:'DM Sans',sans-serif">🔄 Atualizar</button>
+  </div>
+
+  <!-- TABS -->
+  <div class="tabs">
+    <button class="tab active" onclick="showTab('recrutamento')">📋 Recrutamento</button>
+    <button class="tab" onclick="showTab('funcionarios')">👥 Funcionários</button>
+  </div>
+
+  <!-- TAB RECRUTAMENTO -->
+  <div id="tab-recrutamento" class="tab-content active">
+    <div id="rec-loading" class="loading"><div class="spinner"></div></div>
+    <div id="rec-content" style="display:none">
+
+      <!-- KPIs topo -->
+      <div class="grid-4" id="rec-kpis"></div>
+
+      <div class="grid-2">
+        <!-- Funil -->
+        <div class="card">
+          <div class="card-title">🎯 Funil de Recrutamento</div>
+          <div id="funil-content"></div>
+        </div>
+        <!-- Processos -->
+        <div class="card">
+          <div class="card-title">📋 Status dos Processos</div>
+          <div id="processos-status"></div>
+        </div>
+      </div>
+
+      <div class="grid-2">
+        <!-- Score por processo -->
+        <div class="card">
+          <div class="card-title">📊 Score Médio por Processo</div>
+          <div id="score-processos"></div>
+        </div>
+        <!-- Canais de origem -->
+        <div class="card">
+          <div class="card-title">📡 Canais de Origem dos Contratados</div>
+          <div id="canais-content"></div>
+        </div>
+      </div>
+
+      <!-- Tabela de processos -->
+      <div class="card">
+        <div class="card-title">📅 Processos Seletivos</div>
+        <div id="tabela-processos" style="overflow-x:auto"></div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- TAB FUNCIONÁRIOS -->
+  <div id="tab-funcionarios" class="tab-content">
+    <div id="fn-loading" class="loading"><div class="spinner"></div></div>
+    <div id="fn-content" style="display:none">
+
+      <!-- KPIs topo -->
+      <div class="grid-4" id="fn-kpis"></div>
+
+      <div class="grid-3">
+        <!-- Por sexo -->
+        <div class="card">
+          <div class="card-title">⚧ Distribuição por Sexo</div>
+          <div id="demo-sexo"></div>
+        </div>
+        <!-- Por raça -->
+        <div class="card">
+          <div class="card-title">🌈 Distribuição por Raça</div>
+          <div id="demo-raca"></div>
+        </div>
+        <!-- Por faixa etária -->
+        <div class="card">
+          <div class="card-title">📅 Faixa Etária</div>
+          <div id="demo-idade"></div>
+        </div>
+      </div>
+
+      <div class="grid-2">
+        <!-- Escolaridade -->
+        <div class="card">
+          <div class="card-title">🎓 Escolaridade</div>
+          <div id="demo-escolaridade"></div>
+        </div>
+        <!-- Motivos de saída -->
+        <div class="card">
+          <div class="card-title">🚪 Motivos de Saída</div>
+          <div id="motivos-saida"></div>
+        </div>
+      </div>
+
+      <!-- Tabela funcionários -->
+      <div class="card">
+        <div class="card-title">👤 Funcionários Ativos — Tempo de Empresa</div>
+        <div id="tabela-funcionarios" style="overflow-x:auto"></div>
+      </div>
+
+    </div>
+  </div>
+
+</div>
+
+<script>
+const API = 'https://rh-assertivo-api.choil-plosk.workers.dev';
+const token = localStorage.getItem('rh_token');
+
+function showTab(name) {
+  document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+  document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active'));
+  document.getElementById('tab-' + name).classList.add('active');
+  document.querySelectorAll('.tab').forEach(t => { if (t.textContent.toLowerCase().includes(name === 'recrutamento' ? 'recrutamento' : 'funcionário')) t.classList.add('active'); });
+}
+
+async function apiGet(path) {
+  const r = await fetch(API + path, { headers: { 'Authorization': 'Bearer ' + token } });
+  if (!r.ok) throw new Error(await r.text());
+  return r.json();
+}
+
+function cor(i) {
+  const cores = ['#1e4db7','#c9a84c','#1a7a4a','#534AB7','#D85A30','#a0192e','#2da2bb','#43d692'];
+  return cores[i % cores.length];
+}
+
+function barras(dados, labelKey, valueKey, total, color) {
+  if (!dados || !dados.length) return '<div class="empty">Sem dados ainda</div>';
+  return dados.map((d, i) => {
+    const pct = total ? Math.round((d[valueKey] / total) * 100) : 0;
+    return `<div class="bar-row">
+      <div class="bar-label">${d[labelKey] || 'Não informado'}</div>
+      <div class="bar-track"><div class="bar-fill" style="width:${pct}%;background:${color || cor(i)}"></div></div>
+      <div class="bar-num" style="color:${color || cor(i)}">${d[valueKey]}</div>
+    </div>`;
+  }).join('');
+}
+
+function dias(d) {
+  if (!d) return '—';
+  if (d < 30) return `${d} dias`;
+  if (d < 365) return `${Math.round(d/30)} meses`;
+  return `${(d/365).toFixed(1)} anos`;
+}
+
+async function carregarRecrutamento() {
+  document.getElementById('rec-loading').style.display = 'block';
+  document.getElementById('rec-content').style.display = 'none';
+  try {
+    const d = await apiGet('/dashboard/recrutamento');
+
+    // KPIs
+    const abertos = d.processos.filter(p => p.status !== 'encerrado').length;
+    const contratados = d.funil?.contratados || 0;
+    const tempoFech = d.tempo_fechamento_dias ? `${d.tempo_fechamento_dias} dias` : '—';
+    const taxaConv = d.funil?.total ? Math.round((contratados / d.funil.total) * 100) : 0;
+
+    document.getElementById('rec-kpis').innerHTML = `
+      <div class="stat"><div class="stat-label">Processos Abertos</div><div class="stat-value">${abertos}</div><div class="stat-sub">em andamento</div></div>
+      <div class="stat gold"><div class="stat-label">Total Candidatos</div><div class="stat-value">${d.funil?.total || 0}</div><div class="stat-sub">${d.funil?.analisados || 0} analisados</div></div>
+      <div class="stat success"><div class="stat-label">Contratados</div><div class="stat-value">${contratados}</div><div class="stat-sub">Score médio: ${d.score_contratados || '—'}</div></div>
+      <div class="stat purple"><div class="stat-label">Tempo de Fechamento</div><div class="stat-value" style="font-size:24px">${tempoFech}</div><div class="stat-sub">média por processo</div></div>
+    `;
+
+    // Funil
+    const f = d.funil || {};
+    const steps = [
+      { label: 'Currículos recebidos', val: f.total || 0, color: '#1e4db7' },
+      { label: 'Analisados pela IA', val: f.analisados || 0, color: '#534AB7' },
+      { label: 'Aprovados', val: f.aprovados || 0, color: '#1a7a4a' },
+      { label: 'Contratados', val: f.contratados || 0, color: '#c9a84c' },
+    ];
+    const maxVal = steps[0].val || 1;
+    document.getElementById('funil-content').innerHTML = `<div class="funil">${steps.map(s => {
+      const pct = Math.max(20, Math.round((s.val / maxVal) * 100));
+      const conv = steps[0].val ? Math.round((s.val / steps[0].val) * 100) : 0;
+      return `<div class="funil-step">
+        <div class="funil-bar" style="width:${pct}%;background:${s.color}">${s.val}</div>
+        <div class="funil-info">${s.label} <span style="color:${s.color};font-weight:600">${conv}%</span></div>
+      </div>`;
+    }).join('')}</div>
+    <div style="margin-top:12px;font-size:12px;color:var(--text-light)">Taxa de conversão geral: <strong style="color:var(--navy)">${taxaConv}%</strong></div>`;
+
+    // Status processos
+    const statusMap = { aberto: ['#1e4db7','Abertos'], em_triagem: ['#c9a84c','Em triagem'], encerrado: ['#8888aa','Encerrados'] };
+    const totalProc = d.processos.length || 1;
+    document.getElementById('processos-status').innerHTML = Object.entries(statusMap).map(([k,[c,l]]) => {
+      const n = d.processos.filter(p => p.status === k).length;
+      const pct = Math.round((n / totalProc) * 100);
+      return `<div class="bar-row"><div class="bar-label">${l}</div><div class="bar-track"><div class="bar-fill" style="width:${pct}%;background:${c}"></div></div><div class="bar-num" style="color:${c}">${n}</div></div>`;
+    }).join('') + `<div style="margin-top:12px;font-size:12px;color:var(--text-light)">Total: ${d.processos.length} processos</div>`;
+
+    // Score por processo
+    if (d.score_por_processo?.length) {
+      const maxSc = Math.max(...d.score_por_processo.map(p => p.media || 0));
+      document.getElementById('score-processos').innerHTML = d.score_por_processo.map((p, i) => {
+        const pct = maxSc ? Math.round((p.media / maxSc) * 100) : 0;
+        return `<div class="bar-row"><div class="bar-label" style="max-width:140px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap" title="${p.title}">${p.title}</div><div class="bar-track"><div class="bar-fill" style="width:${pct}%;background:${cor(i)}"></div></div><div class="bar-num" style="color:${cor(i)}">${p.media}</div></div>`;
+      }).join('');
+    } else {
+      document.getElementById('score-processos').innerHTML = '<div class="empty">Sem dados ainda</div>';
+    }
+
+    // Canais
+    if (d.canais_origem?.length) {
+      const totalCanais = d.canais_origem.reduce((s, c) => s + c.total, 0);
+      document.getElementById('canais-content').innerHTML = barras(d.canais_origem, 'canal_origem', 'total', totalCanais) +
+        `<div style="margin-top:12px;font-size:12px;color:var(--text-light)">Total com canal informado: ${totalCanais}</div>`;
+    } else {
+      document.getElementById('canais-content').innerHTML = '<div class="empty">Nenhum contratado com canal de origem registrado ainda.<br><span style="font-size:11px">O canal é registrado no cadastro do candidato.</span></div>';
+    }
+
+    // Tabela processos
+    document.getElementById('tabela-processos').innerHTML = `<table>
+      <thead><tr><th>Processo</th><th>Status</th><th>Candidatos</th><th>Score médio</th><th>Canais de divulgação</th><th>Criado em</th></tr></thead>
+      <tbody>${d.processos.map(p => {
+        const statusMap2 = { aberto: 'badge-blue', em_triagem: 'badge-gold', encerrado: 'badge-gray' };
+        const canaisArr = p.canais || [];
+        return `<tr>
+          <td><strong>${p.title}</strong></td>
+          <td><span class="badge ${statusMap2[p.status] || 'badge-gray'}">${p.status}</span></td>
+          <td>${p.total_candidatos}</td>
+          <td>—</td>
+          <td>${canaisArr.length ? canaisArr.map(c => `<span class="badge badge-blue" style="font-size:10px;margin:1px">${c}</span>`).join('') : '<span style="color:var(--text-light);font-size:12px">Não informado</span>'}</td>
+          <td style="font-size:12px">${new Date(p.created_at).toLocaleDateString('pt-BR')}</td>
+        </tr>`;
+      }).join('')}</tbody>
+    </table>`;
+
+    document.getElementById('rec-loading').style.display = 'none';
+    document.getElementById('rec-content').style.display = 'block';
+  } catch(e) {
+    document.getElementById('rec-loading').innerHTML = `<div style="color:var(--danger)">Erro: ${e.message}</div>`;
+  }
+}
+
+async function carregarFuncionarios() {
+  document.getElementById('fn-loading').style.display = 'block';
+  document.getElementById('fn-content').style.display = 'none';
+  try {
+    const d = await apiGet('/dashboard/funcionarios');
+
+    // KPIs
+    const tempoMedio = dias(d.tempo_medio_empresa_dias);
+    document.getElementById('fn-kpis').innerHTML = `
+      <div class="stat success"><div class="stat-label">Funcionários Ativos</div><div class="stat-value">${d.total_ativos}</div><div class="stat-sub">${d.total_inativos} desligados</div></div>
+      <div class="stat danger"><div class="stat-label">Turnover 90 dias</div><div class="stat-value">${d.turnover_90_dias}</div><div class="stat-sub">no período de experiência</div></div>
+      <div class="stat danger"><div class="stat-label">Turnover Anual</div><div class="stat-value">${d.taxa_turnover_pct}<span>%</span></div><div class="stat-sub">${d.turnover_1_ano} desligamentos no ano</div></div>
+      <div class="stat gold"><div class="stat-label">Tempo Médio Empresa</div><div class="stat-value" style="font-size:22px">${tempoMedio}</div><div class="stat-sub">funcionários ativos</div></div>
+    `;
+
+    // Sexo
+    const totalSexo = d.por_sexo.reduce((s, x) => s + x.total, 0) || 1;
+    document.getElementById('demo-sexo').innerHTML = barras(d.por_sexo, 'sexo', 'total', totalSexo) || '<div class="empty">Sem dados</div>';
+
+    // Raça
+    const totalRaca = d.por_raca.reduce((s, x) => s + x.total, 0) || 1;
+    document.getElementById('demo-raca').innerHTML = barras(d.por_raca, 'raca', 'total', totalRaca) || '<div class="empty">Sem dados</div>';
+
+    // Idade
+    const totalIdade = d.por_idade.reduce((s, x) => s + x.total, 0) || 1;
+    document.getElementById('demo-idade').innerHTML = barras(d.por_idade, 'faixa', 'total', totalIdade) || '<div class="empty">Sem dados</div>';
+
+    // Escolaridade
+    const totalEsc = d.por_escolaridade.reduce((s, x) => s + x.total, 0) || 1;
+    document.getElementById('demo-escolaridade').innerHTML = barras(d.por_escolaridade, 'escolaridade', 'total', totalEsc) || '<div class="empty">Sem dados</div>';
+
+    // Motivos saída
+    if (d.motivos_saida?.length) {
+      const totalMotivos = d.motivos_saida.reduce((s, x) => s + x.total, 0);
+      document.getElementById('motivos-saida').innerHTML = barras(d.motivos_saida, 'tipo_saida', 'total', totalMotivos, 'var(--danger)');
+    } else {
+      document.getElementById('motivos-saida').innerHTML = '<div class="empty">Nenhum desligamento registrado</div>';
+    }
+
+    // Tabela funcionários
+    const ativos = d.lista_funcionarios.filter(f => f.ativo);
+    document.getElementById('tabela-funcionarios').innerHTML = ativos.length ? `<table>
+      <thead><tr><th>Nome</th><th>Cargo</th><th>PDV</th><th>Admissão</th><th>Tempo de empresa</th><th>Status</th></tr></thead>
+      <tbody>${ativos.map(f => {
+        const t = dias(f.dias_empresa);
+        const alerta = f.dias_empresa && f.dias_empresa <= 90 ? '⚠️ Experiência' : '';
+        return `<tr>
+          <td><strong>${f.nome}</strong></td>
+          <td>${f.cargo || '—'}</td>
+          <td>${f.pdv || '—'}</td>
+          <td style="font-size:12px">${f.data_admissao ? new Date(f.data_admissao).toLocaleDateString('pt-BR') : '—'}</td>
+          <td><span style="font-weight:600;color:${f.dias_empresa > 365 ? 'var(--success)' : f.dias_empresa > 90 ? 'var(--blue)' : 'var(--warn)'}">${t}</span> ${alerta}</td>
+          <td><span class="badge badge-success">Ativo</span></td>
+        </tr>`;
+      }).join('')}</tbody>
+    </table>` : '<div class="empty">Nenhum funcionário ativo</div>';
+
+    document.getElementById('fn-loading').style.display = 'none';
+    document.getElementById('fn-content').style.display = 'block';
+  } catch(e) {
+    document.getElementById('fn-loading').innerHTML = `<div style="color:var(--danger)">Erro: ${e.message}</div>`;
+  }
+}
+
+function recarregar() {
+  carregarRecrutamento();
+  carregarFuncionarios();
+}
+
+// Corrige tab click
+document.querySelectorAll('.tab').forEach((t, i) => {
+  t.onclick = () => {
+    document.querySelectorAll('.tab').forEach(x => x.classList.remove('active'));
+    document.querySelectorAll('.tab-content').forEach(x => x.classList.remove('active'));
+    t.classList.add('active');
+    document.querySelectorAll('.tab-content')[i].classList.add('active');
+  };
+});
+
+document.getElementById('dash-data').textContent = 'O Boticário Niterói · ' + new Date().toLocaleDateString('pt-BR');
+carregarRecrutamento();
+carregarFuncionarios();
+</script>
+</body>
+</html>
