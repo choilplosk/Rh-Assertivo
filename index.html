@@ -206,7 +206,7 @@
     <button class="nav-item" onclick="showSection('profiles')"><span class="icon">📄</span> Perfis de Vaga</button>
     <button class="nav-item" onclick="showSection('talent')"><span class="icon">⭐</span> Banco de Talentos</button>
     <button class="nav-item" onclick="showSection('funcionarios')"><span class="icon">👤</span> Funcionários</button>
-    <button class="nav-item" id="nav-config" style="display:none" onclick="showSection('config')"><span class="icon">⚙️</span> Configurações</button>
+    <button class="nav-item" id="nav-config" onclick="showSection('config')"><span class="icon">⚙️</span> Configurações</button>
   </nav>
   <div class="sidebar-footer">
     <div class="status-dot" style="flex-direction:column;align-items:flex-start;gap:8px">
@@ -363,33 +363,36 @@
 
     <!-- CONFIGURAÇÕES -->
     <div id="section-config" class="section">
-      <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:20px">
-        <!-- Novo usuário -->
-        <div class="card">
-          <div class="card-header"><span class="card-title">Novo Usuário</span></div>
-          <div class="form-group"><label class="form-label">Nome completo *</label><input type="text" class="form-control" id="nu-nome" placeholder="Nome do usuário"></div>
-          <div class="form-group"><label class="form-label">Email *</label><input type="email" class="form-control" id="nu-email" placeholder="email@exemplo.com"></div>
-          <div class="form-group"><label class="form-label">Senha *</label><input type="password" class="form-control" id="nu-senha" placeholder="Mínimo 6 caracteres"></div>
-          <div class="form-group"><label class="form-label">Perfil</label><select class="form-control" id="nu-perfil"><option value="operador">Operador</option><option value="diretor">Diretor</option></select></div>
-          <div id="nu-msg"></div>
-          <button class="btn btn-primary w-full" onclick="criarUsuario()">➕ Criar Usuário</button>
-          <div style="margin-top:24px;padding-top:24px;border-top:1px solid var(--cream-dark)">
-            <div class="card-title" style="font-size:16px;margin-bottom:16px">Alterar minha senha</div>
-            <div class="form-group"><label class="form-label">Nova senha *</label><input type="password" class="form-control" id="mp-senha" placeholder="Nova senha"></div>
-            <div class="form-group"><label class="form-label">Confirmar senha *</label><input type="password" class="form-control" id="mp-confirma" placeholder="Confirmar nova senha"></div>
-            <div id="mp-msg"></div>
-            <button class="btn btn-secondary w-full" onclick="alterarMinhaSenha()">🔑 Alterar Senha</button>
+      <!-- Gestão de usuários — só diretor -->
+      <div id="config-usuarios" style="display:none;margin-bottom:24px">
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:20px">
+          <div class="card">
+            <div class="card-header"><span class="card-title">Novo Usuário</span></div>
+            <div class="form-group"><label class="form-label">Nome completo *</label><input type="text" class="form-control" id="nu-nome" placeholder="Nome do usuário"></div>
+            <div class="form-group"><label class="form-label">Email *</label><input type="email" class="form-control" id="nu-email" placeholder="email@exemplo.com"></div>
+            <div class="form-group"><label class="form-label">Senha *</label><input type="password" class="form-control" id="nu-senha" placeholder="Mínimo 6 caracteres"></div>
+            <div class="form-group"><label class="form-label">Perfil</label><select class="form-control" id="nu-perfil"><option value="operador">Operador</option><option value="diretor">Diretor</option></select></div>
+            <div id="nu-msg"></div>
+            <button class="btn btn-primary w-full" onclick="criarUsuario()">➕ Criar Usuário</button>
+          </div>
+          <div class="card">
+            <div class="card-header"><span class="card-title">Usuários Cadastrados</span><span id="users-count" class="text-sm text-mid"></span></div>
+            <div id="users-list"><div class="loading"><div class="spinner"></div></div></div>
           </div>
         </div>
-        <!-- Usuários cadastrados -->
+      </div>
+      <!-- Senha + Canais — todos -->
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:20px">
         <div class="card">
-          <div class="card-header"><span class="card-title">Usuários Cadastrados</span><span id="users-count" class="text-sm text-mid"></span></div>
-          <div id="users-list"><div class="loading"><div class="spinner"></div></div></div>
+          <div class="card-header"><span class="card-title">Alterar minha senha</span></div>
+          <div class="form-group"><label class="form-label">Nova senha *</label><input type="password" class="form-control" id="mp-senha" placeholder="Nova senha"></div>
+          <div class="form-group"><label class="form-label">Confirmar senha *</label><input type="password" class="form-control" id="mp-confirma" placeholder="Confirmar nova senha"></div>
+          <div id="mp-msg"></div>
+          <button class="btn btn-secondary w-full" onclick="alterarMinhaSenha()">🔑 Alterar Senha</button>
         </div>
-        <!-- Canais de Atração -->
         <div class="card">
           <div class="card-header"><span class="card-title">Canais de Atração</span></div>
-          <p style="font-size:13px;color:var(--text-mid);margin-bottom:16px">Gerencie os canais que aparecem no cadastro de candidatos.</p>
+          <p style="font-size:13px;color:var(--text-mid);margin-bottom:16px">Canais que aparecem ao enviar currículos.</p>
           <div style="display:flex;gap:8px;margin-bottom:16px">
             <input type="text" class="form-control" id="novo-canal-nome" placeholder="Nome do canal" style="flex:1">
             <button class="btn btn-primary btn-sm" onclick="criarCanal()">+ Adicionar</button>
@@ -492,6 +495,39 @@
   </div>
 </div>
 
+
+<!-- MODAL EDITAR FUNCIONÁRIO -->
+<div class="modal-overlay" id="modal-editar-fn">
+  <div class="modal">
+    <div class="modal-header"><h3>✏️ Editar Funcionário</h3><button class="modal-close" onclick="closeModal('modal-editar-fn')">✕</button></div>
+    <div class="modal-body">
+      <input type="hidden" id="ef-id">
+      <div class="grid-2" style="gap:12px">
+        <div class="form-group"><label class="form-label">Nome completo *</label><input type="text" class="form-control" id="ef-nome"></div>
+        <div class="form-group"><label class="form-label">Cargo</label><input type="text" class="form-control" id="ef-cargo"></div>
+        <div class="form-group"><label class="form-label">PDV</label><input type="text" class="form-control" id="ef-pdv"></div>
+        <div class="form-group"><label class="form-label">Data de admissão</label><input type="date" class="form-control" id="ef-admissao"></div>
+        <div class="form-group"><label class="form-label">Email</label><input type="email" class="form-control" id="ef-email"></div>
+        <div class="form-group"><label class="form-label">Telefone</label><input type="text" class="form-control" id="ef-telefone"></div>
+        <div class="form-group"><label class="form-label">Sexo</label><select class="form-control" id="ef-sexo"><option value="">Selecionar...</option><option>Masculino</option><option>Feminino</option></select></div>
+        <div class="form-group"><label class="form-label">Raça / Cor</label><select class="form-control" id="ef-raca"><option value="">Selecionar...</option><option>Branco</option><option>Pardo</option><option>Preto</option><option>Amarelo</option><option>Indígena</option><option>Prefiro não responder</option><option>Não sei</option></select></div>
+        <div class="form-group" style="grid-column:1/-1"><label class="form-label">Escolaridade</label><select class="form-control" id="ef-escolaridade"><option value="">Selecionar...</option><option>Fundamental Incompleto</option><option>Fundamental Completo</option><option>Médio Incompleto</option><option>Médio Completo</option><option>Superior Incompleto</option><option>Superior Completo</option><option>Pós-graduação Incompleta</option><option>Pós-graduação Completa</option></select></div>
+      </div>
+      <div id="ef-msg"></div>
+    </div>
+    <div class="modal-footer"><button class="btn btn-secondary" onclick="closeModal('modal-editar-fn')">Cancelar</button><button class="btn btn-primary" onclick="salvarEdicaoFuncionario()">💾 Salvar</button></div>
+  </div>
+</div>
+
+<!-- MODAL HISTÓRICO TALENTO -->
+<div class="modal-overlay candidate-detail-modal" id="modal-historico-talento">
+  <div class="modal">
+    <div class="modal-header"><h3 id="ht-nome">Histórico do Candidato</h3><button class="modal-close" onclick="closeModal('modal-historico-talento')">✕</button></div>
+    <div class="modal-body" id="ht-body"><div class="loading"><div class="spinner"></div></div></div>
+    <div class="modal-footer"><button class="btn btn-secondary" onclick="closeModal('modal-historico-talento')">Fechar</button></div>
+  </div>
+</div>
+
 <!-- MODAL CANAL ORIGEM (ao enviar currículo) -->
 <div class="modal-overlay" id="modal-canal-origem">
   <div class="modal" style="max-width:400px">
@@ -518,7 +554,7 @@ function checkAuth() {
   if (!authToken) { document.getElementById('login-screen').style.display = 'flex'; document.getElementById('app-screen').style.display = 'none'; }
   else {
     document.getElementById('login-screen').style.display = 'none'; document.getElementById('app-screen').style.display = 'flex';
-    if (currentUser) { document.getElementById('user-name').textContent = currentUser.name; document.getElementById('user-role').textContent = currentUser.role === 'diretor' ? 'Diretor' : 'Operador'; if (currentUser.role === 'diretor') document.getElementById('nav-config').style.display = ''; }
+    if (currentUser) { document.getElementById('user-name').textContent = currentUser.name; document.getElementById('user-role').textContent = currentUser.role === 'diretor' ? 'Diretor' : 'Operador'; }
     loadDashboard();
   }
 }
@@ -539,7 +575,6 @@ async function doLogin() {
 function doLogout() {
   authToken = null; currentUser = null;
   localStorage.removeItem('rh_token'); localStorage.removeItem('rh_user');
-  document.getElementById('nav-config').style.display = 'none';
   checkAuth();
 }
 document.addEventListener('DOMContentLoaded', () => { document.getElementById('login-password')?.addEventListener('keydown', e => { if (e.key === 'Enter') doLogin(); }); checkAuth(); });
@@ -559,7 +594,7 @@ function showSection(name) {
   if (name==='profiles') loadProfiles();
   if (name==='talent') { loadProcessesForFilter(); loadTalent(); }
   if (name==='funcionarios') loadFuncionarios();
-  if (name==='config') { if (currentUser?.role !== 'diretor') { showSection('dashboard'); return; } loadUsuarios(); loadCanais(); }
+  if (name==='config') { loadCanais(); if (currentUser?.role === 'diretor') loadUsuarios(); renderConfigLayout(); }
 }
 
 async function api(path, opts = {}) {
@@ -1151,7 +1186,7 @@ async function loadTalent() {
   const url = '/talent-bank' + (processId ? `?process_id=${processId}` : '');
   const talents = await api(url);
   if (!talents.length) { el.innerHTML = '<div class="empty"><div class="empty-icon">⭐</div><p>Nenhum talento encontrado.</p></div>'; return; }
-  el.innerHTML = `<div class="table-wrap"><table><thead><tr><th>Candidato</th><th>Vaga avaliada</th><th>Score</th><th>Contato</th></tr></thead><tbody>${talents.map(t => `<tr><td><strong>${t.candidate_name||t.name||'—'}</strong></td><td>${t.vaga_nome||'—'}</td><td><div class="score-bar ${scoreClass(t.last_score||t.vaga_score||0)}" style="max-width:120px"><div class="score-track"><div class="score-fill" style="width:${t.last_score||t.vaga_score||0}%"></div></div><div class="score-num">${Math.round(t.last_score||t.vaga_score||0)}</div></div></td><td>${t.email||'—'}${t.phone?`<br><span class="text-sm text-mid">${t.phone}</span>`:''}</td></tr>`).join('')}</tbody></table></div>`;
+  el.innerHTML = `<div class="table-wrap"><table><thead><tr><th>Candidato</th><th>Vaga avaliada</th><th>Score</th><th>Contato</th><th></th></tr></thead><tbody>${talents.map(t => `<tr><td><strong>${t.candidate_name||t.name||'—'}</strong></td><td>${t.vaga_nome||'—'}</td><td><div class="score-bar ${scoreClass(t.last_score||t.vaga_score||0)}" style="max-width:120px"><div class="score-track"><div class="score-fill" style="width:${t.last_score||t.vaga_score||0}%"></div></div><div class="score-num">${Math.round(t.last_score||t.vaga_score||0)}</div></div></td><td>${t.email||'—'}${t.phone?`<br><span class="text-sm text-mid">${t.phone}</span>`:''}</td><td><button class="btn btn-sm btn-secondary" onclick="verHistoricoTalento(${t.candidate_id||t.id},'${(t.candidate_name||t.name||'').replace(/'/g,"\\'")}')">📋 Ver processo</button></td></tr>`).join('')}</tbody></table></div>`;
 }
 
 // ─── FUNCIONÁRIOS ─────────────────────────────────────────────────
@@ -1168,7 +1203,10 @@ async function loadFuncionarios() {
         <td>${f.pdv||'—'}</td>
         <td>${f.data_admissao?new Date(f.data_admissao).toLocaleDateString('pt-BR'):'—'}</td>
         <td><span style="font-size:12px;color:var(--text-mid)">${dias ? dias + 'd' : '—'}</span></td>
-        <td><button class="btn btn-sm btn-danger" onclick="abrirModalDesligar(${f.id},'${f.nome.replace(/'/g,"\\'")}')">🚪 Desligar</button></td>
+        <td><div style="display:flex;gap:6px">
+          <button class="btn btn-sm btn-secondary" onclick="abrirModalEditarFn(${f.id})">✏️ Editar</button>
+          <button class="btn btn-sm btn-danger" onclick="abrirModalDesligar(${f.id},'${f.nome.replace(/'/g,"\\'")}')">🚪 Desligar</button>
+        </div></td>
       </tr>`;
     }).join('')}</tbody></table></div>`;
   } catch(e) { el.innerHTML = `<div class="alert alert-danger">Erro: ${e.message}</div>`; }
@@ -1310,6 +1348,128 @@ async function carregarHistoricoAnalises(candidateId) {
   } catch(e) { if (el) el.innerHTML = '<p style="font-size:13px;color:var(--text-light)">Histórico não disponível.</p>'; }
 }
 
+
+// ─── CONFIG LAYOUT POR ROLE ───────────────────────────────────────
+function renderConfigLayout() {
+  const isDiretor = currentUser?.role === 'diretor';
+  document.getElementById('config-usuarios').style.display = isDiretor ? 'block' : 'none';
+}
+
+// ─── EDITAR FUNCIONÁRIO ───────────────────────────────────────────
+async function abrirModalEditarFn(id) {
+  try {
+    const f = await api('/funcionarios/' + id);
+    document.getElementById('ef-id').value = f.id;
+    document.getElementById('ef-nome').value = f.nome || '';
+    document.getElementById('ef-cargo').value = f.cargo || '';
+    document.getElementById('ef-pdv').value = f.pdv || '';
+    document.getElementById('ef-admissao').value = f.data_admissao ? f.data_admissao.split('T')[0] : '';
+    document.getElementById('ef-email').value = f.email || '';
+    document.getElementById('ef-telefone').value = f.telefone || '';
+    document.getElementById('ef-sexo').value = f.sexo || '';
+    document.getElementById('ef-raca').value = f.raca || '';
+    document.getElementById('ef-escolaridade').value = f.escolaridade || '';
+    document.getElementById('ef-msg').innerHTML = '';
+    openModal('modal-editar-fn');
+  } catch(e) { alert('Erro ao carregar funcionário: ' + e.message); }
+}
+
+async function salvarEdicaoFuncionario() {
+  const id = parseInt(document.getElementById('ef-id').value);
+  const nome = document.getElementById('ef-nome').value.trim();
+  if (!nome) { document.getElementById('ef-msg').innerHTML = '<div class="alert alert-danger">Nome é obrigatório.</div>'; return; }
+  try {
+    await api('/funcionarios/' + id, { method: 'PUT', body: JSON.stringify({
+      nome, cargo: document.getElementById('ef-cargo').value,
+      pdv: document.getElementById('ef-pdv').value,
+      data_admissao: document.getElementById('ef-admissao').value || null,
+      email: document.getElementById('ef-email').value,
+      telefone: document.getElementById('ef-telefone').value,
+      sexo: document.getElementById('ef-sexo').value,
+      raca: document.getElementById('ef-raca').value,
+      escolaridade: document.getElementById('ef-escolaridade').value
+    })});
+    closeModal('modal-editar-fn');
+    loadFuncionarios();
+  } catch(e) { document.getElementById('ef-msg').innerHTML = `<div class="alert alert-danger">Erro: ${e.message}</div>`; }
+}
+
+// ─── HISTÓRICO TALENTO ────────────────────────────────────────────
+async function verHistoricoTalento(candidateId, nome) {
+  document.getElementById('ht-nome').textContent = nome || 'Histórico';
+  document.getElementById('ht-body').innerHTML = '<div class="loading"><div class="spinner"></div><span class="loading-text">Carregando...</span></div>';
+  openModal('modal-historico-talento');
+  try {
+    // Busca dados do candidato em todos os processos
+    const processes = await api('/processes');
+    let candidato = null;
+    let processTitle = '—';
+    for (const p of processes) {
+      try {
+        const cands = await api('/processes/' + p.id + '/candidates');
+        const c = cands.find(x => x.id === candidateId);
+        if (c) { candidato = c; processTitle = p.title; break; }
+      } catch(e) {}
+    }
+    if (!candidato) { document.getElementById('ht-body').innerHTML = '<div class="alert alert-warn">Candidato não encontrado nos processos ativos.</div>'; return; }
+
+    // Quiz
+    let quizData = null;
+    try { const qr = await api('/questionario/' + candidateId + '/respostas'); if (qr && qr.respondido) quizData = qr; } catch(e) {}
+
+    // Histórico de análises
+    let analyses = [];
+    try { analyses = await api('/candidates/' + candidateId + '/analyses'); } catch(e) {}
+
+    // Parecer salvo
+    let parecer = null;
+    try { parecer = await api('/parecer/' + candidateId + '/ultimo'); } catch(e) {}
+
+    const sc = scoreClass(candidato.score);
+    const parecerHtml = montarParecerIntegrado(candidato, quizData);
+
+    document.getElementById('ht-body').innerHTML = `
+      <div style="margin-bottom:16px">
+        <div style="font-size:12px;text-transform:uppercase;letter-spacing:.05em;color:var(--text-light);margin-bottom:4px">Processo Seletivo</div>
+        <div style="font-size:16px;font-weight:600;color:var(--navy)">${processTitle}</div>
+      </div>
+      ${parecerHtml}
+      <div class="detail-section">
+        <div class="flex items-center gap-2 mb-4" style="gap:16px">
+          <div class="score-bar ${sc}" style="flex:1"><div class="score-track"><div class="score-fill" style="width:${candidato.score}%"></div></div><div class="score-num" style="font-size:22px">${Math.round(candidato.score)}<span style="font-size:13px;opacity:.6">/100</span></div></div>
+          ${candidateStatusBadge(candidato.status)}
+        </div>
+        ${candidato.email ? `<div class="text-sm text-mid">📧 ${candidato.email}</div>` : ''}
+        ${candidato.phone ? `<div class="text-sm text-mid">📞 ${candidato.phone}</div>` : ''}
+        ${candidato.canal_origem ? `<div class="text-sm text-mid">📍 Canal: <strong>${candidato.canal_origem}</strong></div>` : ''}
+        ${candidato.analyzed_at ? `<div style="font-size:11px;color:var(--text-light);margin-top:4px">Analisado em ${new Date(candidato.analyzed_at).toLocaleString('pt-BR',{day:'2-digit',month:'2-digit',year:'numeric',hour:'2-digit',minute:'2-digit'})}</div>` : ''}
+      </div>
+      <div class="detail-section"><h4>Resumo da IA</h4><p style="font-size:14px;line-height:1.7;color:var(--text-mid)">${candidato.ai_summary || '—'}</p></div>
+      ${candidato.requirements_met?.length ? `<div class="detail-section"><h4>✅ Requisitos Atendidos</h4><div class="tag-list">${candidato.requirements_met.map(r => `<span class="tag tag-met">${r}</span>`).join('')}</div></div>` : ''}
+      ${candidato.requirements_missing?.length ? `<div class="detail-section"><h4>❌ Requisitos Faltantes</h4><div class="tag-list">${candidato.requirements_missing.map(r => `<span class="tag tag-missing">${r}</span>`).join('')}</div></div>` : ''}
+      ${candidato.alerts?.length ? `<div class="detail-section"><h4>⚠️ Alertas</h4><div class="tag-list">${candidato.alerts.map(a => `<span class="tag tag-alert">${a}</span>`).join('')}</div></div>` : ''}
+      ${quizData ? `<div class="detail-section"><h4>📋 Questionário Comportamental</h4>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-top:8px">
+          ${[['Resiliência',quizData.scores.resiliencia,'#3B6D11'],['Confiabilidade',quizData.scores.confianca,'#185FA5'],['Crescimento',quizData.scores.crescimento,'#534AB7'],['Risco mosca morta',quizData.scores.mosca,'#E24B4A'],['Risco deslealdade',quizData.scores.traidor,'#D85A30'],['Risco turnover',quizData.scores.turnover,'#BA7517']].map(([l,v,c]) => `<div style="font-size:12px;color:var(--text-mid)">${l}: <strong style="color:${c}">${v}%</strong></div>`).join('')}
+        </div>
+      </div>` : '<div class="detail-section"><h4>📋 Questionário Comportamental</h4><p style="font-size:13px;color:var(--text-light)">Não respondido.</p></div>'}
+      ${candidato.interview_script ? `<div class="detail-section"><h4>🎤 Roteiro de Entrevista</h4><div class="interview-script">${candidato.interview_script}</div></div>` : ''}
+      ${analyses.length ? `<div class="detail-section"><h4>📊 Histórico de Análises (${analyses.length})</h4>
+        ${analyses.map((a, i) => {
+          const cor = a.score >= 70 ? 'var(--success)' : a.score >= 50 ? 'var(--warn)' : 'var(--danger)';
+          return `<div style="display:flex;align-items:center;gap:10px;padding:8px 0;border-bottom:1px solid var(--cream-dark)">
+            <span style="font-size:18px;font-weight:700;color:${cor}">${a.score}</span>
+            <span style="font-size:10px;color:var(--text-light)">/100</span>
+            ${i === 0 ? '<span class="badge badge-blue" style="font-size:10px">Última</span>' : ''}
+            <span style="font-size:11px;color:var(--text-light);margin-left:auto">${a.analisado_em_fmt}</span>
+          </div>`;
+        }).join('')}
+      </div>` : ''}
+    `;
+  } catch(e) {
+    document.getElementById('ht-body').innerHTML = `<div class="alert alert-danger">Erro ao carregar: ${e.message}</div>`;
+  }
+}
 // ─── EXTRAÇÃO DE TEXTO ────────────────────────────────────────────
 async function extractTextFromFile(file) {
   const ext = file.name.split('.').pop().toLowerCase();
