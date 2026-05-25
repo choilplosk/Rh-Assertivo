@@ -50,9 +50,12 @@
   .card-title { font-family: 'DM Serif Display', serif; font-size: 18px; color: var(--navy); }
   .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
   .grid-3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; }
+  .grid-4 { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; }
   .stat-card { background: var(--white); border-radius: var(--radius); padding: 20px 24px; box-shadow: var(--shadow); border-left: 4px solid var(--blue); }
   .stat-card.gold { border-left-color: var(--gold); }
   .stat-card.success { border-left-color: var(--success); }
+  .stat-card.purple { border-left-color: #534AB7; }
+  .stat-card.danger { border-left-color: var(--danger); }
   .stat-label { font-size: 12px; text-transform: uppercase; letter-spacing: 0.05em; color: var(--text-light); font-weight: 500; }
   .stat-value { font-family: 'DM Serif Display', serif; font-size: 36px; color: var(--navy); margin: 4px 0; }
   .stat-sub { font-size: 13px; color: var(--text-mid); }
@@ -102,7 +105,6 @@
   .parecer-avancar { background: #f0faf3; border-color: #2d9e5f; }
   .parecer-ressalvas { background: #fffbf0; border-color: #e6a817; }
   .parecer-nao-avancar { background: #fef2f2; border-color: #dc3545; }
-  .parecer-incompleto { background: #f5f3ee; border-color: #ccc; }
   .parecer-veredicto { font-size: 17px; font-weight: 700; margin-bottom: 6px; }
   .parecer-justificativa { font-size: 13px; line-height: 1.7; }
   .parecer-indicadores { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-top: 14px; }
@@ -149,9 +151,32 @@
   .font-serif { font-family: 'DM Serif Display', serif; } .w-full { width: 100%; }
   .bloqueado-row td { opacity: 0.5; text-decoration: line-through; }
   .badge-blocked { background: #1a1a1a; color: #fff; }
+  /* Dashboard tabs */
+  .dash-tabs { display: flex; gap: 0; border-bottom: 2px solid var(--cream-dark); margin-bottom: 24px; }
+  .dash-tab { padding: 10px 28px; font-size: 14px; font-weight: 500; cursor: pointer; border: none; background: none; color: var(--text-mid); border-bottom: 3px solid transparent; margin-bottom: -2px; transition: all 0.15s; font-family: 'DM Sans', sans-serif; }
+  .dash-tab:hover { color: var(--navy); }
+  .dash-tab.active { color: var(--blue); border-bottom-color: var(--blue); font-weight: 600; }
+  .dash-panel { display: none; } .dash-panel.active { display: block; }
+  /* Funil */
+  .funil-step { display: flex; align-items: center; gap: 12px; margin-bottom: 10px; }
+  .funil-bar-wrap { flex: 1; height: 26px; background: var(--cream-dark); border-radius: 6px; overflow: hidden; }
+  .funil-bar-fill { height: 100%; border-radius: 6px; display: flex; align-items: center; padding-left: 10px; font-size: 12px; font-weight: 600; color: white; transition: width 0.8s; white-space: nowrap; }
+  .funil-label { font-size: 12px; color: var(--text-mid); min-width: 110px; }
+  .funil-count { font-size: 14px; font-weight: 700; color: var(--navy); min-width: 36px; text-align: right; }
+  /* Mini bar */
+  .mini-bar { display: flex; align-items: center; gap: 8px; margin-bottom: 8px; }
+  .mini-bar-label { font-size: 12px; color: var(--text-mid); flex: 1; }
+  .mini-bar-track { width: 100px; height: 6px; background: var(--cream-dark); border-radius: 3px; overflow: hidden; }
+  .mini-bar-fill { height: 100%; border-radius: 3px; }
+  .mini-bar-val { font-size: 12px; font-weight: 600; min-width: 28px; text-align: right; }
+  /* PDV filter */
+  .filter-bar { display: flex; gap: 10px; align-items: center; margin-bottom: 20px; flex-wrap: wrap; background: var(--white); padding: 12px 16px; border-radius: var(--radius-sm); box-shadow: var(--shadow); }
+  .filter-bar label { font-size: 13px; color: var(--text-mid); font-weight: 500; }
 </style>
 </head>
 <body>
+
+<!-- LOGIN -->
 <div id="login-screen" style="display:none;position:fixed;inset:0;background:var(--navy);z-index:9999;align-items:center;justify-content:center;flex-direction:column">
   <div style="background:white;border-radius:16px;padding:48px;width:100%;max-width:420px;box-shadow:0 24px 80px rgba(0,0,0,0.4)">
     <div style="text-align:center;margin-bottom:32px">
@@ -160,16 +185,18 @@
     </div>
     <div style="margin-bottom:16px">
       <label style="font-size:13px;font-weight:500;color:var(--text-mid);display:block;margin-bottom:6px">Email</label>
-      <input id="login-email" type="email" placeholder="seu@email.com" style="width:100%;padding:12px 16px;border:1.5px solid var(--cream-dark);border-radius:8px;font-size:14px;font-family:'DM Sans',sans-serif;outline:none;transition:border 0.15s" onfocus="this.style.borderColor='var(--blue)'" onblur="this.style.borderColor='var(--cream-dark)'">
+      <input id="login-email" type="email" placeholder="seu@email.com" style="width:100%;padding:12px 16px;border:1.5px solid var(--cream-dark);border-radius:8px;font-size:14px;font-family:'DM Sans',sans-serif;outline:none" onfocus="this.style.borderColor='var(--blue)'" onblur="this.style.borderColor='var(--cream-dark)'">
     </div>
     <div style="margin-bottom:24px">
       <label style="font-size:13px;font-weight:500;color:var(--text-mid);display:block;margin-bottom:6px">Senha</label>
-      <input id="login-password" type="password" placeholder="••••••••" style="width:100%;padding:12px 16px;border:1.5px solid var(--cream-dark);border-radius:8px;font-size:14px;font-family:'DM Sans',sans-serif;outline:none;transition:border 0.15s" onfocus="this.style.borderColor='var(--blue)'" onblur="this.style.borderColor='var(--cream-dark)'">
+      <input id="login-password" type="password" placeholder="••••••••" style="width:100%;padding:12px 16px;border:1.5px solid var(--cream-dark);border-radius:8px;font-size:14px;font-family:'DM Sans',sans-serif;outline:none" onfocus="this.style.borderColor='var(--blue)'" onblur="this.style.borderColor='var(--cream-dark)'">
     </div>
     <button id="login-btn" onclick="doLogin()" style="width:100%;padding:14px;background:var(--navy);color:white;border:none;border-radius:8px;font-size:15px;font-weight:600;font-family:'DM Sans',sans-serif;cursor:pointer">Entrar</button>
     <div id="login-msg" style="margin-top:12px;text-align:center;font-size:13px;color:var(--danger)"></div>
   </div>
 </div>
+
+<!-- APP -->
 <div id="app-screen" style="display:none;width:100%;min-height:100vh">
 <aside class="sidebar">
   <div class="sidebar-logo"><h1>RH <span>Assertivo</span></h1><p>Triagem Inteligente</p></div>
@@ -189,35 +216,304 @@
     </div>
   </div>
 </aside>
+
 <main class="main">
   <header class="topbar"><h2 id="page-title">Dashboard</h2><div class="topbar-actions" id="topbar-actions"></div></header>
   <div class="content">
+
+    <!-- DASHBOARD -->
     <div id="section-dashboard" class="section active">
-      <div style="margin-bottom:1rem"><h2 style="font-size:16px;font-weight:600;margin-bottom:2px">Dashboard de Acompanhamento</h2><p style="font-size:12px;color:var(--text-mid)" id="dash-subtitulo">O Boticário Niterói</p></div>
-      <div class="grid-3 mb-6"><div class="stat-card"><div class="stat-label">Processos Abertos</div><div class="stat-value" id="stat-open">—</div><div class="stat-sub">em andamento</div></div><div class="stat-card gold"><div class="stat-label">Candidatos Analisados</div><div class="stat-value" id="stat-candidates">—</div><div class="stat-sub" id="stat-candidates-s">total geral</div></div><div class="stat-card success"><div class="stat-label">Banco de Talentos</div><div class="stat-value" id="stat-talent">—</div><div class="stat-sub">talentos salvos</div></div></div>
-      <div style="display:grid;grid-template-columns:1fr 1fr;gap:.75rem;margin-bottom:.75rem"><div class="stat-card" style="border-left:3px solid var(--blue)"><div class="stat-label">Score médio</div><div class="stat-value" id="stat-score">—</div><div class="stat-sub" id="stat-score-s">máx. 100 pontos</div></div><div class="stat-card" style="border-left:3px solid #534AB7"><div class="stat-label">Questionários respondidos</div><div class="stat-value" id="stat-quiz">—</div><div class="stat-sub" id="stat-quiz-s">comportamental</div></div></div>
-      <div style="display:grid;grid-template-columns:1fr 1fr;gap:.75rem;margin-bottom:.75rem"><div class="card" style="margin-bottom:0"><div class="card-header" style="margin-bottom:.75rem"><span class="card-title">Status dos candidatos</span></div><div id="dash-status-bars"><div class="loading"><div class="spinner"></div></div></div></div><div class="card" style="margin-bottom:0"><div class="card-header" style="margin-bottom:.75rem"><span class="card-title">Indicadores comportamentais</span></div><div id="dash-comportamental"><div class="loading"><div class="spinner"></div></div></div></div></div>
-      <div class="card"><div class="card-header"><span class="card-title">Processos seletivos</span><button class="btn btn-primary btn-sm" onclick="showSection('processes')">Ver todos</button></div><div id="dashboard-processes"><div class="loading"><div class="spinner"></div></div></div></div>
-      <div class="card"><div class="card-header"><span class="card-title">Top candidatos — ranking geral</span></div><div id="dash-ranking"><div class="loading"><div class="spinner"></div></div></div></div>
+      <div class="dash-tabs">
+        <button class="dash-tab active" id="tab-recrutamento" onclick="switchDashTab('recrutamento')">📊 Recrutamento</button>
+        <button class="dash-tab" id="tab-funcionarios-dash" onclick="switchDashTab('funcionarios')">👤 Força de Trabalho</button>
+      </div>
+
+      <!-- PAINEL RECRUTAMENTO -->
+      <div id="dash-panel-recrutamento" class="dash-panel active">
+        <div class="grid-4 mb-6">
+          <div class="stat-card"><div class="stat-label">Processos Abertos</div><div class="stat-value" id="dr-open">—</div><div class="stat-sub">em andamento</div></div>
+          <div class="stat-card gold"><div class="stat-label">Candidatos Analisados</div><div class="stat-value" id="dr-candidates">—</div><div class="stat-sub" id="dr-candidates-s">total</div></div>
+          <div class="stat-card success"><div class="stat-label">Score Médio</div><div class="stat-value" id="dr-score">—</div><div class="stat-sub">máx. 100 pts</div></div>
+          <div class="stat-card purple"><div class="stat-label">Tempo Médio Processo</div><div class="stat-value" id="dr-tempo">—</div><div class="stat-sub">dias até contratação</div></div>
+        </div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:20px;margin-bottom:20px">
+          <div class="card" style="margin-bottom:0">
+            <div class="card-header" style="margin-bottom:16px"><span class="card-title">Funil de Conversão</span></div>
+            <div id="dr-funil"><div class="loading"><div class="spinner"></div></div></div>
+          </div>
+          <div class="card" style="margin-bottom:0">
+            <div class="card-header" style="margin-bottom:16px"><span class="card-title">Efetividade dos Canais</span></div>
+            <div id="dr-canais"><div class="loading"><div class="spinner"></div></div></div>
+          </div>
+        </div>
+        <div class="card mb-6">
+          <div class="card-header"><span class="card-title">Duração dos Processos</span></div>
+          <div id="dr-tempo-processos"><div class="loading"><div class="spinner"></div></div></div>
+        </div>
+        <div class="card">
+          <div class="card-header"><span class="card-title">Top Candidatos — ranking geral</span></div>
+          <div id="dr-ranking"><div class="loading"><div class="spinner"></div></div></div>
+        </div>
+      </div>
+
+      <!-- PAINEL FORÇA DE TRABALHO -->
+      <div id="dash-panel-funcionarios" class="dash-panel">
+        <div class="filter-bar">
+          <label>Filtrar por PDV:</label>
+          <select id="df-pdv-filter" class="form-control" style="width:200px" onchange="renderDashFuncionarios()">
+            <option value="">Todos os PDVs</option>
+          </select>
+        </div>
+        <div class="grid-4 mb-6">
+          <div class="stat-card success"><div class="stat-label">Funcionários Ativos</div><div class="stat-value" id="df-ativos">—</div><div class="stat-sub" id="df-ativos-s">em atividade</div></div>
+          <div class="stat-card danger"><div class="stat-label">Turnover 90 dias</div><div class="stat-value" id="df-t90">—</div><div class="stat-sub">saíram em ≤90 dias</div></div>
+          <div class="stat-card gold"><div class="stat-label">Taxa de Turnover</div><div class="stat-value" id="df-t1a">—</div><div class="stat-sub">últimos 12 meses</div></div>
+          <div class="stat-card purple"><div class="stat-label">Tempo Médio de Casa</div><div class="stat-value" id="df-tempo">—</div><div class="stat-sub">dias (ativos)</div></div>
+        </div>
+        <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:20px;margin-bottom:20px">
+          <div class="card" style="margin-bottom:0">
+            <div class="card-header" style="margin-bottom:12px"><span class="card-title" style="font-size:15px">Por Sexo</span></div>
+            <div id="df-sexo"><div class="loading" style="padding:20px"><div class="spinner"></div></div></div>
+          </div>
+          <div class="card" style="margin-bottom:0">
+            <div class="card-header" style="margin-bottom:12px"><span class="card-title" style="font-size:15px">Por Raça/Cor</span></div>
+            <div id="df-raca"><div class="loading" style="padding:20px"><div class="spinner"></div></div></div>
+          </div>
+          <div class="card" style="margin-bottom:0">
+            <div class="card-header" style="margin-bottom:12px"><span class="card-title" style="font-size:15px">Por Escolaridade</span></div>
+            <div id="df-escolaridade"><div class="loading" style="padding:20px"><div class="spinner"></div></div></div>
+          </div>
+        </div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:20px">
+          <div class="card" style="margin-bottom:0">
+            <div class="card-header" style="margin-bottom:12px"><span class="card-title" style="font-size:15px">Motivos de Saída</span></div>
+            <div id="df-motivos"></div>
+          </div>
+          <div class="card" style="margin-bottom:0">
+            <div class="card-header" style="margin-bottom:12px"><span class="card-title" style="font-size:15px">Tempo de Casa por PDV</span></div>
+            <div id="df-tempo-pdv"></div>
+          </div>
+        </div>
+      </div>
     </div>
-    <div id="section-processes" class="section"><div id="view-process-list"><div class="processes-list" id="processes-list"><div class="loading"><div class="spinner"></div></div></div></div><div id="view-process-detail" style="display:none"><button class="btn btn-secondary btn-sm mb-6" onclick="backToProcessList()">← Voltar</button><div id="process-detail-content"></div></div></div>
-    <div id="section-profiles" class="section"><div class="grid-2"><div class="card"><div class="card-header"><span class="card-title">Novo Perfil de Vaga</span></div><div class="form-group"><label class="form-label">Nome do perfil</label><input type="text" class="form-control" id="profile-name" placeholder="Ex: Consultora de Beleza"></div><div class="form-group"><label class="form-label">Documento do perfil <span style="color:var(--text-mid);font-weight:400">(.docx ou .pdf)</span></label><div id="upload-area" style="border:1.5px dashed var(--cream-dark);border-radius:var(--radius-sm);padding:1rem;text-align:center;cursor:pointer;transition:all .15s" onclick="document.getElementById('profile-file').click()" ondragover="event.preventDefault();this.style.borderColor='var(--blue)'" ondrop="handleDrop(event)"><input type="file" id="profile-file" accept=".docx,.doc,.pdf" style="display:none" onchange="handleFileSelect(this)"><div id="upload-label" style="font-size:13px;color:var(--text-mid)">Clique ou arraste o arquivo aqui<br><span style="font-size:11px;opacity:.7">.doc, .docx ou .pdf</span></div></div></div><div class="form-group" style="margin-top:.25rem"><label class="form-label" style="font-size:11px;color:var(--text-light)">Ou descreva manualmente</label><textarea class="form-control" id="profile-content" rows="4" placeholder="Descreva os requisitos..."></textarea></div><div id="profile-msg"></div><button class="btn btn-primary w-full" onclick="saveProfile()">💾 Salvar Perfil</button></div><div class="card"><div class="card-header"><span class="card-title">Perfis Cadastrados</span></div><div id="profiles-list"><div class="loading"><div class="spinner"></div></div></div></div></div></div>
-    <div id="section-talent" class="section"><div class="card"><div class="card-header"><span class="card-title">Banco de Talentos</span><div style="display:flex;align-items:center;gap:10px"><label style="font-size:13px;color:var(--text-mid)">Filtrar por cargo:</label><select id="talent-filter-process" class="form-control" style="width:220px;padding:7px 12px" onchange="loadTalent()"><option value="">Todos os cargos</option></select></div></div><div id="talent-list"><div class="loading"><div class="spinner"></div></div></div></div></div>
-    <div id="section-funcionarios" class="section"><div class="grid-2"><div class="card"><div class="card-header"><span class="card-title">Cadastrar Funcionário</span></div><div class="form-group"><label class="form-label">Nome completo *</label><input type="text" class="form-control" id="fn-nome" placeholder="Nome do funcionário"></div><div class="form-group"><label class="form-label">PDV</label><input type="text" class="form-control" id="fn-pdv" placeholder="Ponto de venda"></div><div class="form-group"><label class="form-label">Data de admissão</label><input type="date" class="form-control" id="fn-admissao"></div><div class="form-group"><label class="form-label">Raça / Cor</label><select class="form-control" id="fn-raca"><option value="">Selecionar...</option><option>Branco</option><option>Pardo</option><option>Preto</option><option>Amarelo</option><option>Indígena</option><option>Prefiro não responder</option><option>Não sei</option></select></div><div class="form-group"><label class="form-label">Grau de escolaridade</label><select class="form-control" id="fn-escolaridade"><option value="">Selecionar...</option><option>Fundamental Incompleto</option><option>Fundamental Completo</option><option>Médio Incompleto</option><option>Médio Completo</option><option>Superior Incompleto</option><option>Superior Completo</option><option>Pós-graduação Incompleta</option><option>Pós-graduação Completa</option></select></div><div class="form-group"><label class="form-label">Sexo</label><select class="form-control" id="fn-sexo"><option value="">Selecionar...</option><option>Masculino</option><option>Feminino</option></select></div><div class="form-group"><label class="form-label">Cargo</label><input type="text" class="form-control" id="fn-cargo" placeholder="Cargo/função"></div><div class="form-group"><label class="form-label">Email</label><input type="email" class="form-control" id="fn-email" placeholder="email@exemplo.com"></div><div class="form-group"><label class="form-label">Telefone</label><input type="text" class="form-control" id="fn-telefone" placeholder="(21) 99999-9999"></div><div id="fn-msg"></div><button class="btn btn-primary w-full" onclick="saveFuncionario()">💾 Cadastrar Funcionário</button></div><div class="card"><div class="card-header"><span class="card-title">Funcionários Ativos</span><span id="fn-count" class="text-sm text-mid"></span></div><div id="funcionarios-list"><div class="loading"><div class="spinner"></div></div></div></div></div></div>
-    <div id="section-config" class="section"><div class="grid-2"><div class="card"><div class="card-header"><span class="card-title">Novo Usuário</span></div><div class="form-group"><label class="form-label">Nome completo *</label><input type="text" class="form-control" id="nu-nome" placeholder="Nome do usuário"></div><div class="form-group"><label class="form-label">Email *</label><input type="email" class="form-control" id="nu-email" placeholder="email@exemplo.com"></div><div class="form-group"><label class="form-label">Senha *</label><input type="password" class="form-control" id="nu-senha" placeholder="Mínimo 6 caracteres"></div><div class="form-group"><label class="form-label">Perfil</label><select class="form-control" id="nu-perfil"><option value="operador">Operador</option><option value="diretor">Diretor</option></select></div><div id="nu-msg"></div><button class="btn btn-primary w-full" onclick="criarUsuario()">➕ Criar Usuário</button><div style="margin-top:24px;padding-top:24px;border-top:1px solid var(--cream-dark)"><div class="card-title" style="font-size:16px;margin-bottom:16px">Alterar minha senha</div><div class="form-group"><label class="form-label">Nova senha *</label><input type="password" class="form-control" id="mp-senha" placeholder="Nova senha"></div><div class="form-group"><label class="form-label">Confirmar senha *</label><input type="password" class="form-control" id="mp-confirma" placeholder="Confirmar nova senha"></div><div id="mp-msg"></div><button class="btn btn-secondary w-full" onclick="alterarMinhaSenha()">🔑 Alterar Senha</button></div></div><div class="card"><div class="card-header"><span class="card-title">Usuários Cadastrados</span><span id="users-count" class="text-sm text-mid"></span></div><div id="users-list"><div class="loading"><div class="spinner"></div></div></div></div></div></div>
+
+    <!-- PROCESSOS -->
+    <div id="section-processes" class="section">
+      <div id="view-process-list"><div class="processes-list" id="processes-list"><div class="loading"><div class="spinner"></div></div></div></div>
+      <div id="view-process-detail" style="display:none"><button class="btn btn-secondary btn-sm mb-6" onclick="backToProcessList()">← Voltar</button><div id="process-detail-content"></div></div>
+    </div>
+
+    <!-- PERFIS -->
+    <div id="section-profiles" class="section">
+      <div class="grid-2">
+        <div class="card">
+          <div class="card-header"><span class="card-title">Novo Perfil de Vaga</span></div>
+          <div class="form-group"><label class="form-label">Nome do perfil</label><input type="text" class="form-control" id="profile-name" placeholder="Ex: Consultora de Beleza"></div>
+          <div class="form-group"><label class="form-label">Documento do perfil <span style="color:var(--text-mid);font-weight:400">(.docx ou .pdf)</span></label>
+            <div id="upload-area" style="border:1.5px dashed var(--cream-dark);border-radius:var(--radius-sm);padding:1rem;text-align:center;cursor:pointer" onclick="document.getElementById('profile-file').click()" ondragover="event.preventDefault();this.style.borderColor='var(--blue)'" ondrop="handleDrop(event)">
+              <input type="file" id="profile-file" accept=".docx,.doc,.pdf" style="display:none" onchange="handleFileSelect(this)">
+              <div id="upload-label" style="font-size:13px;color:var(--text-mid)">Clique ou arraste o arquivo aqui<br><span style="font-size:11px;opacity:.7">.doc, .docx ou .pdf</span></div>
+            </div>
+          </div>
+          <div class="form-group"><label class="form-label" style="font-size:11px;color:var(--text-light)">Ou descreva manualmente</label><textarea class="form-control" id="profile-content" rows="4" placeholder="Descreva os requisitos..."></textarea></div>
+          <div id="profile-msg"></div>
+          <button class="btn btn-primary w-full" onclick="saveProfile()">💾 Salvar Perfil</button>
+        </div>
+        <div class="card"><div class="card-header"><span class="card-title">Perfis Cadastrados</span></div><div id="profiles-list"><div class="loading"><div class="spinner"></div></div></div></div>
+      </div>
+    </div>
+
+    <!-- BANCO DE TALENTOS -->
+    <div id="section-talent" class="section">
+      <div class="card">
+        <div class="card-header">
+          <span class="card-title">Banco de Talentos</span>
+          <div style="display:flex;align-items:center;gap:10px">
+            <label style="font-size:13px;color:var(--text-mid)">Filtrar por cargo:</label>
+            <select id="talent-filter-process" class="form-control" style="width:220px;padding:7px 12px" onchange="loadTalent()"><option value="">Todos os cargos</option></select>
+          </div>
+        </div>
+        <div id="talent-list"><div class="loading"><div class="spinner"></div></div></div>
+      </div>
+    </div>
+
+    <!-- FUNCIONÁRIOS -->
+    <div id="section-funcionarios" class="section">
+      <div class="grid-2">
+        <div class="card">
+          <div class="card-header"><span class="card-title">Cadastrar Funcionário</span></div>
+          <div class="form-group"><label class="form-label">Nome completo *</label><input type="text" class="form-control" id="fn-nome" placeholder="Nome do funcionário"></div>
+          <div class="form-group"><label class="form-label">PDV</label><input type="text" class="form-control" id="fn-pdv" placeholder="Ponto de venda"></div>
+          <div class="form-group"><label class="form-label">Data de admissão</label><input type="date" class="form-control" id="fn-admissao"></div>
+          <div class="form-group"><label class="form-label">Raça / Cor</label><select class="form-control" id="fn-raca"><option value="">Selecionar...</option><option>Branco</option><option>Pardo</option><option>Preto</option><option>Amarelo</option><option>Indígena</option><option>Prefiro não responder</option><option>Não sei</option></select></div>
+          <div class="form-group"><label class="form-label">Grau de escolaridade</label><select class="form-control" id="fn-escolaridade"><option value="">Selecionar...</option><option>Fundamental Incompleto</option><option>Fundamental Completo</option><option>Médio Incompleto</option><option>Médio Completo</option><option>Superior Incompleto</option><option>Superior Completo</option><option>Pós-graduação Incompleta</option><option>Pós-graduação Completa</option></select></div>
+          <div class="form-group"><label class="form-label">Sexo</label><select class="form-control" id="fn-sexo"><option value="">Selecionar...</option><option>Masculino</option><option>Feminino</option></select></div>
+          <div class="form-group"><label class="form-label">Cargo</label><input type="text" class="form-control" id="fn-cargo" placeholder="Cargo/função"></div>
+          <div class="form-group"><label class="form-label">Email</label><input type="email" class="form-control" id="fn-email" placeholder="email@exemplo.com"></div>
+          <div class="form-group"><label class="form-label">Telefone</label><input type="text" class="form-control" id="fn-telefone" placeholder="(21) 99999-9999"></div>
+          <div id="fn-msg"></div>
+          <button class="btn btn-primary w-full" onclick="saveFuncionario()">💾 Cadastrar Funcionário</button>
+        </div>
+        <div class="card">
+          <div class="card-header"><span class="card-title">Funcionários Ativos</span><span id="fn-count" class="text-sm text-mid"></span></div>
+          <div id="funcionarios-list"><div class="loading"><div class="spinner"></div></div></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- CONFIGURAÇÕES -->
+    <div id="section-config" class="section">
+      <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:20px">
+        <!-- Novo usuário -->
+        <div class="card">
+          <div class="card-header"><span class="card-title">Novo Usuário</span></div>
+          <div class="form-group"><label class="form-label">Nome completo *</label><input type="text" class="form-control" id="nu-nome" placeholder="Nome do usuário"></div>
+          <div class="form-group"><label class="form-label">Email *</label><input type="email" class="form-control" id="nu-email" placeholder="email@exemplo.com"></div>
+          <div class="form-group"><label class="form-label">Senha *</label><input type="password" class="form-control" id="nu-senha" placeholder="Mínimo 6 caracteres"></div>
+          <div class="form-group"><label class="form-label">Perfil</label><select class="form-control" id="nu-perfil"><option value="operador">Operador</option><option value="diretor">Diretor</option></select></div>
+          <div id="nu-msg"></div>
+          <button class="btn btn-primary w-full" onclick="criarUsuario()">➕ Criar Usuário</button>
+          <div style="margin-top:24px;padding-top:24px;border-top:1px solid var(--cream-dark)">
+            <div class="card-title" style="font-size:16px;margin-bottom:16px">Alterar minha senha</div>
+            <div class="form-group"><label class="form-label">Nova senha *</label><input type="password" class="form-control" id="mp-senha" placeholder="Nova senha"></div>
+            <div class="form-group"><label class="form-label">Confirmar senha *</label><input type="password" class="form-control" id="mp-confirma" placeholder="Confirmar nova senha"></div>
+            <div id="mp-msg"></div>
+            <button class="btn btn-secondary w-full" onclick="alterarMinhaSenha()">🔑 Alterar Senha</button>
+          </div>
+        </div>
+        <!-- Usuários cadastrados -->
+        <div class="card">
+          <div class="card-header"><span class="card-title">Usuários Cadastrados</span><span id="users-count" class="text-sm text-mid"></span></div>
+          <div id="users-list"><div class="loading"><div class="spinner"></div></div></div>
+        </div>
+        <!-- Canais de Atração -->
+        <div class="card">
+          <div class="card-header"><span class="card-title">Canais de Atração</span></div>
+          <p style="font-size:13px;color:var(--text-mid);margin-bottom:16px">Gerencie os canais que aparecem no cadastro de candidatos.</p>
+          <div style="display:flex;gap:8px;margin-bottom:16px">
+            <input type="text" class="form-control" id="novo-canal-nome" placeholder="Nome do canal" style="flex:1">
+            <button class="btn btn-primary btn-sm" onclick="criarCanal()">+ Adicionar</button>
+          </div>
+          <div id="novo-canal-msg"></div>
+          <div id="canais-list"><div class="loading"><div class="spinner"></div></div></div>
+        </div>
+      </div>
+    </div>
+
   </div>
 </main>
-<div class="modal-overlay" id="modal-new-process"><div class="modal"><div class="modal-header"><h3>Novo Processo Seletivo</h3><button class="modal-close" onclick="closeModal('modal-new-process')">✕</button></div><div class="modal-body"><div class="form-group"><label class="form-label">Título da vaga</label><input type="text" class="form-control" id="np-title" placeholder="Ex: Consultora de Beleza"></div><div class="form-group"><label class="form-label">Perfil de vaga</label><select class="form-control" id="np-profile"><option value="">— Selecionar perfil —</option></select></div><div class="form-group"><label class="form-label">Ajustes específicos <span class="text-mid">(opcional)</span></label><textarea class="form-control" id="np-adjustments" rows="4" placeholder="Preferências adicionais..."></textarea></div><div id="np-msg"></div></div><div class="modal-footer"><button class="btn btn-secondary" onclick="closeModal('modal-new-process')">Cancelar</button><button class="btn btn-primary" onclick="createProcess()">Criar Processo</button></div></div></div>
-<div class="modal-overlay candidate-detail-modal" id="modal-candidate"><div class="modal"><div class="modal-header"><h3 id="modal-candidate-name">Candidato</h3><button class="modal-close" onclick="closeModal('modal-candidate')">✕</button></div><div class="modal-body" id="modal-candidate-body"></div><div class="modal-footer" id="modal-candidate-footer"></div></div></div>
-<div class="modal-overlay" id="modal-contratar"><div class="modal"><div class="modal-header"><h3>✅ Registrar Contratação</h3><button class="modal-close" onclick="closeModal('modal-contratar')">✕</button></div><div class="modal-body"><div class="alert alert-info" style="margin-bottom:16px">Os dados do candidato foram pré-preenchidos.</div><input type="hidden" id="ct-candidate-id"><div class="grid-2" style="gap:12px"><div class="form-group"><label class="form-label">Nome *</label><input type="text" class="form-control" id="ct-nome"></div><div class="form-group"><label class="form-label">PDV</label><input type="text" class="form-control" id="ct-pdv"></div><div class="form-group"><label class="form-label">Data de admissão</label><input type="date" class="form-control" id="ct-admissao"></div><div class="form-group"><label class="form-label">Cargo</label><input type="text" class="form-control" id="ct-cargo"></div><div class="form-group"><label class="form-label">Raça / Cor</label><select class="form-control" id="ct-raca"><option value="">Selecionar...</option><option>Branco</option><option>Pardo</option><option>Preto</option><option>Amarelo</option><option>Indígena</option><option>Prefiro não responder</option><option>Não sei</option></select></div><div class="form-group"><label class="form-label">Escolaridade</label><select class="form-control" id="ct-escolaridade"><option value="">Selecionar...</option><option>Fundamental Incompleto</option><option>Fundamental Completo</option><option>Médio Incompleto</option><option>Médio Completo</option><option>Superior Incompleto</option><option>Superior Completo</option><option>Pós-graduação Incompleta</option><option>Pós-graduação Completa</option></select></div><div class="form-group"><label class="form-label">Sexo</label><select class="form-control" id="ct-sexo"><option value="">Selecionar...</option><option>Masculino</option><option>Feminino</option></select></div><div class="form-group"><label class="form-label">Email</label><input type="email" class="form-control" id="ct-email"></div><div class="form-group"><label class="form-label">Telefone</label><input type="text" class="form-control" id="ct-telefone"></div></div><div id="ct-msg"></div></div><div class="modal-footer"><button class="btn btn-secondary" onclick="closeModal('modal-contratar')">Cancelar</button><button class="btn btn-gold" onclick="confirmarContratacao()">✅ Confirmar Contratação</button></div></div></div>
-<div class="modal-overlay" id="modal-bloquear"><div class="modal" style="max-width:440px"><div class="modal-header"><h3>🚫 Bloquear Candidato</h3><button class="modal-close" onclick="closeModal('modal-bloquear')">✕</button></div><div class="modal-body"><div class="alert alert-warn" style="margin-bottom:16px">Este candidato ficará impedido de participar de processos futuros.</div><input type="hidden" id="blq-candidate-id"><div class="form-group"><label class="form-label">Motivo do bloqueio</label><textarea class="form-control" id="blq-motivo" rows="3" placeholder="Descreva o motivo..."></textarea></div><div id="blq-msg"></div></div><div class="modal-footer"><button class="btn btn-secondary" onclick="closeModal('modal-bloquear')">Cancelar</button><button class="btn btn-danger" onclick="confirmarBloqueio()">🚫 Confirmar Bloqueio</button></div></div></div>
-<div class="modal-overlay" id="modal-close-process"><div class="modal"><div class="modal-header"><h3>Encerrar Processo</h3><button class="modal-close" onclick="closeModal('modal-close-process')">✕</button></div><div class="modal-body"><div class="form-group"><label class="form-label">Desfecho</label><select class="form-control" id="cp-outcome"><option value="contratado">Contratado</option><option value="cancelado">Cancelado</option><option value="sem_candidato">Sem candidato adequado</option><option value="suspenso">Suspenso temporariamente</option></select></div><div class="form-group"><label class="form-label">Observações</label><textarea class="form-control" id="cp-reason" rows="3" placeholder="Detalhes..."></textarea></div></div><div class="modal-footer"><button class="btn btn-secondary" onclick="closeModal('modal-close-process')">Cancelar</button><button class="btn btn-danger" onclick="closeProcessConfirm()">Encerrar Processo</button></div></div></div>
+
+<!-- MODAL NOVO PROCESSO -->
+<div class="modal-overlay" id="modal-new-process">
+  <div class="modal">
+    <div class="modal-header"><h3>Novo Processo Seletivo</h3><button class="modal-close" onclick="closeModal('modal-new-process')">✕</button></div>
+    <div class="modal-body">
+      <div class="form-group"><label class="form-label">Título da vaga</label><input type="text" class="form-control" id="np-title" placeholder="Ex: Consultora de Beleza"></div>
+      <div class="form-group"><label class="form-label">Perfil de vaga</label><select class="form-control" id="np-profile"><option value="">— Selecionar perfil —</option></select></div>
+      <div class="form-group"><label class="form-label">Ajustes específicos <span class="text-mid">(opcional)</span></label><textarea class="form-control" id="np-adjustments" rows="4" placeholder="Preferências adicionais..."></textarea></div>
+      <div id="np-msg"></div>
+    </div>
+    <div class="modal-footer"><button class="btn btn-secondary" onclick="closeModal('modal-new-process')">Cancelar</button><button class="btn btn-primary" onclick="createProcess()">Criar Processo</button></div>
+  </div>
+</div>
+
+<!-- MODAL CANDIDATO -->
+<div class="modal-overlay candidate-detail-modal" id="modal-candidate">
+  <div class="modal">
+    <div class="modal-header"><h3 id="modal-candidate-name">Candidato</h3><button class="modal-close" onclick="closeModal('modal-candidate')">✕</button></div>
+    <div class="modal-body" id="modal-candidate-body"></div>
+    <div class="modal-footer" id="modal-candidate-footer"></div>
+  </div>
+</div>
+
+<!-- MODAL CONTRATAR -->
+<div class="modal-overlay" id="modal-contratar">
+  <div class="modal">
+    <div class="modal-header"><h3>✅ Registrar Contratação</h3><button class="modal-close" onclick="closeModal('modal-contratar')">✕</button></div>
+    <div class="modal-body">
+      <div class="alert alert-info" style="margin-bottom:16px">Os dados do candidato foram pré-preenchidos.</div>
+      <input type="hidden" id="ct-candidate-id">
+      <div class="grid-2" style="gap:12px">
+        <div class="form-group"><label class="form-label">Nome *</label><input type="text" class="form-control" id="ct-nome"></div>
+        <div class="form-group"><label class="form-label">PDV</label><input type="text" class="form-control" id="ct-pdv"></div>
+        <div class="form-group"><label class="form-label">Data de admissão</label><input type="date" class="form-control" id="ct-admissao"></div>
+        <div class="form-group"><label class="form-label">Cargo</label><input type="text" class="form-control" id="ct-cargo"></div>
+        <div class="form-group"><label class="form-label">Raça / Cor</label><select class="form-control" id="ct-raca"><option value="">Selecionar...</option><option>Branco</option><option>Pardo</option><option>Preto</option><option>Amarelo</option><option>Indígena</option><option>Prefiro não responder</option><option>Não sei</option></select></div>
+        <div class="form-group"><label class="form-label">Escolaridade</label><select class="form-control" id="ct-escolaridade"><option value="">Selecionar...</option><option>Fundamental Incompleto</option><option>Fundamental Completo</option><option>Médio Incompleto</option><option>Médio Completo</option><option>Superior Incompleto</option><option>Superior Completo</option><option>Pós-graduação Incompleta</option><option>Pós-graduação Completa</option></select></div>
+        <div class="form-group"><label class="form-label">Sexo</label><select class="form-control" id="ct-sexo"><option value="">Selecionar...</option><option>Masculino</option><option>Feminino</option></select></div>
+        <div class="form-group"><label class="form-label">Email</label><input type="email" class="form-control" id="ct-email"></div>
+        <div class="form-group"><label class="form-label">Telefone</label><input type="text" class="form-control" id="ct-telefone"></div>
+      </div>
+      <div id="ct-msg"></div>
+    </div>
+    <div class="modal-footer"><button class="btn btn-secondary" onclick="closeModal('modal-contratar')">Cancelar</button><button class="btn btn-gold" onclick="confirmarContratacao()">✅ Confirmar Contratação</button></div>
+  </div>
+</div>
+
+<!-- MODAL BLOQUEAR -->
+<div class="modal-overlay" id="modal-bloquear">
+  <div class="modal" style="max-width:440px">
+    <div class="modal-header"><h3>🚫 Bloquear Candidato</h3><button class="modal-close" onclick="closeModal('modal-bloquear')">✕</button></div>
+    <div class="modal-body">
+      <div class="alert alert-warn" style="margin-bottom:16px">Este candidato ficará impedido de participar de processos futuros.</div>
+      <input type="hidden" id="blq-candidate-id">
+      <div class="form-group"><label class="form-label">Motivo do bloqueio</label><textarea class="form-control" id="blq-motivo" rows="3" placeholder="Descreva o motivo..."></textarea></div>
+      <div id="blq-msg"></div>
+    </div>
+    <div class="modal-footer"><button class="btn btn-secondary" onclick="closeModal('modal-bloquear')">Cancelar</button><button class="btn btn-danger" onclick="confirmarBloqueio()">🚫 Confirmar Bloqueio</button></div>
+  </div>
+</div>
+
+<!-- MODAL ENCERRAR PROCESSO -->
+<div class="modal-overlay" id="modal-close-process">
+  <div class="modal">
+    <div class="modal-header"><h3>Encerrar Processo</h3><button class="modal-close" onclick="closeModal('modal-close-process')">✕</button></div>
+    <div class="modal-body">
+      <div class="form-group"><label class="form-label">Desfecho</label><select class="form-control" id="cp-outcome"><option value="contratado">Contratado</option><option value="cancelado">Cancelado</option><option value="sem_candidato">Sem candidato adequado</option><option value="suspenso">Suspenso temporariamente</option></select></div>
+      <div class="form-group"><label class="form-label">Observações</label><textarea class="form-control" id="cp-reason" rows="3" placeholder="Detalhes..."></textarea></div>
+    </div>
+    <div class="modal-footer"><button class="btn btn-secondary" onclick="closeModal('modal-close-process')">Cancelar</button><button class="btn btn-danger" onclick="closeProcessConfirm()">Encerrar Processo</button></div>
+  </div>
+</div>
+
+<!-- MODAL DESLIGAR FUNCIONÁRIO -->
+<div class="modal-overlay" id="modal-desligar">
+  <div class="modal" style="max-width:440px">
+    <div class="modal-header"><h3>🚪 Desligar Funcionário</h3><button class="modal-close" onclick="closeModal('modal-desligar')">✕</button></div>
+    <div class="modal-body">
+      <div class="alert alert-warn" style="margin-bottom:16px">O funcionário será marcado como inativo.</div>
+      <input type="hidden" id="ds-funcionario-id">
+      <div class="form-group"><label class="form-label">Data de desligamento *</label><input type="date" class="form-control" id="ds-data"></div>
+      <div class="form-group"><label class="form-label">Motivo do desligamento *</label><select class="form-control" id="ds-motivo"><option value="">Selecionar...</option><option value="Pedido de demissão">Pedido de demissão</option><option value="Demissão sem justa causa">Demissão sem justa causa</option><option value="Demissão por justa causa">Demissão por justa causa</option><option value="Término de contrato">Término de contrato</option><option value="Acordo mútuo">Acordo mútuo</option><option value="Aposentadoria">Aposentadoria</option><option value="Outro">Outro</option></select></div>
+      <div class="form-group"><label class="form-label">Observações</label><textarea class="form-control" id="ds-obs" rows="2" placeholder="Detalhes adicionais..."></textarea></div>
+      <div id="ds-msg"></div>
+    </div>
+    <div class="modal-footer"><button class="btn btn-secondary" onclick="closeModal('modal-desligar')">Cancelar</button><button class="btn btn-danger" onclick="confirmarDesligamento()">🚪 Confirmar Desligamento</button></div>
+  </div>
+</div>
+
+<!-- MODAL CANAL ORIGEM (ao enviar currículo) -->
+<div class="modal-overlay" id="modal-canal-origem">
+  <div class="modal" style="max-width:400px">
+    <div class="modal-header"><h3>📍 Canal de Origem</h3><button class="modal-close" onclick="closeModal('modal-canal-origem')">✕</button></div>
+    <div class="modal-body">
+      <p style="font-size:14px;color:var(--text-mid);margin-bottom:16px">Por qual canal este(s) currículo(s) chegou?</p>
+      <div class="form-group"><label class="form-label">Canal de atração</label><select class="form-control" id="co-canal"><option value="">Não informar</option></select></div>
+    </div>
+    <div class="modal-footer"><button class="btn btn-secondary" onclick="skipCanalOrigem()">Pular</button><button class="btn btn-primary" onclick="confirmarCanalOrigem()">Confirmar</button></div>
+  </div>
+</div>
+
 <script>
 const API = 'https://rh-assertivo-api.choil-plosk.workers.dev';
 let currentProcessId = null, currentCandidateId = null, closeProcessId = null;
 let authToken = localStorage.getItem('rh_token') || null;
 let currentUser = JSON.parse(localStorage.getItem('rh_user') || 'null');
+let pendingFiles = null; // Para o modal de canal de origem
+let dashDataRecrutamento = null;
+let dashDataFuncionarios = null;
 
+// ─── AUTH ────────────────────────────────────────────────────────
 function checkAuth() {
   if (!authToken) { document.getElementById('login-screen').style.display = 'flex'; document.getElementById('app-screen').style.display = 'none'; }
   else {
@@ -243,11 +539,12 @@ async function doLogin() {
 function doLogout() {
   authToken = null; currentUser = null;
   localStorage.removeItem('rh_token'); localStorage.removeItem('rh_user');
-  const navConfig = document.getElementById('nav-config'); if (navConfig) navConfig.style.display = 'none';
+  document.getElementById('nav-config').style.display = 'none';
   checkAuth();
 }
 document.addEventListener('DOMContentLoaded', () => { document.getElementById('login-password')?.addEventListener('keydown', e => { if (e.key === 'Enter') doLogin(); }); checkAuth(); });
 
+// ─── NAVEGAÇÃO ───────────────────────────────────────────────────
 function showSection(name) {
   document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
   document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
@@ -262,8 +559,9 @@ function showSection(name) {
   if (name==='profiles') loadProfiles();
   if (name==='talent') { loadProcessesForFilter(); loadTalent(); }
   if (name==='funcionarios') loadFuncionarios();
-  if (name==='config') { if (currentUser?.role !== 'diretor') { showSection('dashboard'); return; } loadUsuarios(); }
+  if (name==='config') { if (currentUser?.role !== 'diretor') { showSection('dashboard'); return; } loadUsuarios(); loadCanais(); }
 }
+
 async function api(path, opts = {}) {
   const headers = { 'Content-Type': 'application/json', ...(opts.headers || {}) };
   if (authToken) headers['Authorization'] = 'Bearer ' + authToken;
@@ -272,6 +570,7 @@ async function api(path, opts = {}) {
   if (!r.ok) throw new Error(await r.text());
   return r.json();
 }
+
 function scoreColor(s){ return s>=70?'var(--success)':s>=50?'var(--warn)':'var(--danger)'; }
 function scoreClass(s) { return s >= 70 ? 'score-high' : s >= 50 ? 'score-mid' : 'score-low'; }
 function fmtDate(str) { if (!str) return '—'; return new Date(str).toLocaleDateString('pt-BR'); }
@@ -281,40 +580,207 @@ function openModal(id) { document.getElementById(id).classList.add('open'); }
 function closeModal(id) { document.getElementById(id).classList.remove('open'); }
 document.querySelectorAll('.modal-overlay').forEach(m => { m.addEventListener('click', e => { if (e.target === m) m.classList.remove('open'); }); });
 
-async function loadDashboard() {
-  try {
-    document.getElementById('dash-subtitulo').textContent = 'O Boticário Niterói · ' + new Date().toLocaleDateString('pt-BR');
-    const [processes, talent] = await Promise.all([api('/processes'), api('/talent-bank')]);
-    const allCandidates = [];
-    for (const p of processes) { const cands = await api(`/processes/${p.id}/candidates`); if (cands) allCandidates.push(...cands.map(c => ({...c, process_title: p.title}))); }
-    const open = processes.filter(p => p.status !== 'encerrado').length;
-    const scores = allCandidates.map(c => c.score).filter(s => s > 0);
-    const scoreMedio = scores.length ? Math.round(scores.reduce((a,b)=>a+b,0)/scores.length) : 0;
-    document.getElementById('stat-open').textContent = open;
-    document.getElementById('stat-candidates').textContent = allCandidates.length;
-    document.getElementById('stat-candidates-s').textContent = scores.length ? `${scores.length} com score` : 'total geral';
-    document.getElementById('stat-talent').textContent = talent ? talent.length : 0;
-    document.getElementById('stat-score').innerHTML = scores.length ? `${scoreMedio}<span style="font-size:14px;font-weight:400;opacity:.6">/100</span>` : '—';
-    document.getElementById('stat-score-s').textContent = scores.length ? `média de ${scores.length} analisados` : 'máx. 100 pontos';
-    let totalQuiz = 0; const allQuizScores = [];
-    for (const p of processes) { try { const pend = await api(`/processes/${p.id}/questionario/pendentes`); if (pend) { const resp = pend.filter(x => x.respondido); totalQuiz += resp.length; for (const c of resp) { const qr = await api(`/questionario/${c.id}/respostas`); if (qr && qr.respondido) allQuizScores.push(qr.scores); } } } catch {} }
-    document.getElementById('stat-quiz').textContent = totalQuiz || '—';
-    document.getElementById('stat-quiz-s').textContent = totalQuiz ? `de ${allCandidates.length} candidatos` : 'nenhum ainda';
-    const ap = allCandidates.filter(c=>c.status==='aprovado'||c.status==='contratado').length, pe = allCandidates.filter(c=>c.status==='pendente').length, rp = allCandidates.filter(c=>c.status==='reprovado').length, tot = allCandidates.length || 1;
-    document.getElementById('dash-status-bars').innerHTML = allCandidates.length ? `${[['Aprovados',ap,'var(--success)'],['Pendentes',pe,'var(--blue)'],['Reprovados',rp,'var(--danger)']].map(([l,v,c])=>`<div style="margin-bottom:10px"><div style="display:flex;justify-content:space-between;font-size:12px;margin-bottom:4px"><span style="color:var(--text-mid)">${l}</span><span style="font-weight:600;color:${c}">${v} (${Math.round(v/tot*100)}%)</span></div><div style="height:6px;background:#e2e2df;border-radius:3px;overflow:hidden"><div style="height:100%;width:${Math.round(v/tot*100)}%;background:${c};border-radius:3px"></div></div></div>`).join('')}` : '<div class="text-sm text-mid">Nenhum candidato ainda.</div>';
-    const compEl = document.getElementById('dash-comportamental');
-    if (allQuizScores.length) { const avg = k => Math.round(allQuizScores.reduce((s,q)=>s+(q[k]||0),0)/allQuizScores.length); compEl.innerHTML = `<div style="font-size:11px;color:var(--text-mid);margin-bottom:8px">${allQuizScores.length} questionário(s)</div>${[['Resiliência',avg('resiliencia'),'var(--success)'],['Confiabilidade',avg('confianca'),'var(--blue)'],['Crescimento',avg('crescimento'),'#534AB7'],['⚠ Mosca morta',avg('mosca'),'var(--danger)'],['⚠ Deslealdade',avg('traidor'),'#D85A30'],['⚠ Turnover',avg('turnover'),'var(--warn)']].map(([l,v,c])=>`<div style="display:flex;align-items:center;gap:6px;margin-bottom:7px"><span style="font-size:11px;color:var(--text-mid);min-width:110px">${l}</span><div style="flex:1;height:5px;background:#e2e2df;border-radius:3px;overflow:hidden"><div style="height:100%;width:${v}%;background:${c};border-radius:3px"></div></div><span style="font-size:11px;font-weight:600;color:${c};min-width:28px;text-align:right">${v}%</span></div>`).join('')}`; }
-    else { compEl.innerHTML = '<div class="text-sm text-mid">Aguardando questionários respondidos.</div>'; }
-    const procEl = document.getElementById('dashboard-processes');
-    if (!processes.length) { procEl.innerHTML = '<div class="empty"><div class="empty-icon">📋</div><p>Nenhum processo ainda.</p></div>'; }
-    else { procEl.innerHTML = `<div class="table-wrap"><table><thead><tr><th>Vaga</th><th>Status</th><th>Candidatos</th><th>Score médio</th><th>Criado em</th></tr></thead><tbody>${processes.map(p => { const cands = allCandidates.filter(c=>c.process_id===p.id); const sc = cands.length ? Math.round(cands.reduce((s,c)=>s+c.score,0)/cands.length) : 0; return `<tr style="cursor:pointer" onclick="openProcess(${p.id})"><td><strong>${p.title}</strong></td><td>${statusBadge(p.status)}</td><td>${p.candidate_count}</td><td>${sc ? `<span style="font-weight:600;color:${scoreColor(sc)}">${sc}</span>` : '—'}</td><td>${fmtDate(p.created_at)}</td></tr>`; }).join('')}</tbody></table></div>`; }
-    const top = [...allCandidates].sort((a,b)=>b.score-a.score).slice(0,8);
-    const rankEl = document.getElementById('dash-ranking');
-    if (top.length) { rankEl.innerHTML = top.map((c,i) => { const ini = c.name.split(' ').slice(0,2).map(n=>n[0]||'').join('').toUpperCase()||'?'; const sc = scoreColor(c.score); return `<div style="display:flex;align-items:center;gap:10px;padding:8px 0;border-bottom:0.5px solid var(--cream-dark)"><span style="font-size:13px;font-weight:600;color:var(--text-light);min-width:18px">${i+1}</span><div style="width:32px;height:32px;border-radius:50%;background:#E6F1FB;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:600;color:var(--blue);flex-shrink:0">${ini}</div><div style="flex:1"><div style="font-size:13px;font-weight:500">${c.name||c.filename}</div><div style="font-size:11px;color:var(--text-mid)">${c.process_title}</div></div><span style="font-size:15px;font-weight:700;color:${sc}">${Math.round(c.score)}</span>${candidateStatusBadge(c.status)}</div>`; }).join(''); }
-    else { rankEl.innerHTML = '<div class="text-sm text-mid">Nenhum candidato analisado ainda.</div>'; }
-  } catch(e) { document.getElementById('dashboard-processes').innerHTML = `<div class="alert alert-danger">Erro ao carregar: ${e.message}</div>`; }
+// ─── DASHBOARD TABS ──────────────────────────────────────────────
+function switchDashTab(tab) {
+  document.querySelectorAll('.dash-tab').forEach(t => t.classList.remove('active'));
+  document.querySelectorAll('.dash-panel').forEach(p => p.classList.remove('active'));
+  document.getElementById('tab-' + (tab === 'funcionarios' ? 'funcionarios-dash' : 'recrutamento')).classList.add('active');
+  document.getElementById('dash-panel-' + tab).classList.add('active');
+  if (tab === 'funcionarios' && !dashDataFuncionarios) loadDashFuncionarios();
 }
 
+async function loadDashboard() {
+  dashDataRecrutamento = null;
+  dashDataFuncionarios = null;
+  loadDashRecrutamento();
+}
+
+async function loadDashRecrutamento() {
+  try {
+    const d = await api('/dashboard/recrutamento');
+    dashDataRecrutamento = d;
+
+    // KPIs
+    const abertos = d.processos.filter(p => p.status !== 'encerrado').length;
+    const totalCands = (d.status_counts || []).reduce((s, x) => s + x.total, 0);
+    const analisados = (d.status_counts || []).filter(x => x.status !== 'aguardando_analise').reduce((s, x) => s + x.total, 0);
+    document.getElementById('dr-open').textContent = abertos;
+    document.getElementById('dr-candidates').textContent = analisados || totalCands;
+    document.getElementById('dr-candidates-s').textContent = analisados ? `de ${totalCands} total` : 'total';
+    const avgScore = d.score_por_processo?.length ? Math.round(d.score_por_processo.reduce((s, p) => s + parseFloat(p.media || 0), 0) / d.score_por_processo.length) : 0;
+    document.getElementById('dr-score').innerHTML = avgScore ? `${avgScore}<span style="font-size:14px;font-weight:400;opacity:.6">/100</span>` : '—';
+    document.getElementById('dr-tempo').innerHTML = d.tempo_fechamento_dias ? `${Math.round(d.tempo_fechamento_dias)}<span style="font-size:14px;font-weight:400;opacity:.6">d</span>` : '—';
+
+    // Funil
+    const f = d.funil || {};
+    const tot = f.total || 1;
+    document.getElementById('dr-funil').innerHTML = [
+      ['Recebidos', f.total, '#8888aa', 100],
+      ['Analisados pela IA', f.analisados, '#1e4db7', Math.round((f.analisados/tot)*100)],
+      ['Avaliados', f.avaliados, '#c9a84c', Math.round((f.avaliados/tot)*100)],
+      ['Aprovados', f.aprovados, '#1a7a4a', Math.round((f.aprovados/tot)*100)],
+      ['Contratados', f.contratados, '#0f1f3d', Math.round((f.contratados/tot)*100)]
+    ].map(([l, v, c, pct]) => `
+      <div class="funil-step">
+        <span class="funil-label">${l}</span>
+        <div class="funil-bar-wrap"><div class="funil-bar-fill" style="width:${pct}%;background:${c}">${pct > 12 ? pct + '%' : ''}</div></div>
+        <span class="funil-count">${v || 0}</span>
+      </div>`).join('');
+
+    // Canais
+    const canais = d.canais_origem || [];
+    if (!canais.length) {
+      document.getElementById('dr-canais').innerHTML = '<div class="text-sm text-mid" style="padding:20px 0">Nenhum candidato com canal registrado ainda.<br><small>Cadastre candidatos informando o canal de origem.</small></div>';
+    } else {
+      const maxTotal = Math.max(...canais.map(c => c.total), 1);
+      document.getElementById('dr-canais').innerHTML = canais.map(c => {
+        const conv = c.total > 0 ? Math.round((c.contratados / c.total) * 100) : 0;
+        const score = c.score_medio ? parseFloat(c.score_medio).toFixed(0) : '—';
+        return `<div class="mini-bar" style="margin-bottom:12px">
+          <span class="mini-bar-label">${c.canal_origem}</span>
+          <div class="mini-bar-track" style="width:80px"><div class="mini-bar-fill" style="width:${Math.round((c.total/maxTotal)*100)}%;background:var(--blue)"></div></div>
+          <span class="mini-bar-val" style="min-width:20px">${c.total}</span>
+          <span style="font-size:11px;color:var(--success);min-width:48px;text-align:right">${conv}% conv.</span>
+          <span style="font-size:11px;color:var(--text-light);min-width:52px;text-align:right">⭐${score}</span>
+        </div>`;
+      }).join('');
+    }
+
+    // Tempo por processo
+    const tp = d.tempo_por_processo || [];
+    if (!tp.length) { document.getElementById('dr-tempo-processos').innerHTML = '<div class="text-sm text-mid">Nenhum processo ainda.</div>'; }
+    else {
+      const maxDias = Math.max(...tp.map(p => p.dias_aberto), 1);
+      document.getElementById('dr-tempo-processos').innerHTML = `<div class="table-wrap"><table>
+        <thead><tr><th>Processo</th><th>Status</th><th>Candidatos</th><th>Duração (dias)</th></tr></thead>
+        <tbody>${tp.map(p => {
+          const cor = p.dias_aberto > 30 ? 'var(--danger)' : p.dias_aberto > 14 ? 'var(--warn)' : 'var(--success)';
+          return `<tr>
+            <td><strong>${p.title}</strong></td>
+            <td>${statusBadge(p.status)}</td>
+            <td>${p.total_candidatos}</td>
+            <td><div style="display:flex;align-items:center;gap:8px">
+              <div style="flex:1;height:6px;background:var(--cream-dark);border-radius:3px;overflow:hidden;max-width:120px">
+                <div style="height:100%;width:${Math.min(100, Math.round((p.dias_aberto/maxDias)*100))}%;background:${cor};border-radius:3px"></div>
+              </div>
+              <span style="font-size:13px;font-weight:600;color:${cor}">${p.dias_aberto}d</span>
+              ${p.status !== 'encerrado' ? '<span style="font-size:10px;color:var(--text-light)">(em aberto)</span>' : ''}
+            </div></td>
+          </tr>`;
+        }).join('')}</tbody></table></div>`;
+    }
+
+    // Ranking
+    const allCands = [];
+    for (const p of d.processos) {
+      try { const cs = await api(`/processes/${p.id}/candidates`); cs.forEach(c => allCands.push({ ...c, process_title: p.title })); } catch(e) {}
+    }
+    const top = [...allCands].sort((a,b) => b.score - a.score).slice(0, 8);
+    const rankEl = document.getElementById('dr-ranking');
+    if (top.length) {
+      rankEl.innerHTML = top.map((c, i) => {
+        const ini = (c.name||'?').split(' ').slice(0,2).map(n=>n[0]||'').join('').toUpperCase();
+        const sc = scoreColor(c.score);
+        return `<div style="display:flex;align-items:center;gap:10px;padding:8px 0;border-bottom:0.5px solid var(--cream-dark)">
+          <span style="font-size:13px;font-weight:600;color:var(--text-light);min-width:18px">${i+1}</span>
+          <div style="width:32px;height:32px;border-radius:50%;background:#E6F1FB;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:600;color:var(--blue);flex-shrink:0">${ini}</div>
+          <div style="flex:1"><div style="font-size:13px;font-weight:500">${c.name||c.filename}</div><div style="font-size:11px;color:var(--text-mid)">${c.process_title}</div></div>
+          <span style="font-size:15px;font-weight:700;color:${sc}">${Math.round(c.score)}</span>
+          ${candidateStatusBadge(c.status)}
+        </div>`;
+      }).join('');
+    } else { rankEl.innerHTML = '<div class="text-sm text-mid">Nenhum candidato analisado ainda.</div>'; }
+
+  } catch(e) {
+    document.getElementById('dr-funil').innerHTML = `<div class="alert alert-danger">Erro: ${e.message}</div>`;
+  }
+}
+
+async function loadDashFuncionarios() {
+  try {
+    const d = await api('/dashboard/funcionarios');
+    dashDataFuncionarios = d;
+
+    // Preencher filtro de PDV
+    const pdvs = [...new Set((d.lista_funcionarios || []).map(f => f.pdv).filter(Boolean))];
+    const sel = document.getElementById('df-pdv-filter');
+    sel.innerHTML = '<option value="">Todos os PDVs</option>' + pdvs.map(p => `<option value="${p}">${p}</option>`).join('');
+
+    renderDashFuncionarios();
+  } catch(e) {
+    document.getElementById('df-ativos').textContent = '!';
+    console.error(e);
+  }
+}
+
+function renderDashFuncionarios() {
+  const d = dashDataFuncionarios;
+  if (!d) return;
+  const pdvFiltro = document.getElementById('df-pdv-filter')?.value || '';
+  const lista = pdvFiltro ? (d.lista_funcionarios || []).filter(f => f.pdv === pdvFiltro) : (d.lista_funcionarios || []);
+  const ativos = lista.filter(f => f.ativo);
+  const inativos = lista.filter(f => !f.ativo);
+
+  // KPIs filtrados
+  const t90 = inativos.filter(f => {
+    if (!f.data_admissao || !f.data_demissao) return false;
+    const dias = (new Date(f.data_demissao) - new Date(f.data_admissao)) / 86400000;
+    return dias <= 90;
+  }).length;
+  const t1a = inativos.length;
+  const totalBase = ativos.length + inativos.length || 1;
+  const taxa = Math.round((inativos.length / totalBase) * 100);
+  const diasMedia = ativos.filter(f => f.dias_empresa).reduce((s, f) => s + f.dias_empresa, 0) / (ativos.filter(f => f.dias_empresa).length || 1);
+
+  document.getElementById('df-ativos').textContent = ativos.length;
+  document.getElementById('df-ativos-s').textContent = pdvFiltro ? `no PDV ${pdvFiltro}` : 'em atividade';
+  document.getElementById('df-t90').textContent = t90;
+  document.getElementById('df-t1a').innerHTML = `${taxa}<span style="font-size:14px;font-weight:400;opacity:.6">%</span>`;
+  document.getElementById('df-tempo').innerHTML = diasMedia > 0 ? `${Math.round(diasMedia)}<span style="font-size:14px;font-weight:400;opacity:.6">d</span>` : '—';
+
+  // Demográficos — baseados em ativos do filtro
+  function miniBarChart(items, colorFn) {
+    if (!items.length) return '<div class="text-sm text-mid" style="padding:8px 0">Sem dados</div>';
+    const max = Math.max(...items.map(i => i.total), 1);
+    return items.map(i => `<div class="mini-bar">
+      <span class="mini-bar-label">${i.key || '—'}</span>
+      <div class="mini-bar-track"><div class="mini-bar-fill" style="width:${Math.round((i.total/max)*100)}%;background:${colorFn(i)}"></div></div>
+      <span class="mini-bar-val">${i.total}</span>
+    </div>`).join('');
+  }
+
+  // Calcular demográficos do filtro
+  const agg = (field) => {
+    const map = {};
+    ativos.forEach(f => { const v = f[field] || 'Não informado'; map[v] = (map[v] || 0) + 1; });
+    return Object.entries(map).sort((a,b) => b[1]-a[1]).map(([key, total]) => ({ key, total }));
+  };
+
+  document.getElementById('df-sexo').innerHTML = miniBarChart(agg('sexo'), () => 'var(--blue)');
+  document.getElementById('df-raca').innerHTML = miniBarChart(agg('raca'), (_, i) => ['#1e4db7','#c9a84c','#1a7a4a','#534AB7','#a0192e'][i] || '#888');
+  document.getElementById('df-escolaridade').innerHTML = miniBarChart(agg('escolaridade'), () => '#534AB7');
+
+  // Motivos de saída
+  const motivosData = {};
+  inativos.forEach(f => { const m = f.motivo_demissao || f.tipo_saida || 'Não informado'; motivosData[m] = (motivosData[m] || 0) + 1; });
+  const motivosList = Object.entries(motivosData).sort((a,b)=>b[1]-a[1]).map(([key,total])=>({key,total}));
+  document.getElementById('df-motivos').innerHTML = motivosList.length
+    ? miniBarChart(motivosList, () => 'var(--danger)')
+    : '<div class="text-sm text-mid" style="padding:8px 0">Nenhum desligamento registrado.</div>';
+
+  // Tempo de casa por PDV
+  const pdvMap = {};
+  ativos.filter(f => f.pdv && f.dias_empresa).forEach(f => {
+    if (!pdvMap[f.pdv]) pdvMap[f.pdv] = [];
+    pdvMap[f.pdv].push(f.dias_empresa);
+  });
+  const pdvList = Object.entries(pdvMap).map(([key, dias]) => ({ key, total: Math.round(dias.reduce((s,d)=>s+d,0)/dias.length) })).sort((a,b)=>b.total-a.total);
+  document.getElementById('df-tempo-pdv').innerHTML = pdvList.length
+    ? miniBarChart(pdvList, () => 'var(--gold)')
+    : '<div class="text-sm text-mid" style="padding:8px 0">Sem dados de PDV.</div>';
+}
+
+// ─── PROCESSOS ───────────────────────────────────────────────────
 async function loadProcesses() {
   const el = document.getElementById('processes-list');
   el.innerHTML = '<div class="loading"><div class="spinner"></div><span class="loading-text">Carregando...</span></div>';
@@ -344,7 +810,12 @@ function renderProcessDetail(proc, candidates) {
   const isOpen = proc.status !== 'encerrado';
   el.innerHTML = `<div class="flex items-center justify-between mb-6"><div><h2 class="font-serif" style="font-size:26px;color:var(--navy)">${proc.title}</h2><div class="text-sm text-mid mt-4">${statusBadge(proc.status)} · ${candidates.length} candidato(s) · Criado em ${fmtDate(proc.created_at)}</div></div>${isOpen ? `<button class="btn btn-danger btn-sm" onclick="openCloseProcess(${proc.id})">Encerrar Processo</button>` : ''}</div>
     ${proc.profile_adjustments ? `<div class="alert alert-info mb-6">📌 Ajustes: ${proc.profile_adjustments}</div>` : ''}
-    ${isOpen ? `<div class="card mb-6"><div class="card-header"><span class="card-title">📤 Enviar Currículos</span></div><div class="upload-zone" id="upload-zone" onclick="document.getElementById('file-input').click()" ondragover="event.preventDefault();this.classList.add('drag')" ondragleave="this.classList.remove('drag')" ondrop="handleDrop(event)"><div class="upload-icon">📂</div><p><strong>Clique para selecionar</strong> ou arraste os arquivos aqui</p><p class="text-sm mt-4" style="margin-top:6px">Formatos: .doc, .docx, .pdf · Múltiplos arquivos</p></div><input type="file" id="file-input" multiple accept=".doc,.docx,.pdf" style="display:none" onchange="handleFiles(this.files)"><div id="upload-progress" style="display:none"><div class="upload-progress"><div class="progress-label" id="progress-label">Enviando arquivos...</div><div class="progress-track"><div class="progress-fill" id="progress-fill" style="width:0%"></div></div><div class="text-sm text-mid" id="progress-detail"></div></div></div><div id="analyze-section" style="display:none;margin-top:16px;padding-top:16px;border-top:1px solid var(--cream-dark)"><div style="display:flex;align-items:center;justify-content:space-between;gap:16px"><div><div style="font-weight:600;color:var(--navy)" id="pending-count-label"></div><div style="font-size:13px;color:var(--text-mid)">Revise a lista e clique em Analisar quando estiver pronto.</div></div><button class="btn btn-gold" onclick="startAnalysis()" id="btn-analyze">🤖 Analisar com IA</button></div></div></div>` : `<div class="alert alert-info mb-6">Processo encerrado. Desfecho: <strong>${proc.outcome}</strong>${proc.outcome_reason ? ' — ' + proc.outcome_reason : ''}</div>`}
+    ${isOpen ? `<div class="card mb-6"><div class="card-header"><span class="card-title">📤 Enviar Currículos</span></div>
+      <div class="upload-zone" id="upload-zone" onclick="document.getElementById('file-input').click()" ondragover="event.preventDefault();this.classList.add('drag')" ondragleave="this.classList.remove('drag')" ondrop="handleDrop(event)"><div class="upload-icon">📂</div><p><strong>Clique para selecionar</strong> ou arraste os arquivos aqui</p><p class="text-sm mt-4" style="margin-top:6px">Formatos: .doc, .docx, .pdf · Múltiplos arquivos</p></div>
+      <input type="file" id="file-input" multiple accept=".doc,.docx,.pdf" style="display:none" onchange="askCanalOrigem(this.files)">
+      <div id="upload-progress" style="display:none"><div class="upload-progress"><div class="progress-label" id="progress-label">Enviando arquivos...</div><div class="progress-track"><div class="progress-fill" id="progress-fill" style="width:0%"></div></div><div class="text-sm text-mid" id="progress-detail"></div></div></div>
+      <div id="analyze-section" style="display:none;margin-top:16px;padding-top:16px;border-top:1px solid var(--cream-dark)"><div style="display:flex;align-items:center;justify-content:space-between;gap:16px"><div><div style="font-weight:600;color:var(--navy)" id="pending-count-label"></div><div style="font-size:13px;color:var(--text-mid)">Revise a lista e clique em Analisar quando estiver pronto.</div></div><button class="btn btn-gold" onclick="startAnalysis()" id="btn-analyze">🤖 Analisar com IA</button></div></div>
+    </div>` : `<div class="alert alert-info mb-6">Processo encerrado. Desfecho: <strong>${proc.outcome}</strong>${proc.outcome_reason ? ' — ' + proc.outcome_reason : ''}</div>`}
     <div class="card"><div class="card-header"><span class="card-title">🏆 Ranking de Candidatos</span><span class="text-sm text-mid">${candidates.length} candidato(s)</span></div><div id="candidates-table">${renderCandidatesTable(candidates, isOpen, proc.title)}</div></div>`;
 }
 
@@ -352,7 +823,18 @@ function renderCandidatesTable(candidates, isOpen, processTitle) {
   if (!candidates.length) return '<div class="empty"><div class="empty-icon">👥</div><p>Nenhum currículo enviado ainda.</p></div>';
   const rows = candidates.map(c => {
     const sc = scoreClass(c.score), bloqueado = c.bloqueado;
-    return `<tr data-candidate-id="${c.id}" class="${bloqueado ? 'bloqueado-row' : ''}"><td><strong>${c.ranking_position}</strong></td><td><div><strong>${c.name || c.filename}</strong> ${bloqueado ? '<span class="badge badge-blocked" style="font-size:10px">🚫 Bloqueado</span>' : ''}</div>${c.email ? `<div class="text-sm text-mid">${c.email}</div>` : ''}</td><td><div class="score-bar ${sc}"><div class="score-track"><div class="score-fill" style="width:${c.score}%"></div></div><div class="score-num">${c.status === 'aguardando_analise' ? '—' : Math.round(c.score) + '/100'}</div></div></td><td>${candidateStatusBadge(c.status)}<span id="pesquisa-badge-${c.id}" style="display:block;margin-top:3px"></span></td><td><div class="flex gap-2" style="flex-wrap:wrap">${c.status === 'aguardando_analise' ? `<span style="font-size:12px;color:var(--text-light)">⏳ Aguardando análise</span>` : `<button class="btn btn-secondary btn-sm" onclick="openCandidate(${c.id})">Ver detalhes</button>`}${isOpen && c.status === 'pendente' ? `<button class="btn btn-sm" style="background:var(--success-bg);color:var(--success)" onclick="updateStatus(${c.id},'aprovado')">✓</button><button class="btn btn-sm" style="background:var(--danger-bg);color:var(--danger)" onclick="updateStatus(${c.id},'reprovado')">✗</button>` : ''}${isOpen && c.status === 'aprovado' ? `<button class="btn btn-sm btn-gold" onclick="abrirModalContratar(${c.id},'${(c.name||'').replace(/'/g,"\\'")}','${(c.email||'')}','${(c.phone||'')}','${(processTitle||'').replace(/'/g,"\\'")}')">✅ Contratado</button>` : ''}${!bloqueado && c.status !== 'aguardando_analise' ? `<button class="btn btn-sm" style="background:#1a1a1a;color:#fff;font-size:11px" onclick="abrirModalBloquear(${c.id})">🚫</button>` : ''}</div></td></tr>`;
+    return `<tr data-candidate-id="${c.id}" class="${bloqueado ? 'bloqueado-row' : ''}">
+      <td><strong>${c.ranking_position}</strong></td>
+      <td><div><strong>${c.name || c.filename}</strong> ${bloqueado ? '<span class="badge badge-blocked" style="font-size:10px">🚫 Bloqueado</span>' : ''}</div>${c.email ? `<div class="text-sm text-mid">${c.email}</div>` : ''}${c.canal_origem ? `<div style="font-size:10px;color:var(--text-light)">📍 ${c.canal_origem}</div>` : ''}</td>
+      <td><div class="score-bar ${sc}"><div class="score-track"><div class="score-fill" style="width:${c.score}%"></div></div><div class="score-num">${c.status === 'aguardando_analise' ? '—' : Math.round(c.score) + '/100'}</div></div></td>
+      <td>${candidateStatusBadge(c.status)}<span id="pesquisa-badge-${c.id}" style="display:block;margin-top:3px"></span></td>
+      <td><div class="flex gap-2" style="flex-wrap:wrap">
+        ${c.status === 'aguardando_analise' ? `<span style="font-size:12px;color:var(--text-light)">⏳ Aguardando análise</span>` : `<button class="btn btn-secondary btn-sm" onclick="openCandidate(${c.id})">Ver detalhes</button>`}
+        ${isOpen && c.status === 'pendente' ? `<button class="btn btn-sm" style="background:var(--success-bg);color:var(--success)" onclick="updateStatus(${c.id},'aprovado')">✓</button><button class="btn btn-sm" style="background:var(--danger-bg);color:var(--danger)" onclick="updateStatus(${c.id},'reprovado')">✗</button>` : ''}
+        ${isOpen && c.status === 'aprovado' ? `<button class="btn btn-sm btn-gold" onclick="abrirModalContratar(${c.id},'${(c.name||'').replace(/'/g,"\\'")}','${(c.email||'')}','${(c.phone||'')}','${(processTitle||'').replace(/'/g,"\\'")}')">✅ Contratado</button>` : ''}
+        ${!bloqueado && c.status !== 'aguardando_analise' ? `<button class="btn btn-sm" style="background:#1a1a1a;color:#fff;font-size:11px" onclick="abrirModalBloquear(${c.id})">🚫</button>` : ''}
+      </div></td>
+    </tr>`;
   }).join('');
   setTimeout(() => enriquecerBadgesTabela(candidates.map(c => c.id)), 400);
   return `<div class="table-wrap"><table><thead><tr><th>#</th><th>Candidato</th><th>Score</th><th>Status / Pesquisa</th><th>Ações</th></tr></thead><tbody>${rows}</tbody></table></div>`;
@@ -366,6 +848,30 @@ async function enriquecerBadgesTabela(candidateIds) {
 }
 
 function backToProcessList() { document.getElementById('view-process-list').style.display = ''; document.getElementById('view-process-detail').style.display = 'none'; currentProcessId = null; loadProcesses(); }
+
+// ─── CANAL DE ORIGEM (modal ao enviar currículos) ────────────────
+async function askCanalOrigem(files) {
+  if (!files || !files.length) return;
+  pendingFiles = files;
+  // Carregar canais disponíveis
+  try {
+    const canais = await api('/canais-atracao');
+    const sel = document.getElementById('co-canal');
+    sel.innerHTML = '<option value="">Não informar</option>' + canais.filter(c => c.ativo).map(c => `<option value="${c.nome}">${c.nome}</option>`).join('');
+  } catch(e) { /* usa sem canais */ }
+  openModal('modal-canal-origem');
+}
+
+function skipCanalOrigem() {
+  closeModal('modal-canal-origem');
+  if (pendingFiles) { handleFiles(pendingFiles, null); pendingFiles = null; }
+}
+
+function confirmarCanalOrigem() {
+  const canal = document.getElementById('co-canal').value;
+  closeModal('modal-canal-origem');
+  if (pendingFiles) { handleFiles(pendingFiles, canal || null); pendingFiles = null; }
+}
 
 async function openNewProcess() {
   document.getElementById('np-msg').innerHTML = ''; document.getElementById('np-title').value = ''; document.getElementById('np-adjustments').value = '';
@@ -382,21 +888,21 @@ async function createProcess() {
   catch(e) { document.getElementById('np-msg').innerHTML = `<div class="alert alert-danger">Erro: ${e.message}</div>`; }
 }
 
-function handleDrop(e) { e.preventDefault(); document.getElementById('upload-zone')?.classList.remove('drag'); handleFiles(e.dataTransfer.files); }
+function handleDrop(e) { e.preventDefault(); document.getElementById('upload-zone')?.classList.remove('drag'); askCanalOrigem(e.dataTransfer.files); }
 
-async function handleFiles(files) {
+async function handleFiles(files, canalOrigem) {
   if (!files.length) return;
   const zone = document.getElementById('upload-zone'), progressEl = document.getElementById('upload-progress'), fill = document.getElementById('progress-fill'), label = document.getElementById('progress-label'), detail = document.getElementById('progress-detail');
   zone.style.display = 'none'; progressEl.style.display = 'block'; label.textContent = `Extraindo texto de ${files.length} arquivo(s)...`; fill.style.width = '30%';
   try {
     const candidates = [];
-    for (let i = 0; i < files.length; i++) { const f = files[i]; label.textContent = `Lendo ${i+1}/${files.length}: ${f.name}`; const text = await extractTextFromFile(f); candidates.push({ filename: f.name, text }); }
+    for (let i = 0; i < files.length; i++) { const f = files[i]; label.textContent = `Lendo ${i+1}/${files.length}: ${f.name}`; const text = await extractTextFromFile(f); candidates.push({ filename: f.name, text, canal_origem: canalOrigem }); }
     fill.style.width = '60%'; label.textContent = `Enviando ${candidates.length} currículo(s)...`;
     const r = await fetch(`${API}/processes/${currentProcessId}/upload`, { method: 'POST', headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + authToken }, body: JSON.stringify({ candidates }) });
     if (!r.ok) throw new Error(await r.text());
     const data = await r.json(); fill.style.width = '100%';
     const temDup = data.skipped && data.skipped.length > 0;
-    label.textContent = `✅ ${data.uploaded} currículo(s) recebido(s)` + (temDup ? ` · ⚠️ ${data.skipped.length} ignorado(s)` : '');
+    label.textContent = `✅ ${data.uploaded} currículo(s) recebido(s)` + (temDup ? ` · ⚠️ ${data.skipped.length} ignorado(s)` : '') + (canalOrigem ? ` via ${canalOrigem}` : '');
     detail.textContent = temDup ? `Ignorados: ${data.skipped.join(', ')}` : 'Clique em "Analisar com IA" quando estiver pronto.';
     setTimeout(() => { progressEl.style.display = 'none'; zone.style.display = ''; checkPendingAnalysis(); openProcess(currentProcessId); }, temDup ? 3000 : 800);
   } catch(e) { fill.style.width = '0%'; fill.style.background = 'var(--danger)'; label.textContent = '❌ Erro ao enviar arquivos'; detail.textContent = e.message; }
@@ -422,6 +928,7 @@ async function startAnalysis() {
   }
 }
 
+// ─── CANDIDATO DETALHE ───────────────────────────────────────────
 async function openCandidate(candidateId) {
   currentCandidateId = candidateId;
   const candidates = await api(`/processes/${currentProcessId}/candidates`);
@@ -443,6 +950,7 @@ async function openCandidate(candidateId) {
       </div>
       ${c.email ? `<div class="text-sm text-mid">📧 ${c.email}</div>` : ''}
       ${c.phone ? `<div class="text-sm text-mid">📞 ${c.phone}</div>` : ''}
+      ${c.canal_origem ? `<div class="text-sm text-mid">📍 Canal: <strong>${c.canal_origem}</strong></div>` : ''}
       ${analyzedLabel}
     </div>
     <div class="detail-section"><h4>Resumo da IA</h4><p style="font-size:14px;line-height:1.7;color:var(--text-mid)">${c.ai_summary || '—'}</p></div>
@@ -498,19 +1006,15 @@ async function confirmarBloqueio() {
   catch(e) { document.getElementById('blq-msg').innerHTML = `<div class="alert alert-danger">Erro: ${e.message}</div>`; }
 }
 
-async function printCandidate(candidateId) {
-  const candidates = await api(`/processes/${currentProcessId}/candidates`), c = candidates.find(x => x.id === candidateId); if (!c) return;
-  const analyzedStr = c.analyzed_at ? new Date(c.analyzed_at).toLocaleString('pt-BR',{day:'2-digit',month:'2-digit',year:'numeric',hour:'2-digit',minute:'2-digit'}) : '—';
-  const win = window.open('', '_blank');
-  win.document.write(`<!DOCTYPE html><html><head><meta charset="UTF-8"><title>Parecer — ${c.name}</title><style>body{font-family:Arial,sans-serif;max-width:800px;margin:40px auto;color:#222;font-size:14px;line-height:1.6}h1{font-size:22px;color:#0f1f3d;margin-bottom:4px}.meta{font-size:12px;color:#888;margin-bottom:24px}h2{font-size:14px;text-transform:uppercase;letter-spacing:.05em;color:#555;border-bottom:1px solid #eee;padding-bottom:4px;margin:20px 0 10px}.score-big{font-size:36px;font-weight:bold;color:#1e4db7}.tag{display:inline-block;padding:3px 10px;border-radius:20px;font-size:12px;margin:2px}.met{background:#e8f7ee;color:#1a7a4a}.miss{background:#fde8eb;color:#a0192e}.alert{background:#fef5e0;color:#8a5a00}.script{white-space:pre-line;background:#f7f4ee;padding:12px;border-radius:6px;font-size:13px}@media print{body{margin:20px}}</style></head><body><h1>${c.name||c.filename}</h1><div class="meta">${c.email?`📧 ${c.email} &nbsp;`:''}${c.phone?`📞 ${c.phone} &nbsp;`:''} 🕐 Analisado em ${analyzedStr}</div><h2>Score</h2><div class="score-big">${Math.round(c.score)}<span style="font-size:18px;font-weight:normal;color:#888">/100</span></div><h2>Resumo da IA</h2><p>${c.ai_summary||'—'}</p>${c.requirements_met.length?`<h2>Requisitos Atendidos</h2><div>${c.requirements_met.map(r=>`<span class="tag met">✓ ${r}</span>`).join('')}</div>`:''}${c.requirements_missing.length?`<h2>Requisitos Faltantes</h2><div>${c.requirements_missing.map(r=>`<span class="tag miss">✗ ${r}</span>`).join('')}</div>`:''}${c.alerts.length?`<h2>Alertas</h2><div>${c.alerts.map(a=>`<span class="tag alert">⚠ ${a}</span>`).join('')}</div>`:''}${c.interview_script?`<h2>Roteiro de Entrevista</h2><div class="script">${c.interview_script}</div>`:''}<div style="margin-top:40px;font-size:11px;color:#aaa;text-align:center">RH Assertivo — O Boticário Niterói</div></body></html>`);
-  win.document.close(); win.focus(); setTimeout(() => win.print(), 500);
-}
+function openCloseProcess(id) { closeProcessId = id; document.getElementById('cp-outcome').value = 'contratado'; document.getElementById('cp-reason').value = ''; openModal('modal-close-process'); }
+async function closeProcessConfirm() { await api(`/processes/${closeProcessId}/close`, { method: 'POST', body: JSON.stringify({ outcome: document.getElementById('cp-outcome').value, outcome_reason: document.getElementById('cp-reason').value }) }); closeModal('modal-close-process'); openProcess(closeProcessId); }
 
 async function updateStatus(candidateId, status) {
   await api(`/processes/${currentProcessId}/candidates/${candidateId}/status`, { method: 'PUT', body: JSON.stringify({ status, reason: '' }) });
   openProcess(currentProcessId);
 }
 
+// ─── QUESTIONÁRIO ─────────────────────────────────────────────────
 async function carregarStatusQuestionario(candidateId) {
   try {
     const r = await api(`/questionario/${candidateId}/respostas`);
@@ -521,7 +1025,7 @@ async function carregarStatusQuestionario(candidateId) {
     } else {
       el.innerHTML = `<span style="color:var(--text-light);font-size:13px">Questionário ainda não respondido.</span><div style="margin-top:8px;display:flex;gap:8px;flex-wrap:wrap"><button class="btn btn-secondary" style="font-size:12px;background:#e8f7ee;color:#1a7a4a" onclick="gerarLinkWhatsApp(${candidateId})">💬 Enviar via WhatsApp</button><button class="btn btn-secondary" style="font-size:12px" onclick="copiarLinkPesquisa(${candidateId}, event)">🔗 Link da pesquisa</button></div><div id="link-result-${candidateId}" style="margin-top:8px"></div>`;
     }
-  } catch(e) { console.log('Erro ao verificar questionário:', e); }
+  } catch(e) {}
 }
 
 async function copiarLinkPesquisa(candidateId, evt) {
@@ -565,12 +1069,13 @@ async function gerarLinkWhatsApp(candidateId) {
     if (r && r.link) {
       localStorage.setItem('quiz_sent_' + candidateId, '1');
       const badge = document.getElementById('pesquisa-badge-' + candidateId); if (badge) badge.innerHTML = '<span class="badge" style="background:#dbeafe;color:#1e40af;font-size:10px">📬 Pesquisa enviada</span>';
-      if (r.whatsapp_url) { el.innerHTML = `<div style="background:var(--cream);border:0.5px solid var(--cream-dark);border-radius:8px;padding:10px;font-size:12px"><div style="font-weight:500;margin-bottom:6px">Link gerado — válido por 7 dias · Expira em ${r.expira_em}</div><a href="${r.whatsapp_url}" target="_blank" class="btn btn-sm" style="background:#25D366;color:#fff;text-decoration:none;display:inline-flex;align-items:center;gap:6px">💬 Abrir WhatsApp (${r.telefone})</a><div style="margin-top:8px;word-break:break-all;color:var(--text-light);font-size:11px">${r.link}</div></div>`; btn.style.display = 'none'; window.open(r.whatsapp_url, '_blank'); }
-      else { el.innerHTML = `<div style="background:var(--warn-bg);border:1px solid var(--gold);border-radius:8px;padding:10px;font-size:12px;margin-bottom:8px">⚠️ Candidato sem telefone cadastrado.</div><div style="background:var(--cream);border:0.5px solid var(--cream-dark);border-radius:8px;padding:10px;font-size:12px"><div style="font-weight:500;margin-bottom:4px">Link gerado — válido por 7 dias</div><div style="word-break:break-all;color:var(--blue);margin-bottom:8px">${r.link}</div><button class="btn btn-secondary" style="font-size:11px" onclick="navigator.clipboard.writeText('${r.link}').then(()=>this.textContent='✅ Copiado!')">📋 Copiar link</button></div>`; btn.style.display = 'none'; }
+      if (r.whatsapp_url) { el.innerHTML = `<div style="background:var(--cream);border:0.5px solid var(--cream-dark);border-radius:8px;padding:10px;font-size:12px"><div style="font-weight:500;margin-bottom:6px">Link gerado · Expira em ${r.expira_em}</div><a href="${r.whatsapp_url}" target="_blank" class="btn btn-sm" style="background:#25D366;color:#fff;text-decoration:none;display:inline-flex;align-items:center;gap:6px">💬 Abrir WhatsApp (${r.telefone})</a><div style="margin-top:8px;word-break:break-all;color:var(--text-light);font-size:11px">${r.link}</div></div>`; btn.style.display = 'none'; window.open(r.whatsapp_url, '_blank'); }
+      else { el.innerHTML = `<div style="background:var(--warn-bg);border:1px solid var(--gold);border-radius:8px;padding:10px;font-size:12px;margin-bottom:8px">⚠️ Candidato sem telefone cadastrado.</div><div style="background:var(--cream);border:0.5px solid var(--cream-dark);border-radius:8px;padding:10px;font-size:12px"><div style="font-weight:500;margin-bottom:4px">Link gerado</div><div style="word-break:break-all;color:var(--blue);margin-bottom:8px">${r.link}</div><button class="btn btn-secondary" style="font-size:11px" onclick="navigator.clipboard.writeText('${r.link}').then(()=>this.textContent='✅ Copiado!')">📋 Copiar link</button></div>`; btn.style.display = 'none'; }
     }
   } catch(e) { btn.disabled = false; btn.textContent = '💬 Enviar via WhatsApp'; alert('Erro ao gerar link.'); }
 }
 
+// ─── PARECER INTEGRADO ────────────────────────────────────────────
 function montarParecerIntegrado(c, quiz) {
   const scoreCurriculo = Math.round(c.score || 0), temQuiz = quiz && quiz.respondido;
   const scoreQuiz = temQuiz ? Math.round(quiz.score_comportamental || 0) : null;
@@ -598,9 +1103,15 @@ async function addToTalentBank(candidateId) {
   catch(e) { alert('Erro ao adicionar ao banco de talentos.'); }
 }
 
-function openCloseProcess(id) { closeProcessId = id; document.getElementById('cp-outcome').value = 'contratado'; document.getElementById('cp-reason').value = ''; openModal('modal-close-process'); }
-async function closeProcessConfirm() { await api(`/processes/${closeProcessId}/close`, { method: 'POST', body: JSON.stringify({ outcome: document.getElementById('cp-outcome').value, outcome_reason: document.getElementById('cp-reason').value }) }); closeModal('modal-close-process'); openProcess(closeProcessId); }
+async function printCandidate(candidateId) {
+  const candidates = await api(`/processes/${currentProcessId}/candidates`), c = candidates.find(x => x.id === candidateId); if (!c) return;
+  const analyzedStr = c.analyzed_at ? new Date(c.analyzed_at).toLocaleString('pt-BR',{day:'2-digit',month:'2-digit',year:'numeric',hour:'2-digit',minute:'2-digit'}) : '—';
+  const win = window.open('', '_blank');
+  win.document.write(`<!DOCTYPE html><html><head><meta charset="UTF-8"><title>Parecer — ${c.name}</title><style>body{font-family:Arial,sans-serif;max-width:800px;margin:40px auto;color:#222;font-size:14px;line-height:1.6}h1{font-size:22px;color:#0f1f3d;margin-bottom:4px}.meta{font-size:12px;color:#888;margin-bottom:24px}h2{font-size:14px;text-transform:uppercase;letter-spacing:.05em;color:#555;border-bottom:1px solid #eee;padding-bottom:4px;margin:20px 0 10px}.score-big{font-size:36px;font-weight:bold;color:#1e4db7}.tag{display:inline-block;padding:3px 10px;border-radius:20px;font-size:12px;margin:2px}.met{background:#e8f7ee;color:#1a7a4a}.miss{background:#fde8eb;color:#a0192e}.alert{background:#fef5e0;color:#8a5a00}.script{white-space:pre-line;background:#f7f4ee;padding:12px;border-radius:6px;font-size:13px}@media print{body{margin:20px}}</style></head><body><h1>${c.name||c.filename}</h1><div class="meta">${c.email?`📧 ${c.email} &nbsp;`:''}${c.phone?`📞 ${c.phone} &nbsp;`:''}${c.canal_origem?`📍 Canal: ${c.canal_origem} &nbsp;`:''} 🕐 Analisado em ${analyzedStr}</div><h2>Score</h2><div class="score-big">${Math.round(c.score)}<span style="font-size:18px;font-weight:normal;color:#888">/100</span></div><h2>Resumo da IA</h2><p>${c.ai_summary||'—'}</p>${c.requirements_met.length?`<h2>Requisitos Atendidos</h2><div>${c.requirements_met.map(r=>`<span class="tag met">✓ ${r}</span>`).join('')}</div>`:''}${c.requirements_missing.length?`<h2>Requisitos Faltantes</h2><div>${c.requirements_missing.map(r=>`<span class="tag miss">✗ ${r}</span>`).join('')}</div>`:''}${c.alerts.length?`<h2>Alertas</h2><div>${c.alerts.map(a=>`<span class="tag alert">⚠ ${a}</span>`).join('')}</div>`:''}${c.interview_script?`<h2>Roteiro de Entrevista</h2><div class="script">${c.interview_script}</div>`:''}<div style="margin-top:40px;font-size:11px;color:#aaa;text-align:center">RH Assertivo — O Boticário Niterói</div></body></html>`);
+  win.document.close(); win.focus(); setTimeout(() => win.print(), 500);
+}
 
+// ─── PERFIS ───────────────────────────────────────────────────────
 async function loadProfiles() {
   const el = document.getElementById('profiles-list'); el.innerHTML = '<div class="loading"><div class="spinner"></div></div>';
   const profiles = await api('/profiles');
@@ -629,6 +1140,7 @@ async function saveProfile() {
 
 async function deleteProfile(id) { if (!confirm('Remover este perfil?')) return; await api(`/profiles/${id}`, { method: 'DELETE' }); loadProfiles(); }
 
+// ─── BANCO DE TALENTOS ───────────────────────────────────────────
 async function loadProcessesForFilter() {
   try { const processes = await api('/processes'); const sel = document.getElementById('talent-filter-process'); sel.innerHTML = '<option value="">Todos os cargos</option>'; processes.forEach(p => { sel.innerHTML += `<option value="${p.id}">${p.title}</option>`; }); } catch(e) {}
 }
@@ -642,12 +1154,23 @@ async function loadTalent() {
   el.innerHTML = `<div class="table-wrap"><table><thead><tr><th>Candidato</th><th>Vaga avaliada</th><th>Score</th><th>Contato</th></tr></thead><tbody>${talents.map(t => `<tr><td><strong>${t.candidate_name||t.name||'—'}</strong></td><td>${t.vaga_nome||'—'}</td><td><div class="score-bar ${scoreClass(t.last_score||t.vaga_score||0)}" style="max-width:120px"><div class="score-track"><div class="score-fill" style="width:${t.last_score||t.vaga_score||0}%"></div></div><div class="score-num">${Math.round(t.last_score||t.vaga_score||0)}</div></div></td><td>${t.email||'—'}${t.phone?`<br><span class="text-sm text-mid">${t.phone}</span>`:''}</td></tr>`).join('')}</tbody></table></div>`;
 }
 
+// ─── FUNCIONÁRIOS ─────────────────────────────────────────────────
 async function loadFuncionarios() {
   const el = document.getElementById('funcionarios-list'); el.innerHTML = '<div class="loading"><div class="spinner"></div></div>';
   try {
-    const fn = await api('/funcionarios'); document.getElementById('fn-count').textContent = fn.length + ' registrado(s)';
+    const fn = await api('/funcionarios'); document.getElementById('fn-count').textContent = fn.length + ' ativo(s)';
     if (!fn.length) { el.innerHTML = '<div class="empty"><div class="empty-icon">👤</div><p>Nenhum funcionário cadastrado ainda.</p></div>'; return; }
-    el.innerHTML = `<div class="table-wrap"><table><thead><tr><th>Nome</th><th>Cargo</th><th>PDV</th><th>Admissão</th><th>Sexo</th><th>Escolaridade</th></tr></thead><tbody>${fn.map(f=>`<tr><td><strong>${f.nome}</strong>${f.email?`<div class="text-sm text-mid">${f.email}</div>`:''}</td><td>${f.cargo||'—'}</td><td>${f.pdv||'—'}</td><td>${f.data_admissao?new Date(f.data_admissao).toLocaleDateString('pt-BR'):'—'}</td><td>${f.sexo||'—'}</td><td style="font-size:12px">${f.escolaridade||'—'}</td></tr>`).join('')}</tbody></table></div>`;
+    el.innerHTML = `<div class="table-wrap"><table><thead><tr><th>Nome</th><th>Cargo</th><th>PDV</th><th>Admissão</th><th>Tempo</th><th></th></tr></thead><tbody>${fn.map(f => {
+      const dias = f.data_admissao ? Math.round((Date.now() - new Date(f.data_admissao)) / 86400000) : null;
+      return `<tr>
+        <td><strong>${f.nome}</strong>${f.email?`<div class="text-sm text-mid">${f.email}</div>`:''}</td>
+        <td>${f.cargo||'—'}</td>
+        <td>${f.pdv||'—'}</td>
+        <td>${f.data_admissao?new Date(f.data_admissao).toLocaleDateString('pt-BR'):'—'}</td>
+        <td><span style="font-size:12px;color:var(--text-mid)">${dias ? dias + 'd' : '—'}</span></td>
+        <td><button class="btn btn-sm btn-danger" onclick="abrirModalDesligar(${f.id},'${f.nome.replace(/'/g,"\\'")}')">🚪 Desligar</button></td>
+      </tr>`;
+    }).join('')}</tbody></table></div>`;
   } catch(e) { el.innerHTML = `<div class="alert alert-danger">Erro: ${e.message}</div>`; }
 }
 
@@ -663,12 +1186,37 @@ async function saveFuncionario() {
   } catch(e) { msg.innerHTML = `<div class="alert alert-danger">Erro: ${e.message}</div>`; }
 }
 
+function abrirModalDesligar(id, nome) {
+  document.getElementById('ds-funcionario-id').value = id;
+  document.getElementById('ds-data').value = new Date().toISOString().split('T')[0];
+  document.getElementById('ds-motivo').value = '';
+  document.getElementById('ds-obs').value = '';
+  document.getElementById('ds-msg').innerHTML = '';
+  document.querySelector('#modal-desligar .modal-header h3').textContent = `🚪 Desligar: ${nome}`;
+  openModal('modal-desligar');
+}
+
+async function confirmarDesligamento() {
+  const id = parseInt(document.getElementById('ds-funcionario-id').value);
+  const data_demissao = document.getElementById('ds-data').value;
+  const motivo = document.getElementById('ds-motivo').value;
+  const obs = document.getElementById('ds-obs').value;
+  if (!data_demissao || !motivo) { document.getElementById('ds-msg').innerHTML = '<div class="alert alert-danger">Data e motivo são obrigatórios.</div>'; return; }
+  try {
+    await api(`/funcionarios/${id}/desligar`, { method: 'PUT', body: JSON.stringify({ data_demissao, motivo_demissao: motivo + (obs ? ' — ' + obs : ''), tipo_saida: motivo }) });
+    closeModal('modal-desligar');
+    loadFuncionarios();
+    alert('✅ Funcionário desligado com sucesso.');
+  } catch(e) { document.getElementById('ds-msg').innerHTML = `<div class="alert alert-danger">Erro: ${e.message}</div>`; }
+}
+
+// ─── CONFIGURAÇÕES ────────────────────────────────────────────────
 async function loadUsuarios() {
   const el = document.getElementById('users-list'); el.innerHTML = '<div class="loading"><div class="spinner"></div></div>';
   try {
     const users = await api('/users'); document.getElementById('users-count').textContent = users.length + ' usuário(s)';
     if (!users.length) { el.innerHTML = '<div class="empty"><div class="empty-icon">👥</div><p>Nenhum usuário.</p></div>'; return; }
-    el.innerHTML = `<div class="table-wrap"><table><thead><tr><th>Nome</th><th>Email</th><th>Perfil</th><th>Status</th><th></th></tr></thead><tbody>${users.map(u => `<tr><td><strong>${u.name}</strong></td><td style="font-size:12px">${u.email}</td><td><span class="badge ${u.role==='diretor'?'badge-blue':'badge-gray'}">${u.role==='diretor'?'Diretor':'Operador'}</span></td><td><span class="badge ${u.ativo?'badge-success':'badge-danger'}">${u.ativo?'Ativo':'Inativo'}</span></td><td>${u.id!==currentUser?.id?`<button class="btn btn-sm ${u.ativo?'btn-danger':'btn-secondary'}" onclick="toggleUsuario(${u.id},${!u.ativo})">${u.ativo?'Desativar':'Ativar'}</button>`:'<span style="font-size:11px;color:var(--text-light)">você</span>'}</td></tr>`).join('')}</tbody></table></div>`;
+    el.innerHTML = `<div class="table-wrap"><table><thead><tr><th>Nome</th><th>Perfil</th><th>Status</th><th></th></tr></thead><tbody>${users.map(u => `<tr><td><strong>${u.name}</strong><div style="font-size:11px;color:var(--text-light)">${u.email}</div></td><td><span class="badge ${u.role==='diretor'?'badge-blue':'badge-gray'}">${u.role==='diretor'?'Diretor':'Operador'}</span></td><td><span class="badge ${u.ativo?'badge-success':'badge-danger'}">${u.ativo?'Ativo':'Inativo'}</span></td><td>${u.id!==currentUser?.id?`<button class="btn btn-sm ${u.ativo?'btn-danger':'btn-secondary'}" onclick="toggleUsuario(${u.id},${!u.ativo})">${u.ativo?'Desativar':'Ativar'}</button>`:'<span style="font-size:11px;color:var(--text-light)">você</span>'}</td></tr>`).join('')}</tbody></table></div>`;
   } catch(e) { el.innerHTML = `<div class="alert alert-danger">Erro: ${e.message}</div>`; }
 }
 
@@ -694,6 +1242,75 @@ async function alterarMinhaSenha() {
   catch(e) { msg.innerHTML = `<div class="alert alert-danger">Erro: ${e.message}</div>`; }
 }
 
+// ─── CANAIS DE ATRAÇÃO ────────────────────────────────────────────
+async function loadCanais() {
+  const el = document.getElementById('canais-list'); el.innerHTML = '<div class="loading" style="padding:20px"><div class="spinner"></div></div>';
+  try {
+    const canais = await api('/canais-atracao');
+    if (!canais.length) { el.innerHTML = '<div class="text-sm text-mid">Nenhum canal cadastrado.</div>'; return; }
+    el.innerHTML = canais.map(c => `<div style="display:flex;align-items:center;justify-content:space-between;padding:8px 0;border-bottom:1px solid var(--cream-dark)">
+      <span style="font-size:14px">${c.nome}</span>
+      <button class="btn btn-sm btn-danger" onclick="deletarCanal(${c.id})">Remover</button>
+    </div>`).join('');
+  } catch(e) { el.innerHTML = `<div class="alert alert-danger">Erro: ${e.message}</div>`; }
+}
+
+async function criarCanal() {
+  const nome = document.getElementById('novo-canal-nome').value.trim();
+  const msg = document.getElementById('novo-canal-msg');
+  if (!nome) { msg.innerHTML = '<div class="alert alert-danger">Informe o nome do canal.</div>'; return; }
+  try {
+    await api('/canais-atracao', { method: 'POST', body: JSON.stringify({ nome }) });
+    document.getElementById('novo-canal-nome').value = '';
+    msg.innerHTML = '<div class="alert alert-success">Canal adicionado!</div>';
+    loadCanais(); setTimeout(() => msg.innerHTML = '', 2000);
+  } catch(e) { msg.innerHTML = `<div class="alert alert-danger">Erro: ${e.message}</div>`; }
+}
+
+async function deletarCanal(id) {
+  if (!confirm('Remover este canal?')) return;
+  try { await api(`/canais-atracao/${id}`, { method: 'DELETE' }); loadCanais(); }
+  catch(e) { alert('Erro: ' + e.message); }
+}
+
+// ─── HISTÓRICO E PARECER ──────────────────────────────────────────
+async function carregarUltimoParecer(candidateId) {
+  try {
+    const p = await api('/parecer/' + candidateId + '/ultimo');
+    if (!p || !p.veredicto) return;
+    const qsEl = document.getElementById('qs-content-' + candidateId); if (!qsEl) return;
+    const vMap = { 'avançar': { border: '#2d9e5f', bg: '#f0faf3', color: '#1a7a4a', emoji: '✅' }, 'ressalvas': { border: '#e6a817', bg: '#fffbf0', color: '#8a5a00', emoji: '⚠️' }, 'não avançar': { border: '#dc3545', bg: '#fef2f2', color: '#a0192e', emoji: '✖️' } };
+    const v = (p.veredicto || '').toLowerCase(), s = vMap[v] || vMap['ressalvas'];
+    const alertas = safeParseArray(p.alertas_json), roteiro = safeParseArray(p.roteiro_json);
+    const alertasHtml = alertas.length ? '<div style="margin-top:8px">' + alertas.map(a => `<span style="display:inline-block;background:var(--warn-bg);color:var(--warn);padding:2px 8px;border-radius:20px;font-size:11px;margin:2px">${a}</span>`).join('') + '</div>' : '';
+    const roteiroHtml = roteiro.length ? `<div style="margin-top:8px"><div style="font-size:11px;text-transform:uppercase;letter-spacing:.06em;color:var(--text-light);margin-bottom:4px">Roteiro</div><ul style="margin:0;padding-left:16px;font-size:12px;color:var(--text-mid);line-height:1.8">${roteiro.map(q => `<li>${q}</li>`).join('')}</ul></div>` : '';
+    const dataFmt = p.gerado_em ? `<div style="font-size:10px;color:var(--text-light);margin-top:6px">Gerado em ${p.gerado_em}</div>` : '';
+    const div = document.createElement('div');
+    div.style.cssText = `margin-top:14px;padding:14px 16px;border-radius:10px;border:1.5px solid ${s.border};background:${s.bg}`;
+    div.innerHTML = `<div style="font-weight:700;font-size:15px;color:${s.color};margin-bottom:6px">${s.emoji} ${(p.veredicto||'').toUpperCase()}</div><div style="font-size:13px;line-height:1.7;color:var(--text-mid)">${p.justificativa||'—'}</div>${alertasHtml}${roteiroHtml}${dataFmt}`;
+    qsEl.appendChild(div);
+  } catch(e) {}
+}
+
+function safeParseArray(val) {
+  if (!val) return []; if (Array.isArray(val)) return val;
+  try { return JSON.parse(val); } catch(e) { return []; }
+}
+
+async function carregarHistoricoAnalises(candidateId) {
+  const el = document.getElementById('historico-content-' + candidateId); if (!el) return;
+  try {
+    const analyses = await api('/candidates/' + candidateId + '/analyses');
+    if (!analyses || !analyses.length) { el.innerHTML = '<p style="font-size:13px;color:var(--text-light)">Nenhuma análise registrada ainda.</p>'; return; }
+    el.innerHTML = analyses.map((a, i) => {
+      const sc = a.score || 0, cor = sc >= 70 ? 'var(--success)' : sc >= 50 ? 'var(--warn)' : 'var(--danger)', isLast = i === 0;
+      const met = (a.requirements_met || []).slice(0, 3), miss = (a.requirements_missing || []).slice(0, 3), alts = (a.alerts || []).slice(0, 2);
+      return `<details style="margin-bottom:8px;border:1px solid var(--cream-dark);border-radius:8px;overflow:hidden" ${isLast ? 'open' : ''}><summary style="padding:10px 14px;cursor:pointer;display:flex;align-items:center;justify-content:space-between;background:${isLast ? '#f0f4ff' : 'var(--cream)'};list-style:none;gap:8px"><div style="display:flex;align-items:center;gap:10px"><span style="font-size:20px;font-weight:700;color:${cor}">${sc}</span><span style="font-size:10px;color:var(--text-light);font-weight:400">/100</span>${isLast ? '<span class="badge badge-blue" style="font-size:10px">Atual</span>' : ''}</div><span style="font-size:11px;color:var(--text-light)">${a.analisado_em_fmt}</span></summary><div style="padding:12px 14px;font-size:12px;line-height:1.7">${a.ai_summary ? `<p style="color:var(--text-mid);margin-bottom:8px">${a.ai_summary}</p>` : ''}${met.length ? `<div style="margin-bottom:6px"><strong style="color:var(--success)">✅ Atendidos:</strong> ${met.map(r=>`<span style="background:var(--success-bg);color:var(--success);padding:1px 8px;border-radius:20px;font-size:11px;margin:1px;display:inline-block">${r}</span>`).join('')}</div>` : ''}${miss.length ? `<div style="margin-bottom:6px"><strong style="color:var(--danger)">❌ Faltantes:</strong> ${miss.map(r=>`<span style="background:var(--danger-bg);color:var(--danger);padding:1px 8px;border-radius:20px;font-size:11px;margin:1px;display:inline-block">${r}</span>`).join('')}</div>` : ''}${alts.length ? `<div><strong style="color:var(--warn)">⚠️ Alertas:</strong> ${alts.map(a=>`<span style="background:var(--warn-bg);color:var(--warn);padding:1px 8px;border-radius:20px;font-size:11px;margin:1px;display:inline-block">${a}</span>`).join('')}</div>` : ''}</div></details>`;
+    }).join('');
+  } catch(e) { if (el) el.innerHTML = '<p style="font-size:13px;color:var(--text-light)">Histórico não disponível.</p>'; }
+}
+
+// ─── EXTRAÇÃO DE TEXTO ────────────────────────────────────────────
 async function extractTextFromFile(file) {
   const ext = file.name.split('.').pop().toLowerCase();
   if (ext === 'pdf') return extractPDF(file);
@@ -713,50 +1330,6 @@ async function extractDOCX(file) {
   return result.value;
 }
 function loadScript(src) { return new Promise((resolve, reject) => { const s = document.createElement('script'); s.src = src; s.onload = resolve; s.onerror = reject; document.head.appendChild(s); }); }
-
-async function carregarUltimoParecer(candidateId) {
-  try {
-    const p = await api('/parecer/' + candidateId + '/ultimo');
-    if (!p || !p.veredicto) return;
-    const qsEl = document.getElementById('qs-content-' + candidateId);
-    if (!qsEl) return;
-    const vMap = {
-      'avançar':     { border: '#2d9e5f', bg: '#f0faf3', color: '#1a7a4a', emoji: '✅' },
-      'ressalvas':   { border: '#e6a817', bg: '#fffbf0', color: '#8a5a00', emoji: '⚠️' },
-      'não avançar': { border: '#dc3545', bg: '#fef2f2', color: '#a0192e', emoji: '✖️' }
-    };
-    const v = (p.veredicto || '').toLowerCase(), s = vMap[v] || vMap['ressalvas'];
-    const alertas = safeParseArray(p.alertas_json);
-    const roteiro = safeParseArray(p.roteiro_json);
-    const alertasHtml = alertas.length ? '<div style="margin-top:8px">' + alertas.map(a => `<span style="display:inline-block;background:var(--warn-bg);color:var(--warn);padding:2px 8px;border-radius:20px;font-size:11px;margin:2px">${a}</span>`).join('') + '</div>' : '';
-    const roteiroHtml = roteiro.length ? `<div style="margin-top:8px"><div style="font-size:11px;text-transform:uppercase;letter-spacing:.06em;color:var(--text-light);margin-bottom:4px">Roteiro</div><ul style="margin:0;padding-left:16px;font-size:12px;color:var(--text-mid);line-height:1.8">${roteiro.map(q => `<li>${q}</li>`).join('')}</ul></div>` : '';
-    const dataFmt = p.gerado_em ? `<div style="font-size:10px;color:var(--text-light);margin-top:6px">Gerado em ${p.gerado_em}</div>` : '';
-    const div = document.createElement('div');
-    div.style.cssText = `margin-top:14px;padding:14px 16px;border-radius:10px;border:1.5px solid ${s.border};background:${s.bg}`;
-    div.innerHTML = `<div style="font-weight:700;font-size:15px;color:${s.color};margin-bottom:6px">${s.emoji} ${(p.veredicto||'').toUpperCase()}</div><div style="font-size:13px;line-height:1.7;color:var(--text-mid)">${p.justificativa||'—'}</div>${alertasHtml}${roteiroHtml}${dataFmt}`;
-    qsEl.appendChild(div);
-  } catch(e) { /* nenhum parecer salvo ainda — silencioso */ }
-}
-
-function safeParseArray(val) {
-  if (!val) return [];
-  if (Array.isArray(val)) return val;
-  try { return JSON.parse(val); } catch(e) { return []; }
-}
-
-async function carregarHistoricoAnalises(candidateId) {
-  const el = document.getElementById('historico-content-' + candidateId);
-  if (!el) return;
-  try {
-    const analyses = await api('/candidates/' + candidateId + '/analyses');
-    if (!analyses || !analyses.length) { el.innerHTML = '<p style="font-size:13px;color:var(--text-light)">Nenhuma análise registrada ainda.</p>'; return; }
-    el.innerHTML = analyses.map((a, i) => {
-      const sc = a.score || 0, cor = sc >= 70 ? 'var(--success)' : sc >= 50 ? 'var(--warn)' : 'var(--danger)', isLast = i === 0;
-      const met = (a.requirements_met || []).slice(0, 3), miss = (a.requirements_missing || []).slice(0, 3), alts = (a.alerts || []).slice(0, 2);
-      return `<details style="margin-bottom:8px;border:1px solid var(--cream-dark);border-radius:8px;overflow:hidden" ${isLast ? 'open' : ''}><summary style="padding:10px 14px;cursor:pointer;display:flex;align-items:center;justify-content:space-between;background:${isLast ? '#f0f4ff' : 'var(--cream)'};list-style:none;gap:8px"><div style="display:flex;align-items:center;gap:10px"><span style="font-size:20px;font-weight:700;color:${cor}">${sc}</span><span style="font-size:10px;color:var(--text-light);font-weight:400">/100</span>${isLast ? '<span class="badge badge-blue" style="font-size:10px">Atual</span>' : ''}</div><span style="font-size:11px;color:var(--text-light)">${a.analisado_em_fmt}</span></summary><div style="padding:12px 14px;font-size:12px;line-height:1.7">${a.ai_summary ? `<p style="color:var(--text-mid);margin-bottom:8px">${a.ai_summary}</p>` : ''}${met.length ? `<div style="margin-bottom:6px"><strong style="color:var(--success)">✅ Atendidos:</strong> ${met.map(r=>`<span style="background:var(--success-bg);color:var(--success);padding:1px 8px;border-radius:20px;font-size:11px;margin:1px;display:inline-block">${r}</span>`).join('')}</div>` : ''}${miss.length ? `<div style="margin-bottom:6px"><strong style="color:var(--danger)">❌ Faltantes:</strong> ${miss.map(r=>`<span style="background:var(--danger-bg);color:var(--danger);padding:1px 8px;border-radius:20px;font-size:11px;margin:1px;display:inline-block">${r}</span>`).join('')}</div>` : ''}${alts.length ? `<div><strong style="color:var(--warn)">⚠️ Alertas:</strong> ${alts.map(a=>`<span style="background:var(--warn-bg);color:var(--warn);padding:1px 8px;border-radius:20px;font-size:11px;margin:1px;display:inline-block">${a}</span>`).join('')}</div>` : ''}</div></details>`;
-    }).join('');
-  } catch(e) { if (el) el.innerHTML = '<p style="font-size:13px;color:var(--text-light)">Histórico não disponível.</p>'; }
-}
 </script>
 </div>
 </body>
