@@ -1244,7 +1244,7 @@ function montarParecerIntegrado(c, quiz) {
   const mosca = temQuiz ? (quiz.scores?.mosca || 0) : null, traidor = temQuiz ? (quiz.scores?.traidor || 0) : null, turnover = temQuiz ? (quiz.scores?.turnover || 0) : null;
   const altoRisco = temQuiz && (mosca >= 65 || traidor >= 65 || turnover >= 65), temAlertas = c.alerts && c.alerts.length > 0;
   // Score final só existe quando os dois scores estão disponíveis
-  const scoreFinal = temQuiz ? Math.round(scoreCurriculo * 0.6 + scoreQuiz * 0.4) : null;
+  const scoreFinal = temQuiz ? Math.round(scoreCurriculo * 0.4 + scoreQuiz * 0.6) : null;
 
   function indColor(val, invertido = false) { if (val === null) return 'ind-gray'; if (invertido) return val >= 65 ? 'ind-red' : val >= 40 ? 'ind-yellow' : 'ind-green'; return val >= 70 ? 'ind-green' : val >= 50 ? 'ind-yellow' : 'ind-red'; }
 
