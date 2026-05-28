@@ -266,7 +266,7 @@
         </div>
         <div class="grid-4 mb-6">
           <div class="stat-card success"><div class="stat-label">Funcionários Ativos</div><div class="stat-value" id="df-ativos">—</div><div class="stat-sub" id="df-ativos-s">em atividade</div></div>
-          <div class="stat-card danger"><div class="stat-label">Turnover 90 dias</div><div class="stat-value" id="df-t90">—</div><div class="stat-sub">saíram em ≤90 dias</div></div>
+          <div class="stat-card danger"><div class="stat-label">Turnover 90 dias</div><div class="stat-value" id="df-t90">—</div><div class="stat-sub">demit. c/ ≤90d casa</div></div>
           <div class="stat-card gold"><div class="stat-label">Taxa de Turnover</div><div class="stat-value" id="df-t1a">—</div><div class="stat-sub">últimos 12 meses</div></div>
           <div class="stat-card purple"><div class="stat-label">Tempo Médio de Casa</div><div class="stat-value" id="df-tempo">—</div><div class="stat-sub">dias (ativos)</div></div>
         </div>
@@ -756,24 +756,67 @@ function renderDashFuncionarios() {
   const ativos = lista.filter(f => f.ativo);
   const inativos = lista.filter(f => !f.ativo);
 
+  // Helper: converte dias em formato "Xa Ym"
+  function diasParaAnoesMeses(dias) {
+    if (!dias || dias <= 0) return '—';
+    const anos = Math.floor(dias / 365);
+    const meses = Math.floor((dias % 365) / 30);
+    if (anos === 0) return `${meses}m`;
+    if (meses === 0) return `${anos}a`;
+    return `${anos}a${meses}m`;
+  }
+
   // KPIs filtrados
-  const t90 = inativos.filter(f => {
+  // CORREÇÃO #6: Turnover 90 dias = demitidos que tinham ≤90 dias de empresa
+  const demitidosAte90dias = inativos.filter(f => {
     if (!f.data_admissao || !f.data_demissao) return false;
-    const dias = (new Date(f.data_demissao) - new Date(f.data_admissao)) / 86400000;
-    return dias <= 90;
-  }).length;
+    const diasEmpresa = (new Date(f.data_demissao) - new Date(f.data_admissao)) / 86400000;
+    return diasEmpresa <= 90;
+  });
+  const baseAte90dias = lista.filter(f => {
+    if (!f.data_admissao) return false;
+    const dataRef = f.data_demissao ? new Date(f.data_demissao) : new Date();
+    const diasEmpresa = (dataRef - new Date(f.data_admissao)) / 86400000;
+    return diasEmpresa <= 90;
+  }).length || 1;
+  const t90 = demitidosAte90dias.length;
+  const t90Pct = Math.round((t90 / baseAte90dias) * 100);
+
   const t1a = inativos.length;
   const totalBase = ativos.length + inativos.length || 1;
   const taxa = Math.round((inativos.length / totalBase) * 100);
-  const diasMedia = ativos.filter(f => f.dias_empresa).reduce((s, f) => s + f.dias_empresa, 0) / (ativos.filter(f => f.dias_empresa).length || 1);
+  const diasMediaVal = ativos.filter(f => f.dias_empresa).reduce((s, f) => s + f.dias_empresa, 0) / (ativos.filter(f => f.dias_empresa).length || 1);
 
   document.getElementById('df-ativos').textContent = ativos.length;
   document.getElementById('df-ativos-s').textContent = pdvFiltro ? `no PDV ${pdvFiltro}` : 'em atividade';
-  document.getElementById('df-t90').textContent = t90;
+  // CORREÇÃO #6: exibe % e contagem
+  document.getElementById('df-t90').innerHTML = `${t90Pct}<span style="font-size:14px;font-weight:400;opacity:.6">%</span>`;
+  document.querySelector('#df-t90').closest('.stat-card').querySelector('.stat-sub').textContent = `${t90} demit. c/ ≤90d casa`;
   document.getElementById('df-t1a').innerHTML = `${taxa}<span style="font-size:14px;font-weight:400;opacity:.6">%</span>`;
-  document.getElementById('df-tempo').innerHTML = diasMedia > 0 ? `${Math.round(diasMedia)}<span style="font-size:14px;font-weight:400;opacity:.6">d</span>` : '—';
+  // CORREÇÃO #4: Tempo médio de casa em anos e meses
+  document.getElementById('df-tempo').innerHTML = diasMediaVal > 0 ? `<span style="font-size:28px">${diasParaAnoesMeses(Math.round(diasMediaVal))}</span>` : '—';
+  document.querySelector('.stat-sub', document.getElementById('df-tempo').closest('.stat-card'));
+  const tempoCard = document.getElementById('df-tempo').closest('.stat-card');
+  if (tempoCard) tempoCard.querySelector('.stat-sub').textContent = `≈ ${Math.round(diasMediaVal)}d (ativos)`;
 
   // Demográficos — baseados em ativos do filtro
+  const totalAtivos = ativos.length || 1;
+
+  // CORREÇÃO #1/#2/#3: miniBarChart com % em vez de número absoluto
+  function miniBarChartPct(items, colorFn) {
+    if (!items.length) return '<div class="text-sm text-mid" style="padding:8px 0">Sem dados</div>';
+    const totalGeral = items.reduce((s, i) => s + i.total, 0) || 1;
+    const max = Math.max(...items.map(i => i.total), 1);
+    return items.map((item, idx) => {
+      const pct = Math.round((item.total / totalGeral) * 100);
+      return `<div class="mini-bar">
+        <span class="mini-bar-label">${item.key || '—'}</span>
+        <div class="mini-bar-track"><div class="mini-bar-fill" style="width:${Math.round((item.total/max)*100)}%;background:${colorFn(item, idx)}"></div></div>
+        <span class="mini-bar-val">${pct}%</span>
+      </div>`;
+    }).join('');
+  }
+
   function miniBarChart(items, colorFn) {
     if (!items.length) return '<div class="text-sm text-mid" style="padding:8px 0">Sem dados</div>';
     const max = Math.max(...items.map(i => i.total), 1);
@@ -791,9 +834,12 @@ function renderDashFuncionarios() {
     return Object.entries(map).sort((a,b) => b[1]-a[1]).map(([key, total]) => ({ key, total }));
   };
 
-  document.getElementById('df-sexo').innerHTML = miniBarChart(agg('sexo'), () => 'var(--blue)');
-  document.getElementById('df-raca').innerHTML = miniBarChart(agg('raca'), (_, i) => ['#1e4db7','#c9a84c','#1a7a4a','#534AB7','#a0192e'][i] || '#888');
-  document.getElementById('df-escolaridade').innerHTML = miniBarChart(agg('escolaridade'), () => '#534AB7');
+  // CORREÇÃO #1: Sexo em %
+  document.getElementById('df-sexo').innerHTML = miniBarChartPct(agg('sexo'), () => 'var(--blue)');
+  // CORREÇÃO #2: Raça em %
+  document.getElementById('df-raca').innerHTML = miniBarChartPct(agg('raca'), (_, i) => ['#1e4db7','#c9a84c','#1a7a4a','#534AB7','#a0192e'][i] || '#888');
+  // CORREÇÃO #3: Escolaridade em %
+  document.getElementById('df-escolaridade').innerHTML = miniBarChartPct(agg('escolaridade'), () => '#534AB7');
 
   // Motivos de saída
   const motivosData = {};
@@ -803,16 +849,27 @@ function renderDashFuncionarios() {
     ? miniBarChart(motivosList, () => 'var(--danger)')
     : '<div class="text-sm text-mid" style="padding:8px 0">Nenhum desligamento registrado.</div>';
 
-  // Tempo de casa por PDV
+  // CORREÇÃO #5: Tempo de casa por PDV em anos e meses
   const pdvMap = {};
   ativos.filter(f => f.pdv && f.dias_empresa).forEach(f => {
     if (!pdvMap[f.pdv]) pdvMap[f.pdv] = [];
     pdvMap[f.pdv].push(f.dias_empresa);
   });
-  const pdvList = Object.entries(pdvMap).map(([key, dias]) => ({ key, total: Math.round(dias.reduce((s,d)=>s+d,0)/dias.length) })).sort((a,b)=>b.total-a.total);
-  document.getElementById('df-tempo-pdv').innerHTML = pdvList.length
-    ? miniBarChart(pdvList, () => 'var(--gold)')
-    : '<div class="text-sm text-mid" style="padding:8px 0">Sem dados de PDV.</div>';
+  const pdvList = Object.entries(pdvMap).map(([key, dias]) => {
+    const media = Math.round(dias.reduce((s,d)=>s+d,0)/dias.length);
+    return { key, total: media, label: diasParaAnoesMeses(media) };
+  }).sort((a,b)=>b.total-a.total);
+
+  if (pdvList.length) {
+    const maxPdv = Math.max(...pdvList.map(p => p.total), 1);
+    document.getElementById('df-tempo-pdv').innerHTML = pdvList.map(p => `<div class="mini-bar">
+      <span class="mini-bar-label">${p.key}</span>
+      <div class="mini-bar-track"><div class="mini-bar-fill" style="width:${Math.round((p.total/maxPdv)*100)}%;background:var(--gold)"></div></div>
+      <span class="mini-bar-val">${p.label}</span>
+    </div>`).join('');
+  } else {
+    document.getElementById('df-tempo-pdv').innerHTML = '<div class="text-sm text-mid" style="padding:8px 0">Sem dados de PDV.</div>';
+  }
 }
 
 // ─── PROCESSOS ───────────────────────────────────────────────────
