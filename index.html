@@ -1233,7 +1233,14 @@ async function gerarLinkWhatsApp(candidateId) {
 // ─── PARECER INTEGRADO ────────────────────────────────────────────
 function montarParecerIntegrado(c, quiz) {
   const scoreCurriculo = Math.round(c.score || 0), temQuiz = quiz && quiz.respondido;
-  const scoreQuiz = temQuiz ? Math.round(quiz.score_comportamental || 0) : null;
+  // score_comportamental: usa campo da API se existir; senão calcula
+  // a partir dos scores positivos (resiliência, confiança, crescimento)
+  const calcScoreComport = (scores) => {
+    if (!scores) return 0;
+    const pos = [scores.resiliencia, scores.confianca, scores.crescimento].filter(v => v != null && v > 0);
+    return pos.length ? Math.round(pos.reduce((s,v) => s+v, 0) / pos.length) : 0;
+  };
+  const scoreQuiz = temQuiz ? (quiz.score_comportamental > 0 ? Math.round(quiz.score_comportamental) : calcScoreComport(quiz.scores)) : null;
   const mosca = temQuiz ? (quiz.scores?.mosca || 0) : null, traidor = temQuiz ? (quiz.scores?.traidor || 0) : null, turnover = temQuiz ? (quiz.scores?.turnover || 0) : null;
   const altoRisco = temQuiz && (mosca >= 65 || traidor >= 65 || turnover >= 65), temAlertas = c.alerts && c.alerts.length > 0;
   // Score final só existe quando os dois scores estão disponíveis
