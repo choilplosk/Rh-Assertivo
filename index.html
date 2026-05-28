@@ -294,6 +294,13 @@
             <div id="df-tempo-pdv"></div>
           </div>
         </div>
+        <div class="card" style="margin-top:20px">
+          <div class="card-header" style="margin-bottom:12px">
+            <span class="card-title">🎂 Aniversariantes do Mês</span>
+            <span id="df-aniv-mes" class="badge badge-blue" style="font-size:12px"></span>
+          </div>
+          <div id="df-aniversariantes"><div class="text-sm text-mid">Carregando...</div></div>
+        </div>
       </div>
     </div>
 
@@ -345,6 +352,7 @@
           <div class="form-group"><label class="form-label">Nome completo *</label><input type="text" class="form-control" id="fn-nome" placeholder="Nome do funcionário"></div>
           <div class="form-group"><label class="form-label">PDV</label><input type="text" class="form-control" id="fn-pdv" placeholder="Ponto de venda"></div>
           <div class="form-group"><label class="form-label">Data de admissão</label><input type="date" class="form-control" id="fn-admissao"></div>
+          <div class="form-group"><label class="form-label">Data de nascimento</label><input type="date" class="form-control" id="fn-nascimento"></div>
           <div class="form-group"><label class="form-label">Raça / Cor</label><select class="form-control" id="fn-raca"><option value="">Selecionar...</option><option>Branco</option><option>Pardo</option><option>Preto</option><option>Amarelo</option><option>Indígena</option><option>Prefiro não responder</option><option>Não sei</option></select></div>
           <div class="form-group"><label class="form-label">Grau de escolaridade</label><select class="form-control" id="fn-escolaridade"><option value="">Selecionar...</option><option>Fundamental Incompleto</option><option>Fundamental Completo</option><option>Médio Incompleto</option><option>Médio Completo</option><option>Superior Incompleto</option><option>Superior Completo</option><option>Pós-graduação Incompleta</option><option>Pós-graduação Completa</option></select></div>
           <div class="form-group"><label class="form-label">Sexo</label><select class="form-control" id="fn-sexo"><option value="">Selecionar...</option><option>Masculino</option><option>Feminino</option></select></div>
@@ -507,6 +515,7 @@
         <div class="form-group"><label class="form-label">Cargo</label><input type="text" class="form-control" id="ef-cargo"></div>
         <div class="form-group"><label class="form-label">PDV</label><input type="text" class="form-control" id="ef-pdv"></div>
         <div class="form-group"><label class="form-label">Data de admissão</label><input type="date" class="form-control" id="ef-admissao"></div>
+        <div class="form-group"><label class="form-label">Data de nascimento</label><input type="date" class="form-control" id="ef-nascimento"></div>
         <div class="form-group"><label class="form-label">Email</label><input type="email" class="form-control" id="ef-email"></div>
         <div class="form-group"><label class="form-label">Telefone</label><input type="text" class="form-control" id="ef-telefone"></div>
         <div class="form-group"><label class="form-label">Sexo</label><select class="form-control" id="ef-sexo"><option value="">Selecionar...</option><option>Masculino</option><option>Feminino</option></select></div>
@@ -870,6 +879,58 @@ function renderDashFuncionarios() {
   } else {
     document.getElementById('df-tempo-pdv').innerHTML = '<div class="text-sm text-mid" style="padding:8px 0">Sem dados de PDV.</div>';
   }
+
+  // Aniversariantes do mês
+  renderAniversariantesMes(lista);
+}
+
+function renderAniversariantesMes(lista) {
+  const mesAtual = new Date().getMonth() + 1; // 1-12
+  const nomesMes = ['Janeiro','Fevereiro','Março','Abril','Maio','Junho','Julho','Agosto','Setembro','Outubro','Novembro','Dezembro'];
+  const el = document.getElementById('df-aniversariantes');
+  const badge = document.getElementById('df-aniv-mes');
+  if (!el) return;
+
+  badge.textContent = nomesMes[mesAtual - 1];
+
+  const aniversariantes = lista
+    .filter(f => f.ativo && f.data_nascimento)
+    .filter(f => {
+      try {
+        const mes = parseInt(f.data_nascimento.split('T')[0].split('-')[1]);
+        return mes === mesAtual;
+      } catch(e) { return false; }
+    })
+    .map(f => {
+      const nasc = f.data_nascimento.split('T')[0];
+      const dia = parseInt(nasc.split('-')[2]);
+      const ano = parseInt(nasc.split('-')[0]);
+      const idade = new Date().getFullYear() - ano;
+      const hoje = new Date();
+      const ehHoje = hoje.getDate() === dia;
+      return { ...f, dia, idade, ehHoje };
+    })
+    .sort((a, b) => a.dia - b.dia);
+
+  if (!aniversariantes.length) {
+    el.innerHTML = '<div class="text-sm text-mid" style="padding:8px 0">Nenhum aniversariante este mês.</div>';
+    return;
+  }
+
+  el.innerHTML = `<div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:10px">
+    ${aniversariantes.map(f => {
+      const ini = (f.nome||'?').split(' ').slice(0,2).map(n=>n[0]||'').join('').toUpperCase();
+      const corFundo = f.ehHoje ? '#fff9e6' : 'var(--cream)';
+      const borda = f.ehHoje ? '1.5px solid var(--gold)' : '1px solid var(--cream-dark)';
+      return `<div style="display:flex;align-items:center;gap:10px;padding:10px 12px;border-radius:8px;background:${corFundo};border:${borda}">
+        <div style="width:36px;height:36px;border-radius:50%;background:${f.ehHoje ? 'var(--gold)' : '#E6F1FB'};display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;color:${f.ehHoje ? 'var(--navy)' : 'var(--blue)'};flex-shrink:0">${f.ehHoje ? '🎂' : ini}</div>
+        <div style="flex:1;min-width:0">
+          <div style="font-size:13px;font-weight:600;color:var(--navy);white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${f.ehHoje ? '🎉 ' : ''}${f.nome}</div>
+          <div style="font-size:11px;color:var(--text-light)">dia ${f.dia} · ${f.idade} anos · ${f.pdv||'—'}</div>
+        </div>
+      </div>`;
+    }).join('')}
+  </div>`;
 }
 
 // ─── PROCESSOS ───────────────────────────────────────────────────
@@ -1273,9 +1334,9 @@ async function saveFuncionario() {
   const nome = document.getElementById('fn-nome').value.trim(), msg = document.getElementById('fn-msg');
   if (!nome) { msg.innerHTML = '<div class="alert alert-danger">Nome é obrigatório.</div>'; return; }
   try {
-    await api('/funcionarios', { method: 'POST', body: JSON.stringify({ nome, pdv: document.getElementById('fn-pdv').value, data_admissao: document.getElementById('fn-admissao').value || null, raca: document.getElementById('fn-raca').value, escolaridade: document.getElementById('fn-escolaridade').value, sexo: document.getElementById('fn-sexo').value, cargo: document.getElementById('fn-cargo').value, email: document.getElementById('fn-email').value, telefone: document.getElementById('fn-telefone').value })});
+    await api('/funcionarios', { method: 'POST', body: JSON.stringify({ nome, pdv: document.getElementById('fn-pdv').value, data_admissao: document.getElementById('fn-admissao').value || null, data_nascimento: document.getElementById('fn-nascimento').value || null, raca: document.getElementById('fn-raca').value, escolaridade: document.getElementById('fn-escolaridade').value, sexo: document.getElementById('fn-sexo').value, cargo: document.getElementById('fn-cargo').value, email: document.getElementById('fn-email').value, telefone: document.getElementById('fn-telefone').value })});
     msg.innerHTML = '<div class="alert alert-success">Funcionário cadastrado!</div>';
-    ['fn-nome','fn-pdv','fn-admissao','fn-cargo','fn-email','fn-telefone'].forEach(id => document.getElementById(id).value = '');
+    ['fn-nome','fn-pdv','fn-admissao','fn-nascimento','fn-cargo','fn-email','fn-telefone'].forEach(id => document.getElementById(id).value = '');
     ['fn-raca','fn-escolaridade','fn-sexo'].forEach(id => document.getElementById(id).value = '');
     loadFuncionarios(); setTimeout(() => msg.innerHTML = '', 3000);
   } catch(e) { msg.innerHTML = `<div class="alert alert-danger">Erro: ${e.message}</div>`; }
@@ -1421,6 +1482,7 @@ async function abrirModalEditarFn(id) {
     document.getElementById('ef-cargo').value = f.cargo || '';
     document.getElementById('ef-pdv').value = f.pdv || '';
     document.getElementById('ef-admissao').value = f.data_admissao ? f.data_admissao.split('T')[0] : '';
+    document.getElementById('ef-nascimento').value = f.data_nascimento ? f.data_nascimento.split('T')[0] : '';
     document.getElementById('ef-email').value = f.email || '';
     document.getElementById('ef-telefone').value = f.telefone || '';
     document.getElementById('ef-sexo').value = f.sexo || '';
@@ -1440,6 +1502,7 @@ async function salvarEdicaoFuncionario() {
       nome, cargo: document.getElementById('ef-cargo').value,
       pdv: document.getElementById('ef-pdv').value,
       data_admissao: document.getElementById('ef-admissao').value || null,
+      data_nascimento: document.getElementById('ef-nascimento').value || null,
       email: document.getElementById('ef-email').value,
       telefone: document.getElementById('ef-telefone').value,
       sexo: document.getElementById('ef-sexo').value,
