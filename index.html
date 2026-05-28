@@ -719,7 +719,9 @@ async function loadDashRecrutamento() {
     for (const p of d.processos) {
       try { const cs = await api(`/processes/${p.id}/candidates`); cs.forEach(c => allCands.push({ ...c, process_title: p.title })); } catch(e) {}
     }
-    const top = [...allCands].sort((a,b) => b.score - a.score).slice(0, 8);
+    // Ordena pelo score final (técnico + comportamental) quando disponível, senão score técnico
+    const getScoreRanking = c => c.score_final != null ? c.score_final : c.score;
+    const top = [...allCands].sort((a,b) => getScoreRanking(b) - getScoreRanking(a)).slice(0, 8);
     const rankEl = document.getElementById('dr-ranking');
     if (top.length) {
       rankEl.innerHTML = top.map((c, i) => {
@@ -1234,21 +1236,80 @@ function montarParecerIntegrado(c, quiz) {
   const scoreQuiz = temQuiz ? Math.round(quiz.score_comportamental || 0) : null;
   const mosca = temQuiz ? (quiz.scores?.mosca || 0) : null, traidor = temQuiz ? (quiz.scores?.traidor || 0) : null, turnover = temQuiz ? (quiz.scores?.turnover || 0) : null;
   const altoRisco = temQuiz && (mosca >= 65 || traidor >= 65 || turnover >= 65), temAlertas = c.alerts && c.alerts.length > 0;
-  const scoreCombinado = temQuiz ? Math.round(scoreCurriculo * 0.6 + scoreQuiz * 0.4) : scoreCurriculo;
-  let veredicto, justificativa, classe, emoji;
-  if (!temQuiz) {
-    if (scoreCurriculo >= 70 && !temAlertas) { veredicto = "AVANÇAR — Aguardando questionário"; justificativa = "Currículo sólido. Recomenda-se enviar o questionário comportamental antes da decisão final."; classe = "parecer-ressalvas"; emoji = "⏳"; }
-    else if (scoreCurriculo >= 70) { veredicto = "AVANÇAR COM ATENÇÃO — Aguardando questionário"; justificativa = "Currículo acima da média, mas com pontos de atenção."; classe = "parecer-ressalvas"; emoji = "⚠️"; }
-    else if (scoreCurriculo >= 50) { veredicto = "AVALIAR COM CAUTELA — Aguardando questionário"; justificativa = "Currículo abaixo do esperado. O questionário pode complementar a análise."; classe = "parecer-ressalvas"; emoji = "⚠️"; }
-    else { veredicto = "NÃO AVANÇAR"; justificativa = "Currículo com score baixo e lacunas significativas."; classe = "parecer-nao-avancar"; emoji = "✖️"; }
-  } else {
-    if (altoRisco) { const riscos = []; if (mosca >= 65) riscos.push("perfil de baixo engajamento"); if (traidor >= 65) riscos.push("indicadores de deslealdade"); if (turnover >= 65) riscos.push("alto risco de rotatividade"); veredicto = "NÃO AVANÇAR — Risco comportamental elevado"; justificativa = `A análise comportamental identificou ${riscos.join(', ')}.`; classe = "parecer-nao-avancar"; emoji = "✖️"; }
-    else if (scoreCombinado >= 72 && !temAlertas) { veredicto = "AVANÇAR PARA ENTREVISTA"; justificativa = `Score combinado de ${scoreCombinado}/100. Currículo e perfil comportamental alinhados.`; classe = "parecer-avancar"; emoji = "✅"; }
-    else if (scoreCombinado >= 60) { const obs = []; if (temAlertas) obs.push("alertas no currículo"); if (scoreQuiz < 60) obs.push("perfil comportamental abaixo do ideal"); veredicto = "AVANÇAR COM RESSALVAS"; justificativa = `Score combinado de ${scoreCombinado}/100 com ${obs.join(' e ')}.`; classe = "parecer-ressalvas"; emoji = "⚠️"; }
-    else { veredicto = "NÃO AVANÇAR"; justificativa = `Score combinado de ${scoreCombinado}/100 abaixo do mínimo.`; classe = "parecer-nao-avancar"; emoji = "✖️"; }
-  }
+  // Score final só existe quando os dois scores estão disponíveis
+  const scoreFinal = temQuiz ? Math.round(scoreCurriculo * 0.6 + scoreQuiz * 0.4) : null;
+
   function indColor(val, invertido = false) { if (val === null) return 'ind-gray'; if (invertido) return val >= 65 ? 'ind-red' : val >= 40 ? 'ind-yellow' : 'ind-green'; return val >= 70 ? 'ind-green' : val >= 50 ? 'ind-yellow' : 'ind-red'; }
-  return `<div class="parecer-card ${classe}"><div class="parecer-veredicto">${emoji} ${veredicto}</div><div class="parecer-justificativa">${justificativa}</div><div class="parecer-indicadores"><div class="indicador"><div class="indicador-label">Score Currículo</div><div class="indicador-valor ${indColor(scoreCurriculo)}">${scoreCurriculo}<span style="font-size:11px;font-weight:400">/100</span></div></div><div class="indicador"><div class="indicador-label">Score Comportamental</div><div class="indicador-valor ${temQuiz ? indColor(scoreQuiz) : 'ind-gray'}">${temQuiz ? scoreQuiz + '<span style="font-size:11px;font-weight:400">/100</span>' : '—'}</div></div><div class="indicador"><div class="indicador-label">Risco Mosca Morta</div><div class="indicador-valor ${indColor(mosca, true)}">${mosca !== null ? mosca + '<span style="font-size:11px;font-weight:400">%</span>' : '—'}</div></div><div class="indicador"><div class="indicador-label">Risco Turnover</div><div class="indicador-valor ${indColor(turnover, true)}">${turnover !== null ? turnover + '<span style="font-size:11px;font-weight:400">%</span>' : '—'}</div></div></div></div>`;
+
+  // ── BLOCO 1: PARECER TÉCNICO INICIAL (sempre exibido) ──────────────────
+  let vTec, jTec, classeTec, emojiTec;
+  if (scoreCurriculo >= 70 && !temAlertas) { vTec = "PERFIL TÉCNICO ADEQUADO"; jTec = "Currículo sólido com boa aderência ao perfil da vaga."; classeTec = "parecer-avancar"; emojiTec = "✅"; }
+  else if (scoreCurriculo >= 70) { vTec = "PERFIL TÉCNICO ADEQUADO COM RESSALVAS"; jTec = "Currículo acima da média, mas com pontos de atenção registrados."; classeTec = "parecer-ressalvas"; emojiTec = "⚠️"; }
+  else if (scoreCurriculo >= 50) { vTec = "PERFIL TÉCNICO PARCIAL"; jTec = "Currículo abaixo do esperado para a vaga. Requer avaliação cuidadosa."; classeTec = "parecer-ressalvas"; emojiTec = "⚠️"; }
+  else { vTec = "PERFIL TÉCNICO INSUFICIENTE"; jTec = "Currículo com score baixo e lacunas significativas em relação ao perfil."; classeTec = "parecer-nao-avancar"; emojiTec = "✖️"; }
+
+  const parecerTecnico = `
+    <div class="parecer-card ${classeTec}" style="margin-bottom:10px">
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:6px">
+        <div class="parecer-veredicto" style="font-size:14px">${emojiTec} ${vTec}</div>
+        <span style="font-size:10px;text-transform:uppercase;letter-spacing:.08em;color:var(--text-light);font-weight:600;white-space:nowrap;margin-left:10px">PARECER TÉCNICO</span>
+      </div>
+      <div class="parecer-justificativa">${jTec}</div>
+      <div style="margin-top:10px;display:flex;align-items:center;gap:16px">
+        <div class="indicador" style="flex:1;background:rgba(255,255,255,0.6)">
+          <div class="indicador-label">Score Técnico</div>
+          <div class="indicador-valor ${indColor(scoreCurriculo)}">${scoreCurriculo}<span style="font-size:11px;font-weight:400">/100</span></div>
+        </div>
+        ${temAlertas ? `<div style="font-size:11px;color:var(--warn);background:var(--warn-bg);padding:6px 10px;border-radius:6px;line-height:1.5">⚠️ ${c.alerts.length} alerta(s)<br>identificado(s)</div>` : ''}
+      </div>
+      ${!temQuiz ? `<div style="margin-top:10px;padding-top:10px;border-top:1px solid rgba(0,0,0,0.07);font-size:12px;color:var(--text-light);font-style:italic">💡 Este parecer avalia exclusivamente o currículo. Combine com o Parecer Final (após questionário comportamental) para uma decisão mais assertiva.</div>` : ''}
+    </div>`;
+
+  // ── BLOCO 2: PARECER FINAL COMBINADO (só quando quiz respondido) ────────
+  let parecerFinal = '';
+  if (!temQuiz) {
+    parecerFinal = `
+      <div style="border:1.5px dashed var(--cream-dark);border-radius:10px;padding:16px 20px;margin-bottom:20px;background:var(--cream)">
+        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:8px">
+          <span style="font-size:13px;font-weight:600;color:var(--text-mid)">⏳ PARECER FINAL</span>
+          <span style="font-size:10px;text-transform:uppercase;letter-spacing:.08em;color:var(--text-light);font-weight:600">AGUARDANDO QUESTIONÁRIO</span>
+        </div>
+        <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px">
+          <div class="indicador" style="background:rgba(255,255,255,0.8)"><div class="indicador-label">Score Técnico</div><div class="indicador-valor ${indColor(scoreCurriculo)}">${scoreCurriculo}<span style="font-size:11px;font-weight:400">/100</span></div></div>
+          <div class="indicador" style="opacity:.45"><div class="indicador-label">Score Comportamental</div><div class="indicador-valor ind-gray">—</div></div>
+          <div class="indicador" style="opacity:.45"><div class="indicador-label">Score Final</div><div class="indicador-valor ind-gray">—</div></div>
+        </div>
+        <div style="margin-top:10px;font-size:12px;color:var(--text-light)">Envie o questionário comportamental para liberar o Score Final e o veredicto completo.</div>
+      </div>`;
+  } else {
+    let vFinal, jFinal, classeFinal, emojiFinal;
+    if (altoRisco) {
+      const riscos = []; if (mosca >= 65) riscos.push("baixo engajamento"); if (traidor >= 65) riscos.push("deslealdade"); if (turnover >= 65) riscos.push("alto risco de turnover");
+      vFinal = "NÃO AVANÇAR — Risco comportamental elevado"; jFinal = `Análise comportamental identificou: ${riscos.join(', ')}.`; classeFinal = "parecer-nao-avancar"; emojiFinal = "✖️";
+    } else if (scoreFinal >= 72 && !temAlertas) { vFinal = "AVANÇAR PARA ENTREVISTA"; jFinal = `Score Final de ${scoreFinal}/100. Perfil técnico e comportamental alinhados ao cargo.`; classeFinal = "parecer-avancar"; emojiFinal = "✅"; }
+    else if (scoreFinal >= 60) {
+      const obs = []; if (temAlertas) obs.push("alertas no currículo"); if (scoreQuiz < 60) obs.push("perfil comportamental abaixo do ideal");
+      vFinal = "AVANÇAR COM RESSALVAS"; jFinal = `Score Final de ${scoreFinal}/100 com ${obs.join(' e ')}.`; classeFinal = "parecer-ressalvas"; emojiFinal = "⚠️";
+    } else { vFinal = "NÃO AVANÇAR"; jFinal = `Score Final de ${scoreFinal}/100 abaixo do mínimo recomendado.`; classeFinal = "parecer-nao-avancar"; emojiFinal = "✖️"; }
+
+    parecerFinal = `
+      <div class="parecer-card ${classeFinal}">
+        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:6px">
+          <div class="parecer-veredicto">${emojiFinal} ${vFinal}</div>
+          <span style="font-size:10px;text-transform:uppercase;letter-spacing:.08em;color:var(--text-light);font-weight:600;white-space:nowrap;margin-left:10px">PARECER FINAL</span>
+        </div>
+        <div class="parecer-justificativa">${jFinal}</div>
+        <div class="parecer-indicadores" style="grid-template-columns:1fr 1fr 1fr 1fr 1fr;margin-top:14px">
+          <div class="indicador"><div class="indicador-label">Score Técnico</div><div class="indicador-valor ${indColor(scoreCurriculo)}">${scoreCurriculo}<span style="font-size:11px;font-weight:400">/100</span></div></div>
+          <div class="indicador"><div class="indicador-label">Score Comportamental</div><div class="indicador-valor ${indColor(scoreQuiz)}">${scoreQuiz}<span style="font-size:11px;font-weight:400">/100</span></div></div>
+          <div class="indicador" style="background:rgba(15,31,61,0.06);border:1.5px solid rgba(15,31,61,0.12)"><div class="indicador-label" style="font-weight:700">Score Final</div><div class="indicador-valor ${indColor(scoreFinal)}" style="font-size:22px">${scoreFinal}<span style="font-size:11px;font-weight:400">/100</span></div></div>
+          <div class="indicador"><div class="indicador-label">Risco Mosca Morta</div><div class="indicador-valor ${indColor(mosca, true)}">${mosca}<span style="font-size:11px;font-weight:400">%</span></div></div>
+          <div class="indicador"><div class="indicador-label">Risco Turnover</div><div class="indicador-valor ${indColor(turnover, true)}">${turnover}<span style="font-size:11px;font-weight:400">%</span></div></div>
+        </div>
+      </div>`;
+  }
+
+  return parecerTecnico + parecerFinal;
 }
 
 async function addToTalentBank(candidateId) {
