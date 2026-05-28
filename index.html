@@ -719,9 +719,10 @@ async function loadDashRecrutamento() {
     for (const p of d.processos) {
       try { const cs = await api(`/processes/${p.id}/candidates`); cs.forEach(c => allCands.push({ ...c, process_title: p.title })); } catch(e) {}
     }
-    // Ordena pelo score final (técnico + comportamental) quando disponível, senão score técnico
-    const getScoreRanking = c => c.score_final != null ? c.score_final : c.score;
-    const top = [...allCands].sort((a,b) => getScoreRanking(b) - getScoreRanking(a)).slice(0, 8);
+    // Ranking em dois grupos: score final primeiro, score técnico depois
+    const g1 = allCands.filter(c => c.score_final != null && c.score_final > 0).sort((a,b) => b.score_final - a.score_final);
+    const g2 = allCands.filter(c => !c.score_final || c.score_final === 0).sort((a,b) => b.score - a.score);
+    const top = [...g1, ...g2].slice(0, 8);
     const rankEl = document.getElementById('dr-ranking');
     if (top.length) {
       rankEl.innerHTML = top.map((c, i) => {
@@ -974,25 +975,77 @@ function renderProcessDetail(proc, candidates) {
     <div class="card"><div class="card-header"><span class="card-title">🏆 Ranking de Candidatos</span><span class="text-sm text-mid">${candidates.length} candidato(s)</span></div><div id="candidates-table">${renderCandidatesTable(candidates, isOpen, proc.title)}</div></div>`;
 }
 
+function renderScoreCell(c) {
+  if (c.status === 'aguardando_analise') return '<span style="font-size:12px;color:var(--text-light)">⏳</span>';
+  const tec = Math.round(c.score);
+  const scoreFinal = (c.score_final != null && c.score_final > 0) ? Math.round(c.score_final) : null;
+  if (scoreFinal != null) {
+    const scoreComp = Math.round((scoreFinal - tec * 0.4) / 0.6);
+    const corFinal = scoreFinal >= 70 ? 'var(--success)' : scoreFinal >= 50 ? 'var(--warn)' : 'var(--danger)';
+    const bgFinal = scoreFinal >= 70 ? 'var(--success-bg)' : scoreFinal >= 50 ? 'var(--warn-bg)' : 'var(--danger-bg)';
+    return `<div style="display:flex;gap:4px;align-items:center;flex-wrap:nowrap">
+      <div style="text-align:center;background:var(--cream);border-radius:5px;padding:3px 6px;min-width:38px">
+        <div style="font-size:9px;color:var(--text-light);text-transform:uppercase;letter-spacing:.04em">téc.</div>
+        <div style="font-size:13px;font-weight:600;color:var(--text-mid)">${tec}</div>
+      </div>
+      <div style="font-size:10px;color:var(--text-light)">+</div>
+      <div style="text-align:center;background:var(--cream);border-radius:5px;padding:3px 6px;min-width:38px">
+        <div style="font-size:9px;color:var(--text-light);text-transform:uppercase;letter-spacing:.04em">comp.</div>
+        <div style="font-size:13px;font-weight:600;color:var(--text-mid)">${scoreComp > 0 ? scoreComp : '—'}</div>
+      </div>
+      <div style="font-size:10px;color:var(--text-light)">=</div>
+      <div style="text-align:center;background:${bgFinal};border-radius:5px;padding:3px 8px;min-width:42px;border:1px solid ${corFinal}">
+        <div style="font-size:9px;color:${corFinal};text-transform:uppercase;letter-spacing:.04em;font-weight:600">final</div>
+        <div style="font-size:14px;font-weight:700;color:${corFinal}">${scoreFinal}</div>
+      </div>
+    </div>`;
+  } else {
+    return `<div style="display:flex;gap:4px;align-items:center">
+      <div style="text-align:center;background:#EFF4FF;border-radius:5px;padding:3px 8px;min-width:42px;border:1px solid #a8c4f8">
+        <div style="font-size:9px;color:var(--blue);text-transform:uppercase;letter-spacing:.04em;font-weight:600">téc.</div>
+        <div style="font-size:14px;font-weight:700;color:var(--blue)">${tec}</div>
+      </div>
+      <div style="font-size:10px;color:var(--text-light)">+</div>
+      <div style="text-align:center;background:var(--cream);border-radius:5px;padding:3px 6px;min-width:38px;opacity:.4">
+        <div style="font-size:9px;color:var(--text-light);text-transform:uppercase;letter-spacing:.04em">comp.</div>
+        <div style="font-size:13px;font-weight:600;color:var(--text-light)">—</div>
+      </div>
+      <div style="font-size:10px;color:var(--text-light)">=</div>
+      <div style="text-align:center;background:var(--cream);border-radius:5px;padding:3px 8px;min-width:42px;opacity:.4">
+        <div style="font-size:9px;color:var(--text-light);text-transform:uppercase;letter-spacing:.04em">final</div>
+        <div style="font-size:13px;font-weight:600;color:var(--text-light)">—</div>
+      </div>
+    </div>`;
+  }
+}
+
 function renderCandidatesTable(candidates, isOpen, processTitle) {
   if (!candidates.length) return '<div class="empty"><div class="empty-icon">👥</div><p>Nenhum currículo enviado ainda.</p></div>';
-  const rows = candidates.map(c => {
-    const sc = scoreClass(c.score), bloqueado = c.bloqueado;
+  const grupo1 = candidates.filter(c => c.score_final != null && c.score_final > 0).sort((a,b) => b.score_final - a.score_final);
+  const grupo2 = candidates.filter(c => !c.score_final || c.score_final === 0).sort((a,b) => b.score - a.score);
+  const makeRow = (c, pos) => {
+    const bloqueado = c.bloqueado;
     return `<tr data-candidate-id="${c.id}" class="${bloqueado ? 'bloqueado-row' : ''}">
-      <td><strong>${c.ranking_position}</strong></td>
+      <td><strong>${pos}</strong></td>
       <td><div><strong>${c.name || c.filename}</strong> ${bloqueado ? '<span class="badge badge-blocked" style="font-size:10px">🚫 Bloqueado</span>' : ''}</div>${c.email ? `<div class="text-sm text-mid">${c.email}</div>` : ''}${c.canal_origem ? `<div style="font-size:10px;color:var(--text-light)">📍 ${c.canal_origem}</div>` : ''}</td>
-      <td><div class="score-bar ${sc}"><div class="score-track"><div class="score-fill" style="width:${c.score}%"></div></div><div class="score-num">${c.status === 'aguardando_analise' ? '—' : Math.round(c.score) + '/100'}</div></div></td>
+      <td>${renderScoreCell(c)}</td>
       <td>${candidateStatusBadge(c.status)}<span id="pesquisa-badge-${c.id}" style="display:block;margin-top:3px"></span></td>
       <td><div class="flex gap-2" style="flex-wrap:wrap">
         ${c.status === 'aguardando_analise' ? `<span style="font-size:12px;color:var(--text-light)">⏳ Aguardando análise</span>` : `<button class="btn btn-secondary btn-sm" onclick="openCandidate(${c.id})">Ver detalhes</button>`}
         ${isOpen && c.status === 'pendente' ? `<button class="btn btn-sm" style="background:var(--success-bg);color:var(--success)" onclick="updateStatus(${c.id},'aprovado')">✓</button><button class="btn btn-sm" style="background:var(--danger-bg);color:var(--danger)" onclick="updateStatus(${c.id},'reprovado')">✗</button>` : ''}
-        ${isOpen && c.status === 'aprovado' ? `<button class="btn btn-sm btn-gold" onclick="abrirModalContratar(${c.id},'${(c.name||'').replace(/'/g,"\\'")}','${(c.email||'')}','${(c.phone||'')}','${(processTitle||'').replace(/'/g,"\\'")}')">✅ Contratado</button>` : ''}
+        ${isOpen && c.status === 'aprovado' ? `<button class="btn btn-sm btn-gold" onclick="abrirModalContratar(${c.id},'${(c.name||'').replace(/'/g,"\'")}','${(c.email||'')}','${(c.phone||'')}','${(processTitle||'').replace(/'/g,"\'")}')">✅ Contratado</button>` : ''}
         ${!bloqueado && c.status !== 'aguardando_analise' ? `<button class="btn btn-sm" style="background:#1a1a1a;color:#fff;font-size:11px" onclick="abrirModalBloquear(${c.id})">🚫</button>` : ''}
       </div></td>
     </tr>`;
-  }).join('');
-  setTimeout(() => enriquecerBadgesTabela(candidates.map(c => c.id)), 400);
-  return `<div class="table-wrap"><table><thead><tr><th>#</th><th>Candidato</th><th>Score</th><th>Status / Pesquisa</th><th>Ações</th></tr></thead><tbody>${rows}</tbody></table></div>`;
+  };
+  const rowsG1 = grupo1.map((c, i) => makeRow(c, i + 1)).join('');
+  const sepRow = (grupo1.length > 0 && grupo2.length > 0)
+    ? `<tr><td colspan="5" style="padding:6px 14px;background:var(--cream);border-top:2px dashed var(--cream-dark)"><span style="font-size:11px;color:var(--text-light);text-transform:uppercase;letter-spacing:.06em">⬇ avaliação técnica — questionário comportamental pendente</span></td></tr>`
+    : '';
+  const rowsG2 = grupo2.map((c, i) => makeRow(c, grupo1.length + i + 1)).join('');
+  const todos = [...grupo1, ...grupo2];
+  setTimeout(() => enriquecerBadgesTabela(todos.map(c => c.id)), 400);
+  return `<div class="table-wrap"><table><thead><tr><th>#</th><th>Candidato</th><th>Score</th><th>Status / Pesquisa</th><th>Ações</th></tr></thead><tbody>${rowsG1}${sepRow}${rowsG2}</tbody></table></div>`;
 }
 
 async function enriquecerBadgesTabela(candidateIds) {
