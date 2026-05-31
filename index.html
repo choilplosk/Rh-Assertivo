@@ -205,6 +205,7 @@
     <button class="nav-item" onclick="showSection('processes')"><span class="icon">📋</span> Processos</button>
     <button class="nav-item" onclick="showSection('profiles')"><span class="icon">📄</span> Perfis de Vaga</button>
     <button class="nav-item" onclick="showSection('talent')"><span class="icon">⭐</span> Banco de Talentos</button>
+    <button class="nav-item" onclick="showSection('arquivo-frio')"><span class="icon">🗂️</span> Arquivo Frio</button>
     <button class="nav-item" onclick="showSection('funcionarios')"><span class="icon">👤</span> Funcionários</button>
     <button class="nav-item" id="nav-config" onclick="showSection('config')"><span class="icon">⚙️</span> Configurações</button>
   </nav>
@@ -369,6 +370,17 @@
       </div>
     </div>
 
+    <!-- ARQUIVO FRIO -->
+    <div id="section-arquivo-frio" class="section">
+      <div class="card">
+        <div class="card-header">
+          <span class="card-title">🗂️ Arquivo Frio</span>
+          <span class="text-sm text-mid">Candidatos que não responderam ao processo seletivo</span>
+        </div>
+        <div id="arquivo-frio-list"><div class="loading"><div class="spinner"></div></div></div>
+      </div>
+    </div>
+
     <!-- CONFIGURAÇÕES -->
     <div id="section-config" class="section">
       <!-- Gestão de usuários — só diretor -->
@@ -379,7 +391,7 @@
             <div class="form-group"><label class="form-label">Nome completo *</label><input type="text" class="form-control" id="nu-nome" placeholder="Nome do usuário"></div>
             <div class="form-group"><label class="form-label">Email *</label><input type="email" class="form-control" id="nu-email" placeholder="email@exemplo.com"></div>
             <div class="form-group"><label class="form-label">Senha *</label><input type="password" class="form-control" id="nu-senha" placeholder="Mínimo 6 caracteres"></div>
-            <div class="form-group"><label class="form-label">Perfil</label><select class="form-control" id="nu-perfil"><option value="operador">Operador</option><option value="diretor">Diretor</option></select></div>
+            <div class="form-group"><label class="form-label">Perfil</label><select class="form-control" id="nu-perfil"><option value="operador">Operador</option><option value="diretor">Diretor</option><option value="leitor">Leitor</option></select></div>
             <div id="nu-msg"></div>
             <button class="btn btn-primary w-full" onclick="criarUsuario()">➕ Criar Usuário</button>
           </div>
@@ -407,6 +419,16 @@
           </div>
           <div id="novo-canal-msg"></div>
           <div id="canais-list"><div class="loading"><div class="spinner"></div></div></div>
+        </div>
+        <div class="card" style="margin-top:20px">
+          <div class="card-header"><span class="card-title">Motivos de Reprovação</span></div>
+          <p style="font-size:13px;color:var(--text-mid);margin-bottom:16px">Motivos que aparecem ao reprovar um candidato.</p>
+          <div style="display:flex;gap:8px;margin-bottom:16px">
+            <input type="text" class="form-control" id="novo-motivo-nome" placeholder="Ex: Sem experiência no setor" style="flex:1">
+            <button class="btn btn-primary btn-sm" onclick="criarMotivoReprovacao()">+ Adicionar</button>
+          </div>
+          <div id="novo-motivo-msg"></div>
+          <div id="motivos-reprovacao-list"><div class="loading"><div class="spinner"></div></div></div>
         </div>
       </div>
     </div>
@@ -458,6 +480,31 @@
       <div id="ct-msg"></div>
     </div>
     <div class="modal-footer"><button class="btn btn-secondary" onclick="closeModal('modal-contratar')">Cancelar</button><button class="btn btn-gold" onclick="confirmarContratacao()">✅ Confirmar Contratação</button></div>
+  </div>
+</div>
+
+<!-- MODAL REPROVAR CANDIDATO -->
+<div class="modal-overlay" id="modal-reprovar">
+  <div class="modal" style="max-width:480px">
+    <div class="modal-header"><h3>✖️ Reprovar Candidato</h3><button class="modal-close" onclick="closeModal('modal-reprovar')">✕</button></div>
+    <div class="modal-body">
+      <input type="hidden" id="rp-candidate-id">
+      <div class="form-group">
+        <label class="form-label">Motivo da reprovação</label>
+        <select class="form-control" id="rp-motivo-select" onchange="syncMotivoReprovacao()">
+          <option value="">Selecionar motivo cadastrado...</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label class="form-label">Detalhes / motivo livre</label>
+        <textarea class="form-control" id="rp-motivo-livre" rows="3" placeholder="Descreva o motivo da reprovação..."></textarea>
+      </div>
+      <div id="rp-msg"></div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-secondary" onclick="closeModal('modal-reprovar')">Cancelar</button>
+      <button class="btn btn-danger" onclick="confirmarReprovacao()">✖️ Confirmar Reprovação</button>
+    </div>
   </div>
 </div>
 
@@ -543,7 +590,11 @@
     <div class="modal-header"><h3>📍 Canal de Origem</h3><button class="modal-close" onclick="closeModal('modal-canal-origem')">✕</button></div>
     <div class="modal-body">
       <p style="font-size:14px;color:var(--text-mid);margin-bottom:16px">Por qual canal este(s) currículo(s) chegou?</p>
-      <div class="form-group"><label class="form-label">Canal de atração</label><select class="form-control" id="co-canal"><option value="">Não informar</option></select></div>
+      <div class="form-group"><label class="form-label">Canal de atração</label><select class="form-control" id="co-canal" onchange="toggleIndicadoPor()"><option value="">Não informar</option></select></div>
+      <div class="form-group" id="co-indicado-por-group" style="display:none">
+        <label class="form-label">Indicado por <span style="color:var(--text-light);font-weight:400">(nome de quem indicou)</span></label>
+        <input type="text" class="form-control" id="co-indicado-por" placeholder="Ex: Maria Silva — Consultora PDV Norte">
+      </div>
     </div>
     <div class="modal-footer"><button class="btn btn-secondary" onclick="skipCanalOrigem()">Pular</button><button class="btn btn-primary" onclick="confirmarCanalOrigem()">Confirmar</button></div>
   </div>
@@ -563,7 +614,7 @@ function checkAuth() {
   if (!authToken) { document.getElementById('login-screen').style.display = 'flex'; document.getElementById('app-screen').style.display = 'none'; }
   else {
     document.getElementById('login-screen').style.display = 'none'; document.getElementById('app-screen').style.display = 'flex';
-    if (currentUser) { document.getElementById('user-name').textContent = currentUser.name; document.getElementById('user-role').textContent = currentUser.role === 'diretor' ? 'Diretor' : 'Operador'; }
+    if (currentUser) { document.getElementById('user-name').textContent = currentUser.name; document.getElementById('user-role').textContent = currentUser.role === 'diretor' ? 'Diretor' : currentUser.role === 'leitor' ? 'Leitor' : 'Operador'; }
     loadDashboard();
   }
 }
@@ -593,17 +644,18 @@ function showSection(name) {
   document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
   document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
   document.getElementById('section-' + name).classList.add('active');
-  document.querySelectorAll('.nav-item').forEach(n => { const t = n.textContent.trim().toLowerCase(); if ((name==='dashboard'&&t.includes('dashboard'))||(name==='processes'&&t.includes('processo'))||(name==='profiles'&&t.includes('perfis'))||(name==='talent'&&t.includes('talento'))||(name==='funcionarios'&&t.includes('funcionário'))||(name==='config'&&t.includes('configurações'))) n.classList.add('active'); });
-  const titles = { dashboard:'Dashboard', processes:'Processos Seletivos', profiles:'Perfis de Vaga', talent:'Banco de Talentos', funcionarios:'Funcionários', config:'Configurações' };
+  document.querySelectorAll('.nav-item').forEach(n => { const t = n.textContent.trim().toLowerCase(); if ((name==='dashboard'&&t.includes('dashboard'))||(name==='processes'&&t.includes('processo'))||(name==='profiles'&&t.includes('perfis'))||(name==='talent'&&t.includes('talento'))||(name==='arquivo-frio'&&t.includes('arquivo'))||(name==='funcionarios'&&t.includes('funcionário'))||(name==='config'&&t.includes('configurações'))) n.classList.add('active'); });
+  const titles = { dashboard:'Dashboard', processes:'Processos Seletivos', profiles:'Perfis de Vaga', talent:'Banco de Talentos', 'arquivo-frio':'Arquivo Frio', funcionarios:'Funcionários', config:'Configurações' };
   document.getElementById('page-title').textContent = titles[name] || name;
   const actions = document.getElementById('topbar-actions'); actions.innerHTML = '';
-  if (name==='processes') actions.innerHTML = '<button class="btn btn-gold" onclick="openNewProcess()">+ Novo Processo</button>';
+  if (name==='processes' && !isLeitor()) actions.innerHTML = '<button class="btn btn-gold" onclick="openNewProcess()">+ Novo Processo</button>';
   if (name==='dashboard') loadDashboard();
   if (name==='processes') loadProcesses();
   if (name==='profiles') loadProfiles();
   if (name==='talent') { loadProcessesForFilter(); loadTalent(); }
   if (name==='funcionarios') loadFuncionarios();
-  if (name==='config') { loadCanais(); if (currentUser?.role === 'diretor') loadUsuarios(); renderConfigLayout(); }
+  if (name==='config') { loadCanais(); loadMotivosReprovacaoConfig(); if (currentUser?.role === 'diretor') loadUsuarios(); renderConfigLayout(); }
+  if (name==='arquivo-frio') loadArquivoFrio();
 }
 
 async function api(path, opts = {}) {
@@ -955,6 +1007,7 @@ async function openProcess(id) {
   const el = document.getElementById('process-detail-content');
   el.innerHTML = '<div class="loading"><div class="spinner"></div><span class="loading-text">Carregando processo...</span></div>';
   try {
+    carregarMotivosReprovacao();
     const [proc, candidates] = await Promise.all([api(`/processes/${id}`), api(`/processes/${id}/candidates`)]);
     renderProcessDetail(proc, candidates);
     setTimeout(() => checkPendingAnalysis(), 100);
@@ -963,7 +1016,7 @@ async function openProcess(id) {
 
 function renderProcessDetail(proc, candidates) {
   const el = document.getElementById('process-detail-content');
-  const isOpen = proc.status !== 'encerrado';
+  const isOpen = proc.status !== 'encerrado' && !isLeitor();
   el.innerHTML = `<div class="flex items-center justify-between mb-6"><div><h2 class="font-serif" style="font-size:26px;color:var(--navy)">${proc.title}</h2><div class="text-sm text-mid mt-4">${statusBadge(proc.status)} · ${candidates.length} candidato(s) · Criado em ${fmtDate(proc.created_at)}</div></div>${isOpen ? `<button class="btn btn-danger btn-sm" onclick="openCloseProcess(${proc.id})">Encerrar Processo</button>` : ''}</div>
     ${proc.profile_adjustments ? `<div class="alert alert-info mb-6">📌 Ajustes: ${proc.profile_adjustments}</div>` : ''}
     ${isOpen ? `<div class="card mb-6"><div class="card-header"><span class="card-title">📤 Enviar Currículos</span></div>
@@ -1032,9 +1085,9 @@ function renderCandidatesTable(candidates, isOpen, processTitle) {
       <td>${candidateStatusBadge(c.status)}<span id="pesquisa-badge-${c.id}" style="display:block;margin-top:3px"></span></td>
       <td><div class="flex gap-2" style="flex-wrap:wrap">
         ${c.status === 'aguardando_analise' ? `<span style="font-size:12px;color:var(--text-light)">⏳ Aguardando análise</span>` : `<button class="btn btn-secondary btn-sm" onclick="openCandidate(${c.id})">Ver detalhes</button>`}
-        ${isOpen && c.status === 'pendente' ? `<button class="btn btn-sm" style="background:var(--success-bg);color:var(--success)" onclick="updateStatus(${c.id},'aprovado')">✓</button><button class="btn btn-sm" style="background:var(--danger-bg);color:var(--danger)" onclick="updateStatus(${c.id},'reprovado')">✗</button>` : ''}
+        ${isOpen && c.status === 'pendente' ? `<button class="btn btn-sm" style="background:var(--success-bg);color:var(--success)" onclick="updateStatus(${c.id},'aprovado')">✓</button><button class="btn btn-sm" style="background:var(--danger-bg);color:var(--danger)" onclick="abrirModalReprovar(${c.id})">✗</button>` : ''}
         ${isOpen && c.status === 'aprovado' ? `<button class="btn btn-sm btn-gold" onclick="abrirModalContratar(${c.id},'${(c.name||'').replace(/'/g,"\'")}','${(c.email||'')}','${(c.phone||'')}','${(processTitle||'').replace(/'/g,"\'")}')">✅ Contratado</button>` : ''}
-        ${!bloqueado && c.status !== 'aguardando_analise' ? `<button class="btn btn-sm" style="background:#1a1a1a;color:#fff;font-size:11px" onclick="abrirModalBloquear(${c.id})">🚫</button>` : ''}
+        ${!bloqueado && c.status !== 'aguardando_analise' ? `<button class="btn btn-sm" style="background:#1a1a1a;color:#fff;font-size:11px" onclick="abrirModalBloquear(${c.id})">🚫</button><button class="btn btn-sm" style="background:var(--cream-dark);color:var(--text-mid);font-size:11px" title="Arquivo Frio" onclick="moverParaArquivoFrio(${c.id})">🗂️</button>` : ''}
       </div></td>
     </tr>`;
   };
@@ -1077,8 +1130,9 @@ function skipCanalOrigem() {
 
 function confirmarCanalOrigem() {
   const canal = document.getElementById('co-canal').value;
+  const indicadoPor = document.getElementById('co-indicado-por')?.value?.trim() || '';
   closeModal('modal-canal-origem');
-  if (pendingFiles) { handleFiles(pendingFiles, canal || null); pendingFiles = null; }
+  if (pendingFiles) { handleFiles(pendingFiles, canal || null, indicadoPor || null); pendingFiles = null; }
 }
 
 async function openNewProcess() {
@@ -1098,13 +1152,13 @@ async function createProcess() {
 
 function handleDrop(e) { e.preventDefault(); document.getElementById('upload-zone')?.classList.remove('drag'); askCanalOrigem(e.dataTransfer.files); }
 
-async function handleFiles(files, canalOrigem) {
+async function handleFiles(files, canalOrigem, indicadoPor) {
   if (!files.length) return;
   const zone = document.getElementById('upload-zone'), progressEl = document.getElementById('upload-progress'), fill = document.getElementById('progress-fill'), label = document.getElementById('progress-label'), detail = document.getElementById('progress-detail');
   zone.style.display = 'none'; progressEl.style.display = 'block'; label.textContent = `Extraindo texto de ${files.length} arquivo(s)...`; fill.style.width = '30%';
   try {
     const candidates = [];
-    for (let i = 0; i < files.length; i++) { const f = files[i]; label.textContent = `Lendo ${i+1}/${files.length}: ${f.name}`; const text = await extractTextFromFile(f); candidates.push({ filename: f.name, text, canal_origem: canalOrigem }); }
+    for (let i = 0; i < files.length; i++) { const f = files[i]; label.textContent = `Lendo ${i+1}/${files.length}: ${f.name}`; const text = await extractTextFromFile(f); candidates.push({ filename: f.name, text, canal_origem: canalOrigem, indicado_por: indicadoPor }); }
     fill.style.width = '60%'; label.textContent = `Enviando ${candidates.length} currículo(s)...`;
     const r = await fetch(`${API}/processes/${currentProcessId}/upload`, { method: 'POST', headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + authToken }, body: JSON.stringify({ candidates }) });
     if (!r.ok) throw new Error(await r.text());
@@ -1179,13 +1233,13 @@ async function openCandidate(candidateId) {
   carregarUltimoParecer(c.id);
   const footer = document.getElementById('modal-candidate-footer');
   const proc = await api(`/processes/${currentProcessId}`);
-  const isOpen = proc.status !== 'encerrado';
+  const isOpen = proc.status !== 'encerrado' && !isLeitor();
   const btnTalent = c.in_talent_bank ? `<button class="btn btn-secondary" disabled style="opacity:.5">⭐ No banco</button>` : `<button class="btn btn-secondary" style="background:var(--warn-bg);color:var(--warn)" onclick="addToTalentBank(${c.id})">⭐ Banco de talentos</button>`;
   const btnPrint = `<button class="btn btn-secondary btn-sm" onclick="printCandidate(${c.id})">🖨️ Imprimir</button>`;
   const btnBloquear = !c.bloqueado ? `<button class="btn btn-sm" style="background:#1a1a1a;color:#fff" onclick="closeModal('modal-candidate');abrirModalBloquear(${c.id})">🚫 Bloquear</button>` : '';
   const btnContratar = isOpen && c.status === 'aprovado' ? `<button class="btn btn-gold" onclick="closeModal('modal-candidate');abrirModalContratar(${c.id},'${(c.name||'').replace(/'/g,"\\'")}','${c.email||''}','${c.phone||''}','${proc.title.replace(/'/g,"\\'")}')">✅ Contratado</button>` : '';
   if (c.status === 'pendente' && isOpen) {
-    footer.innerHTML = `<button class="btn btn-secondary" onclick="closeModal('modal-candidate')">Fechar</button>${btnPrint}${btnTalent}${btnBloquear}<button class="btn btn-danger" onclick="updateStatus(${c.id},'reprovado');closeModal('modal-candidate')">Reprovar</button><button class="btn btn-primary" onclick="updateStatus(${c.id},'aprovado');closeModal('modal-candidate')">Aprovar</button>${btnContratar}`;
+    footer.innerHTML = `<button class="btn btn-secondary" onclick="closeModal('modal-candidate')">Fechar</button>${btnPrint}${btnTalent}${btnBloquear}<button class="btn btn-danger" onclick="closeModal('modal-candidate');abrirModalReprovar(${c.id})">Reprovar</button><button class="btn btn-primary" onclick="updateStatus(${c.id},'aprovado');closeModal('modal-candidate')">Aprovar</button>${btnContratar}`;
   } else {
     footer.innerHTML = `<button class="btn btn-secondary" onclick="closeModal('modal-candidate')">Fechar</button>${btnPrint}${btnTalent}${btnBloquear}${btnContratar}`;
   }
@@ -1493,7 +1547,7 @@ async function loadUsuarios() {
   try {
     const users = await api('/users'); document.getElementById('users-count').textContent = users.length + ' usuário(s)';
     if (!users.length) { el.innerHTML = '<div class="empty"><div class="empty-icon">👥</div><p>Nenhum usuário.</p></div>'; return; }
-    el.innerHTML = `<div class="table-wrap"><table><thead><tr><th>Nome</th><th>Perfil</th><th>Status</th><th></th></tr></thead><tbody>${users.map(u => `<tr><td><strong>${u.name}</strong><div style="font-size:11px;color:var(--text-light)">${u.email}</div></td><td><span class="badge ${u.role==='diretor'?'badge-blue':'badge-gray'}">${u.role==='diretor'?'Diretor':'Operador'}</span></td><td><span class="badge ${u.ativo?'badge-success':'badge-danger'}">${u.ativo?'Ativo':'Inativo'}</span></td><td>${u.id!==currentUser?.id?`<button class="btn btn-sm ${u.ativo?'btn-danger':'btn-secondary'}" onclick="toggleUsuario(${u.id},${!u.ativo})">${u.ativo?'Desativar':'Ativar'}</button>`:'<span style="font-size:11px;color:var(--text-light)">você</span>'}</td></tr>`).join('')}</tbody></table></div>`;
+    el.innerHTML = `<div class="table-wrap"><table><thead><tr><th>Nome</th><th>Perfil</th><th>Status</th><th></th></tr></thead><tbody>${users.map(u => `<tr><td><strong>${u.name}</strong><div style="font-size:11px;color:var(--text-light)">${u.email}</div></td><td><span class="badge ${u.role==='diretor'?'badge-blue':u.role==='leitor'?'badge-warn':'badge-gray'}">${u.role==='diretor'?'Diretor':u.role==='leitor'?'Leitor':'Operador'}</span></td><td><span class="badge ${u.ativo?'badge-success':'badge-danger'}">${u.ativo?'Ativo':'Inativo'}</span></td><td>${u.id!==currentUser?.id?`<button class="btn btn-sm ${u.ativo?'btn-danger':'btn-secondary'}" onclick="toggleUsuario(${u.id},${!u.ativo})">${u.ativo?'Desativar':'Ativar'}</button>`:'<span style="font-size:11px;color:var(--text-light)">você</span>'}</td></tr>`).join('')}</tbody></table></div>`;
   } catch(e) { el.innerHTML = `<div class="alert alert-danger">Erro: ${e.message}</div>`; }
 }
 
@@ -1517,6 +1571,130 @@ async function alterarMinhaSenha() {
   if (senha.length < 6) { msg.innerHTML = '<div class="alert alert-danger">Mínimo 6 caracteres.</div>'; return; }
   try { await api(`/users/${currentUser.id}/senha`, { method: 'PUT', body: JSON.stringify({ password: senha }) }); msg.innerHTML = '<div class="alert alert-success">Senha alterada!</div>'; document.getElementById('mp-senha').value = ''; document.getElementById('mp-confirma').value = ''; setTimeout(() => msg.innerHTML = '', 3000); }
   catch(e) { msg.innerHTML = `<div class="alert alert-danger">Erro: ${e.message}</div>`; }
+}
+
+// ─── REPROVAR COM MOTIVO ─────────────────────────────────────────
+let motivosReprovacaoCache = [];
+
+async function carregarMotivosReprovacao() {
+  try {
+    const motivos = await api('/motivos-reprovacao');
+    motivosReprovacaoCache = motivos;
+    return motivos;
+  } catch(e) { return []; }
+}
+
+function abrirModalReprovar(candidateId) {
+  document.getElementById('rp-candidate-id').value = candidateId;
+  document.getElementById('rp-motivo-livre').value = '';
+  document.getElementById('rp-msg').innerHTML = '';
+  const sel = document.getElementById('rp-motivo-select');
+  sel.innerHTML = '<option value="">Selecionar motivo cadastrado...</option>' +
+    motivosReprovacaoCache.map(m => `<option value="${m.motivo}">${m.motivo}</option>`).join('');
+  openModal('modal-reprovar');
+}
+
+function syncMotivoReprovacao() {
+  const sel = document.getElementById('rp-motivo-select');
+  const livre = document.getElementById('rp-motivo-livre');
+  if (sel.value && !livre.value) livre.value = sel.value;
+}
+
+async function confirmarReprovacao() {
+  const candidateId = parseInt(document.getElementById('rp-candidate-id').value);
+  const motivoLivre = document.getElementById('rp-motivo-livre').value.trim();
+  const motivoSelect = document.getElementById('rp-motivo-select').value;
+  const motivo = motivoLivre || motivoSelect;
+  try {
+    await api(`/processes/${currentProcessId}/candidates/${candidateId}/status`, {
+      method: 'PUT',
+      body: JSON.stringify({ status: 'reprovado', motivo_reprovacao: motivo, reason: motivo })
+    });
+    closeModal('modal-reprovar');
+    openProcess(currentProcessId);
+  } catch(e) {
+    document.getElementById('rp-msg').innerHTML = `<div class="alert alert-danger">Erro: ${e.message}</div>`;
+  }
+}
+
+// ─── INDICADO POR ─────────────────────────────────────────────────
+function toggleIndicadoPor() {
+  const canal = document.getElementById('co-canal').value;
+  const grp = document.getElementById('co-indicado-por-group');
+  grp.style.display = canal && canal.toLowerCase().includes('indicaç') ? 'block' : 'none';
+}
+
+// ─── ARQUIVO FRIO ─────────────────────────────────────────────────
+async function loadArquivoFrio() {
+  const el = document.getElementById('arquivo-frio-list');
+  el.innerHTML = '<div class="loading"><div class="spinner"></div></div>';
+  try {
+    const lista = await api('/arquivo-frio');
+    if (!lista.length) {
+      el.innerHTML = '<div class="empty"><div class="empty-icon">🗂️</div><p>Nenhum candidato no arquivo frio ainda.</p></div>';
+      return;
+    }
+    el.innerHTML = `<div class="table-wrap"><table>
+      <thead><tr><th>Candidato</th><th>Vaga</th><th>Score Técnico</th><th>Movido em</th><th></th></tr></thead>
+      <tbody>${lista.map(c => `<tr>
+        <td><strong>${c.name || c.filename}</strong>${c.email ? `<div class="text-sm text-mid">${c.email}</div>` : ''}</td>
+        <td>${c.process_title || '—'}</td>
+        <td><span style="font-weight:600;color:var(--blue)">${Math.round(c.score)}</span></td>
+        <td>${c.arquivo_frio_em ? new Date(c.arquivo_frio_em).toLocaleDateString('pt-BR') : '—'}</td>
+        <td><button class="btn btn-sm btn-secondary" onclick="removerArquivoFrio(${c.id})">↩ Restaurar</button></td>
+      </tr>`).join('')}</tbody>
+    </table></div>`;
+  } catch(e) { el.innerHTML = `<div class="alert alert-danger">Erro: ${e.message}</div>`; }
+}
+
+async function moverParaArquivoFrio(candidateId) {
+  if (!confirm('Mover este candidato para o Arquivo Frio?')) return;
+  try {
+    await api(`/candidates/${candidateId}/arquivo-frio`, { method: 'PUT', body: JSON.stringify({ arquivo_frio: true }) });
+    openProcess(currentProcessId);
+  } catch(e) { alert('Erro: ' + e.message); }
+}
+
+async function removerArquivoFrio(candidateId) {
+  try {
+    await api(`/candidates/${candidateId}/arquivo-frio`, { method: 'PUT', body: JSON.stringify({ arquivo_frio: false }) });
+    loadArquivoFrio();
+  } catch(e) { alert('Erro: ' + e.message); }
+}
+
+// ─── MOTIVOS DE REPROVAÇÃO (configs) ─────────────────────────────
+async function loadMotivosReprovacaoConfig() {
+  const el = document.getElementById('motivos-reprovacao-list');
+  if (!el) return;
+  el.innerHTML = '<div class="loading" style="padding:20px"><div class="spinner"></div></div>';
+  try {
+    const motivos = await api('/motivos-reprovacao');
+    motivosReprovacaoCache = motivos;
+    if (!motivos.length) { el.innerHTML = '<div class="text-sm text-mid">Nenhum motivo cadastrado.</div>'; return; }
+    el.innerHTML = motivos.map(m => `<div style="display:flex;align-items:center;justify-content:space-between;padding:8px 0;border-bottom:1px solid var(--cream-dark)">
+      <span style="font-size:14px">${m.motivo}</span>
+      <button class="btn btn-sm btn-danger" onclick="deletarMotivoReprovacao(${m.id})">Remover</button>
+    </div>`).join('');
+  } catch(e) { el.innerHTML = `<div class="alert alert-danger">Erro: ${e.message}</div>`; }
+}
+
+async function criarMotivoReprovacao() {
+  const nome = document.getElementById('novo-motivo-nome').value.trim();
+  const msg = document.getElementById('novo-motivo-msg');
+  if (!nome) { msg.innerHTML = '<div class="alert alert-danger">Informe o motivo.</div>'; return; }
+  try {
+    await api('/motivos-reprovacao', { method: 'POST', body: JSON.stringify({ motivo: nome }) });
+    document.getElementById('novo-motivo-nome').value = '';
+    msg.innerHTML = '<div class="alert alert-success">Motivo adicionado!</div>';
+    loadMotivosReprovacaoConfig();
+    setTimeout(() => msg.innerHTML = '', 2000);
+  } catch(e) { msg.innerHTML = `<div class="alert alert-danger">Erro: ${e.message}</div>`; }
+}
+
+async function deletarMotivoReprovacao(id) {
+  if (!confirm('Remover este motivo?')) return;
+  try { await api(`/motivos-reprovacao/${id}`, { method: 'DELETE' }); loadMotivosReprovacaoConfig(); }
+  catch(e) { alert('Erro: ' + e.message); }
 }
 
 // ─── CANAIS DE ATRAÇÃO ────────────────────────────────────────────
@@ -1591,8 +1769,14 @@ async function carregarHistoricoAnalises(candidateId) {
 // ─── CONFIG LAYOUT POR ROLE ───────────────────────────────────────
 function renderConfigLayout() {
   const isDiretor = currentUser?.role === 'diretor';
+  const isLeitor = currentUser?.role === 'leitor';
   document.getElementById('config-usuarios').style.display = isDiretor ? 'block' : 'none';
+  // Leitor: ocultar botão de novo processo e ações de upload
+  const topActions = document.getElementById('topbar-actions');
+  if (isLeitor && topActions) topActions.innerHTML = '';
 }
+
+function isLeitor() { return currentUser?.role === 'leitor'; }
 
 // ─── EDITAR FUNCIONÁRIO ───────────────────────────────────────────
 async function abrirModalEditarFn(id) {
